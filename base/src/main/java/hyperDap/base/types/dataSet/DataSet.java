@@ -24,9 +24,9 @@ import java.util.Iterator;
  */
 public class DataSet<T> implements Collection {
 
-  private final double base;
-  private final double step;
-  private ArrayList<T> values;
+  protected final double base;
+  protected final double step;
+  protected ArrayList<T> values;
 
   public DataSet(Number base, Number step) {
     this.base = base.doubleValue();
@@ -46,6 +46,10 @@ public class DataSet<T> implements Collection {
   public double getIndependentValue(int index) {
     double independentValue = this.base + index * this.step;
     return independentValue;
+  }
+
+  public double getMaxIndependentValue() {
+    return this.getIndependentValue(this.values.size() - 1);
   }
 
   //
@@ -234,8 +238,6 @@ public class DataSet<T> implements Collection {
 
   @Override
   public boolean remove(Object o) {
-
-
     // TODO Auto-generated method stub
     return false;
   }
