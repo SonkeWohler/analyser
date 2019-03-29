@@ -16,13 +16,13 @@ import java.util.Iterator;
  * <p>
  * Retrieving by the independent variable is performed by calculating the corresponding index using
  * the {@link #base} and {@link #step} fields, such that
- * {@code independent value= base + index*step}.
+ * {@code independent value= base + index*step}. +-
  * 
  * @author soenk
  *
  * @param <T> The type of values stored in this DataSet
  */
-public class DataSet<T> implements Collection {
+public abstract class DataSet<T> implements Collection {
 
   protected final double base;
   protected final double step;

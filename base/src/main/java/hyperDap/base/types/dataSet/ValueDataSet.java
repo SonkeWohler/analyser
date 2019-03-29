@@ -1,10 +1,11 @@
 package hyperDap.base.types.dataSet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import hyperDap.base.types.value.ValuePair;
 
 /**
- * An implementation of {@link DataSet} that makes use of the
+ * An implementation of {@link DataSet} that holds Numbers as the dependentValue.
  * 
  * @author soenk
  *
@@ -14,6 +15,7 @@ public class ValueDataSet<T extends Number> extends DataSet {
 
   public ValueDataSet(Number base, Number step) {
     super(base, step);
+    this.values = new ArrayList<T>();
   }
 
   @Override

@@ -1,5 +1,12 @@
 package hyperDap.base.types.value;
 
+/**
+ * An immutable pair of number values.
+ * 
+ * @author soenk
+ *
+ * @param <T>
+ */
 public class ValuePair<T extends Number> {
 
   private final T xValue; // independentValue
