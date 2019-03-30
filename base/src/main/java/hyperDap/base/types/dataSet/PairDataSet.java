@@ -10,7 +10,9 @@ import hyperDap.base.types.value.ValuePair;
  *
  * @param <T> The type of {@link ValuePair} which must extend {@link Number}
  */
-public class PairDataSet<T extends Number> extends DataSet {
+public class PairDataSet<T extends Number> extends DataSet<ValuePair<T>> {
+
+  protected ArrayList<ValuePair<T>> values;
 
   public PairDataSet(Number base, Number step) {
     super(base, step);

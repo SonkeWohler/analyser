@@ -11,7 +11,9 @@ import hyperDap.base.types.value.ValuePair;
  *
  * @param <T>
  */
-public class ValueDataSet<T extends Number> extends DataSet {
+public class ValueDataSet<T extends Number> extends DataSet<T> {
+
+  ArrayList<T> values;
 
   public ValueDataSet(Number base, Number step) {
     super(base, step);
@@ -41,7 +43,7 @@ public class ValueDataSet<T extends Number> extends DataSet {
   }
 
   @Override
-  public boolean containsAll(Collection c) {
+  public boolean containsAll(Collection<?> c) {
     boolean ret = true;
     for (Object o : c) {
       if (this.contains(o) == false) {
@@ -58,13 +60,13 @@ public class ValueDataSet<T extends Number> extends DataSet {
   }
 
   @Override
-  public boolean removeAll(Collection c) {
+  public boolean removeAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean retainAll(Collection c) {
+  public boolean retainAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }

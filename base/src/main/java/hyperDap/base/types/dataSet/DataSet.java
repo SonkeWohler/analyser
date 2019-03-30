@@ -22,7 +22,7 @@ import java.util.Iterator;
  *
  * @param <T> The type of values stored in this DataSet
  */
-public abstract class DataSet<T> implements Collection {
+public abstract class DataSet<T> implements Collection<T> {
 
   protected final double base;
   protected final double step;
@@ -55,12 +55,37 @@ public abstract class DataSet<T> implements Collection {
   //
   // *************************************************************************************
 
+  /**
+   * Used within {@link #set(int, Object)} to initialise elements at intermediate indices to a
+   * sensible default value.
+   * <p>
+   * Should be overwritten by subclasses.
+   * 
+   * @return A default value for elements of this DataSet.
+   */
+  @SuppressWarnings("unused")
   private T initialisationValue() {
     return null;
   }
 
+  /**
+   * Used within {@link #set(int, Object)} to initialise elements at intermediate indices to a
+   * sensible value based on the two surrounding values (the currently last and the newly added
+   * one).
+   * <p>
+   * Should be overwritten by subclasses.
+   * 
+   * @param value1 The currently last value in {@link #values}
+   * @param value2 The value that should be added at the desired index.
+   * @return A default value for elements of this DataSet.
+   */
   private T initialisationValue(T value1, T value2) {
     return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private T castToT(Object o) throws ClassCastException {
+    return (T) o;
   }
 
   //
@@ -106,12 +131,14 @@ public abstract class DataSet<T> implements Collection {
    */
   @Override
   public boolean add(Object e) {
+    T e2;
     try {
-      T value = (T) e;
-      return this.values.add(value);
+      e2 = this.castToT(e);
     } catch (ClassCastException exception) {
       return false;
     }
+    T value = e2;
+    return this.values.add(value);
   }
 
   /**
@@ -182,7 +209,7 @@ public abstract class DataSet<T> implements Collection {
   // ****************************************************************************************
 
   @Override
-  public boolean containsAll(Collection c) {
+  public boolean containsAll(Collection<?> c) {
     boolean ret = true;
     for (Object o : c) {
       if (this.contains(o) == false) {
@@ -205,7 +232,7 @@ public abstract class DataSet<T> implements Collection {
   // ****************************************************************************************
 
   @Override
-  public Iterator iterator() {
+  public Iterator<T> iterator() {
     // TODO return value pair
     return this.values.iterator();
   }
@@ -216,9 +243,9 @@ public abstract class DataSet<T> implements Collection {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public Object[] toArray(Object[] a) {
-    // TODO Auto-generated method stub
-    return null;
+    return this.values.toArray(a);
   }
 
   //
@@ -243,19 +270,19 @@ public abstract class DataSet<T> implements Collection {
   }
 
   @Override
-  public boolean addAll(Collection c) {
+  public boolean addAll(Collection<? extends T> c) {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean removeAll(Collection c) {
+  public boolean removeAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean retainAll(Collection c) {
+  public boolean retainAll(Collection<?> c) {
     // TODO Auto-generated method stub
     return false;
   }
