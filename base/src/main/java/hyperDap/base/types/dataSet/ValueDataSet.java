@@ -1,11 +1,14 @@
 package hyperDap.base.types.dataSet;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import hyperDap.base.types.value.ValuePair;
 
 /**
  * An implementation of {@link DataSet} that holds Numbers as the dependentValue.
+ * <p>
+ * This implementation and its subclasses are collections of values, as opposed to
+ * {@link NestedDataSet} subclasses, and feature methods to retrieve and manipulate these values
+ * efficiently.
  * 
  * @author soenk
  *
@@ -20,11 +23,8 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
     this.values = new ArrayList<T>();
   }
 
-  @Override
-  public boolean contains(Object o) {
-
-    return false;
-  }
+  //
+  // ****************************************************************************************
 
   public boolean contains(Number value) {
     return this.values.contains(value);
@@ -42,33 +42,8 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
     return ret;
   }
 
-  @Override
-  public boolean containsAll(Collection<?> c) {
-    boolean ret = true;
-    for (Object o : c) {
-      if (this.contains(o) == false) {
-        ret = false;
-        break;
-      }
-    }
-    return ret;
-  }
+  //
+  // ****************************************************************************************
 
-  @Override
-  public Object[] toArray() {
-    return this.values.toArray();
-  }
-
-  @Override
-  public boolean removeAll(Collection<?> c) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean retainAll(Collection<?> c) {
-    // TODO Auto-generated method stub
-    return false;
-  }
 
 }
