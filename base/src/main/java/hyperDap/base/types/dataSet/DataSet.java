@@ -28,6 +28,12 @@ public abstract class DataSet<T> implements Collection<T> {
   protected final double step;
   protected ArrayList<T> values;
 
+  /**
+   * Default constructor.
+   * 
+   * @param base
+   * @param step
+   */
   public DataSet(Number base, Number step) {
     this.base = base.doubleValue();
     this.step = step.doubleValue();
@@ -37,17 +43,38 @@ public abstract class DataSet<T> implements Collection<T> {
   //
   // *************************************************************************************
 
+  /**
+   * Calculate the index associated with this independent value.
+   * <p>
+   * Calculated as index=({@code independentValue}- {@link #base} ) / {@link #step}.
+   * 
+   * @param independentValue
+   * @return
+   */
   public int getIndex(double independentValue) {
     independentValue = (independentValue - this.base) / this.step;
     int index = (int) independentValue;
     return index;
   }
 
+  /**
+   * Calculate the independent value associated with the requested index.
+   * <p>
+   * calculated as return= {@link #base} + {@code index} * {@link #step}.
+   * 
+   * @param index The requested index.
+   * @return The independent value associated with {@code index}
+   */
   public double getIndependentValue(int index) {
     double independentValue = this.base + index * this.step;
     return independentValue;
   }
 
+  /**
+   * Returns the largest independent value that still maps to an entry.
+   * 
+   * @return The independent value associated with the last index of {@link #values}.
+   */
   public double getMaxIndependentValue() {
     return this.getIndependentValue(this.values.size() - 1);
   }
@@ -83,6 +110,13 @@ public abstract class DataSet<T> implements Collection<T> {
     return null;
   }
 
+  /**
+   * Helper method to cast from other objects to T without triggering warnings.
+   * 
+   * @param o
+   * @return
+   * @throws ClassCastException
+   */
   @SuppressWarnings("unchecked")
   private T castToT(Object o) throws ClassCastException {
     return (T) o;
@@ -179,10 +213,23 @@ public abstract class DataSet<T> implements Collection<T> {
     return this.getByIndex(this.getIndex(independentValue.doubleValue()));
   }
 
+  /**
+   * Get an entry by its associated independent value.
+   * 
+   * @param independentValue Used by {@link #getIndex(double)} to calculate the index of the desired
+   *        element.
+   * @return The value corresponding to the calculated index.
+   */
   public T get(double independentValue) {
     return this.getByIndex(this.getIndex(independentValue));
   }
 
+  /**
+   * Get an entry by the index in {@link #values}.
+   * 
+   * @param index
+   * @return
+   */
   public T getByIndex(int index) {
     return this.values.get(index);
   }
@@ -190,16 +237,31 @@ public abstract class DataSet<T> implements Collection<T> {
   //
   // ****************************************************************************************
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public int size() {
     return this.values.size();
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean isEmpty() {
     return this.values.isEmpty();
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean contains(Object o) {
     return this.values.contains(o);
@@ -208,6 +270,11 @@ public abstract class DataSet<T> implements Collection<T> {
   //
   // ****************************************************************************************
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean containsAll(Collection<?> c) {
     boolean ret = true;
@@ -223,6 +290,11 @@ public abstract class DataSet<T> implements Collection<T> {
   //
   // ****************************************************************************************
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public void clear() {
     this.values.clear();
@@ -231,17 +303,32 @@ public abstract class DataSet<T> implements Collection<T> {
   //
   // ****************************************************************************************
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public Iterator<T> iterator() {
     // TODO return value pair
     return this.values.iterator();
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public Object[] toArray() {
     return this.values.toArray();
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   @SuppressWarnings("unchecked")
   public Object[] toArray(Object[] a) {
@@ -263,28 +350,44 @@ public abstract class DataSet<T> implements Collection<T> {
 
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean remove(Object o) {
-    // TODO Auto-generated method stub
-    return false;
+    return this.values.remove(o);
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean addAll(Collection<? extends T> c) {
-    // TODO Auto-generated method stub
-    return false;
+    return this.values.addAll(c);
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean removeAll(Collection<?> c) {
-    // TODO Auto-generated method stub
-    return false;
+    return this.values.removeAll(c);
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Is applied to {@link #values}.
+   */
   @Override
   public boolean retainAll(Collection<?> c) {
-    // TODO Auto-generated method stub
-    return false;
+    return this.values.retainAll(c);
   }
 
 }
