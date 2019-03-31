@@ -20,8 +20,8 @@ public class PairDataSet<T extends Number> extends ValueDataSet<T> {
 
   protected ArrayList<ValuePair<T>> values;
 
-  public PairDataSet(Number base, Number step) {
-    super(base, step);
+  public PairDataSet(Number base, Number step, Number yPrecision) {
+    super(base, step, yPrecision);
     this.values = new ArrayList<ValuePair<T>>();
   }
 

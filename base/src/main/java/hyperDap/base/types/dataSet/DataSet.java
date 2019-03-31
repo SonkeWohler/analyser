@@ -3,20 +3,36 @@ package hyperDap.base.types.dataSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import hyperDap.base.types.value.ValuePair;
 
 /**
- * Superclass for series of Values that come in a pair of Independent variable to dependent variable
- * (a value pair), where the independent value is used to determine the index of the dependent value
- * within the list of values.
+ * Superclass for series of Values that can be mapped from an independent value (or xValue) to a
+ * dependent one (a yValue), e.g. a {@link ValuePair}. This class provides an encapsulation of
+ * {@link ArrayList}, which contains the independent values, that calculates from the independent
+ * value to the correct index in this list, and vice versa.
  * <p>
- * This Collection is used to store independent value that are exactly spaced out by {@link step},
+ * This Collection is used to store independent values that are exactly spaced out by {@link step},
  * or where the exact spacing does not matter. At assignment the independent value is only retained
- * in the index within the list, and resulting casting errors etc. may lead to discreptancies
- * between the intended value and the actual values.
+ * in the index within the list, and resulting rounding errors etc. may lead to discrepancies
+ * between the intended value and the actual values of the independent values. An exception to this
+ * is the {@link PairDataSet}.
  * <p>
  * Retrieving by the independent variable is performed by calculating the corresponding index using
  * the {@link #base} and {@link #step} fields, such that
- * {@code independent value= base + index*step}. +-
+ * {@code independentValue= base + index*step}. See {@link #getIndex(double)} for details on
+ * calculating the index based on the independent value, and {@link #getIndependentValue(int)} on
+ * calculating the value corresponding to an integer.
+ * <p>
+ * Care should be taken when adding elements by their xValue as in {@link #add(double, Object)} or
+ * {@link #add(int, Object)}, as this may require filling the DataSet with many new values
+ * increasing its memory use, while not substantially increasing the number of meaningful values
+ * recorded. If you end up using this method repeatedly in this manner consider adapting the step or
+ * using a HashMap implementation of DataSet.
+ * <p>
+ * This class implements {@link Collection} but not {@link java.util.List List}, as some of the
+ * index based operations here would violate the API of {@link java.util.List List}, while some
+ * requirements set out in {@link java.util.List List} would not translate well to DataSet. Note for
+ * example {@link #add(int, Object)} here compared to {@link java.util.List List#add(int,Object)}.
  * 
  * @author soenk
  *
@@ -46,7 +62,8 @@ public abstract class DataSet<T> implements Collection<T> {
   /**
    * Calculate the index associated with this independent value.
    * <p>
-   * Calculated as index=({@code independentValue}- {@link #base} ) / {@link #step}.
+   * Calculated as index=({@code independentValue}- {@link #base} ) / {@link #step}, then rounding
+   * the result with {@link Math#round(double)} and casting to integer.
    * 
    * @category helper
    * @param independentValue
@@ -54,9 +71,9 @@ public abstract class DataSet<T> implements Collection<T> {
    */
   public int getIndex(double independentValue) {
     independentValue = (independentValue - this.base) / this.step;
-    int index = (int) independentValue;
+    int index = (int) Math.round(independentValue);
     return index;
-  }
+  } // TODO edge cases
 
   /**
    * Calculate the independent value associated with the requested index.
@@ -146,12 +163,19 @@ public abstract class DataSet<T> implements Collection<T> {
    * the list of values is extended to include the required index, with the values between the last
    * and this new one being initialised to the default value specified by
    * {@link #initialisationValue(Object, Object).
+   * <p>
+   * This method is more comparable to {@link ArrayList#set(int, Object)} as it replaces the element
+   * in question rather than shifting elements to the right.
+   * 
    * 
    * @category writing
    * @param index The index at which the value is to be added.
    * @param value The value that is to be added.
    */
   public void add(int index, T value) {
+    if (index < 0) {
+      throw new IndexOutOfBoundsException();
+    }
     try {
       this.values.set(index, value);
     } catch (IndexOutOfBoundsException e) {
@@ -321,14 +345,7 @@ public abstract class DataSet<T> implements Collection<T> {
    */
   @Override
   public boolean containsAll(Collection<?> c) {
-    boolean ret = true;
-    for (Object o : c) {
-      if (this.contains(o) == false) {
-        ret = false;
-        break;
-      }
-    }
-    return ret;
+    return this.values.containsAll(c);
   }
 
   /**
@@ -357,13 +374,21 @@ public abstract class DataSet<T> implements Collection<T> {
   }
 
   /**
-   * {@inheritDoc}
-   * <p>
-   * Is applied to {@link #values}.
+   * Replaces the specified Object with a default value, if it exists.
+   * 
+   * @category fromCollection
+   * @param o The Object to be removed
+   * @return {@code true} if this DataSet has changed as a result of this operation.
    */
   @Override
   public boolean remove(Object o) {
-    return this.values.remove(o);
+    int index = this.values.indexOf(o);
+    if (index == -1) {
+      return false;
+    }
+    this.values.remove(index);
+    this.values.add(index, this.initialisationValue());
+    return true;
   }
 
   /**
@@ -379,27 +404,32 @@ public abstract class DataSet<T> implements Collection<T> {
   }
 
   /**
-   * {@inheritDoc}
-   * <p>
-   * Is applied to {@link #values}.
+   * Replace all Objects in {@code c} with default values by calling {@link #remove(Object)} with
+   * them.
    * 
    * @category fromCollection
+   * @param The Objects that are to be removed.
+   * @return {@code true} if this DataSet has changed as a result of this operation.
    */
   @Override
   public boolean removeAll(Collection<?> c) {
-    return this.values.removeAll(c);
+    boolean ret = false;
+    for (Object o : c) {
+      if (this.remove(o) == true) {
+        ret = true;
+      }
+    }
+    return ret;
   }
 
   /**
-   * {@inheritDoc}
-   * <p>
-   * Is applied to {@link #values}.
+   * Not implemented from {@link Collection}.
    * 
    * @category fromCollection
    */
   @Override
-  public boolean retainAll(Collection<?> c) {
-    return this.values.retainAll(c);
+  public boolean retainAll(Collection<?> c) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
   // main for testing
