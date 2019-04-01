@@ -5,10 +5,14 @@ import java.util.ArrayList;
 /**
  * An implementation of {@link DataSet} that allows nesting several DataSets, used as the superclass
  * to nested DataSet classes.
+ * <p>
+ * Currently WIP.
+ * 
+ * @category WIP
  * 
  * @author soenk
  *
- * @param <T> The type that the nested DataSet<T> use.
+ * @param <Set> The subtype of {@link DataSet} that this set holds.
  */
 public class NestedDataSet<Set extends DataSet<?>> extends DataSet<Set> {
 
@@ -21,5 +25,7 @@ public class NestedDataSet<Set extends DataSet<?>> extends DataSet<Set> {
     this.nestedStep = nestedStep;
     this.values = new ArrayList<Set>();
   }
+
+  // TODO
 
 }
