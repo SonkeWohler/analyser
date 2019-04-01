@@ -1,5 +1,14 @@
 package hyperDap.base.maths;
 
+/**
+ * An abstract helper class for frequently used number comparisons that exceed one line. Its purpose
+ * not only to simplify but rather to streamline programming and ensure comparisons in the project
+ * follow well defined standards.
+ * 
+ * @author soenk
+ *
+ */
+
 public abstract class Comparator {
 
   /**
