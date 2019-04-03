@@ -2,6 +2,9 @@
  * 
  */
 /**
+ * This module serves as a baseline and defines necessary datatypes and some static helper classes
+ * that are used throughout the project.
+ * 
  * @author soenk
  *
  */
