@@ -45,8 +45,10 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
   /**
    * Test if this DataSet contains the specified value at this index.
    * <p>
-   * Only checks for exactly this entry, for checking for a range of values around a specific
-   * independent value use {@link #contains(double, double)}.
+   * <<<<<<< HEAD Only checks for exactly this entry, for checking for a range of values around a
+   * specific independent value use {@link #contains(double, double)}. ======= Only checks for
+   * exactly this entry, for checking for a value close to this one see
+   * {@link #contains(double, double, double, double)}. >>>>>>> master
    * <p>
    * If the index is out of bounds false is returned.
    * 

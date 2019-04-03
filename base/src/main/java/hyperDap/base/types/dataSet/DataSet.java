@@ -103,7 +103,8 @@ public abstract class DataSet<T> implements Collection<T> {
    * Used within {@link #add(int, Object)} to initialise elements at intermediate indices to a
    * sensible default value.
    * <p>
-   * Should be overwritten by subclasses but will default to null.
+   * <<<<<<< HEAD Should be overwritten by subclasses but will default to null. ======= Should be
+   * overwritten by subclasses. >>>>>>> master
    * 
    * @category helper
    * @return A default value for elements of this DataSet.
@@ -118,7 +119,8 @@ public abstract class DataSet<T> implements Collection<T> {
    * sensible value based on the two surrounding values (the currently last and the newly added
    * one).
    * <p>
-   * Should be overwritten by subclasses but will default to null.
+   * <<<<<<< HEAD Should be overwritten by subclasses but will default to null. ======= Should be
+   * overwritten by subclasses. >>>>>>> master
    * 
    * @category helper
    * @param value1 The currently last value in {@link #values}
@@ -165,8 +167,13 @@ public abstract class DataSet<T> implements Collection<T> {
    * {@link #initialisationValue(Object, Object).
    * <p>
    * This method is more comparable to {@link ArrayList#set(int, Object)} as it replaces the element
-   * in question rather than shifting elements to the right.
+   * in question rather than shifting elements to the right. <<<<<<< HEAD
    * 
+   * 
+   * =======
+   * 
+   * 
+   * >>>>>>> master
    * 
    * @category writing
    * @param index The index at which the value is to be added.
@@ -297,7 +304,6 @@ public abstract class DataSet<T> implements Collection<T> {
       return false;
     }
   }
-
   // other inheritances from Collection
   // ****************************************************************************************
 
