@@ -2,7 +2,7 @@ package hyperDap.base.types.dataSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import hyperDap.base.maths.Comparator;
+import hyperDap.base.helpers.Comparator;
 import hyperDap.base.types.value.ValuePair;
 
 /**
@@ -33,8 +33,10 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
   // write
   // ****************************************************************************************
 
-  public void add(ValuePair<? extends Number> valuePair) {
-
+  public void add(ValuePair<T> valuePair) {
+    double xValue = valuePair.getX().doubleValue();
+    T yValue = valuePair.getY();
+    this.add(xValue, yValue);
   }
 
   // contains
