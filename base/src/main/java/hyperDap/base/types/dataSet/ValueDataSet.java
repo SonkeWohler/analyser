@@ -45,8 +45,8 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
   /**
    * Test if this DataSet contains the specified value at this index.
    * <p>
-   * Only checks for exactly this entry, for checking for a value close to this one see
-   * {@link #contains(double, double, double, double)}.
+   * Only checks for exactly this entry, for checking for a range of values around a specific
+   * independent value use {@link #contains(double, double)}.
    * <p>
    * If the index is out of bounds false is returned.
    * 
@@ -82,24 +82,22 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
     List<Integer> list = new ArrayList<Integer>(); // a list of the indices that should be checked
     list.add(index);
     int i = index - 1;
-    try {
-      while (Comparator.equalApprox(xValue, this.getIndependentValue(i), xPrecision)) {
-        list.add(i);
-      }
-    } catch (IndexOutOfBoundsException e) {
-
+    while (Comparator.equalApprox(xValue, this.getIndependentValue(i), xPrecision)) {
+      list.add(i);
+      i--;
     }
     i = index + 1;
-    try {
-      while (Comparator.equalApprox(xValue, this.getIndependentValue(i), xPrecision)) {
-        list.add(i);
-      }
-    } catch (IndexOutOfBoundsException e) {
-
+    while (Comparator.equalApprox(xValue, this.getIndependentValue(i), xPrecision)) {
+      list.add(i);
+      i++;
     }
     for (int j : list) {
-      if (Comparator.equalApprox(yValue, this.getByIndex(j).doubleValue(), yPrecision) == true) {
-        return true;
+      try {
+        if (Comparator.equalApprox(yValue, this.getByIndex(j).doubleValue(), yPrecision) == true) {
+          return true;
+        }
+      } catch (IndexOutOfBoundsException e) {
+
       }
     }
     return false;
@@ -120,15 +118,15 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
   }
 
   /**
-   * Check whether this {@link ValuePair} is represented in this DataSet using
-   * {@link #contains(int, Number)}.
+   * Check whether this {@link ValuePair} is represented in this DataSet.
+   * <p>
+   * Makes use of {@link #contains(double, double)};
    * 
    * @param valuePair A pair of the independent and dependent values to be checked.
    * @return {@code true} if this pair is conatained, {@code false} otherwise.
    */
   public boolean contains(ValuePair<? extends Number> valuePair) {
-    int index = this.getIndex(valuePair.getX().doubleValue());
-    return this.contains(index, valuePair.getY().doubleValue());
+    return this.contains(valuePair.getX().doubleValue(), valuePair.getY().doubleValue());
   }
 
   //

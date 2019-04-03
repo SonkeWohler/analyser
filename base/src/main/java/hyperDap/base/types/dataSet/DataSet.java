@@ -278,6 +278,26 @@ public abstract class DataSet<T> implements Collection<T> {
     return this.values.get(index);
   }
 
+  /**
+   * Check whether this collection contains an entry corresponding to the {@code independentValue}.
+   * <p>
+   * More formally, returns {@code true} if {@link #get(double) get(independentValue)} would return
+   * an entry and {@code false} if it is out of bounds.
+   * <p>
+   * Entries of {@code null} are considered valid and will return {@code true}.
+   * 
+   * @param independentValue The xValue
+   * @return
+   */
+  public boolean hasEntryAt(double independentValue) {
+    try {
+      this.get(independentValue);
+      return true;
+    } catch (IndexOutOfBoundsException e) {
+      return false;
+    }
+  }
+
   // other inheritances from Collection
   // ****************************************************************************************
 
