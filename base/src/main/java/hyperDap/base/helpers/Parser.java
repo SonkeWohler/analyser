@@ -25,7 +25,9 @@ import java.util.function.Function;
  *
  */
 
-public class Parser {
+public final class Parser {
+
+  private Parser() {}
 
   /**
    * A map of parseable classes to their correct parsing functions. Used by

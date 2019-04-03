@@ -9,7 +9,9 @@ package hyperDap.base.helpers;
  *
  */
 
-public abstract class Comparator {
+public final class Comparator {
+
+  private Comparator() {}
 
   /**
    * Evaluate whether with the chosen precision the two values are equal, i.e. if {@code a} plus or
