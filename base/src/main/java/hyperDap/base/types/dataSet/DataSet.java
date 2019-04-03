@@ -103,7 +103,7 @@ public abstract class DataSet<T> implements Collection<T> {
    * Used within {@link #add(int, Object)} to initialise elements at intermediate indices to a
    * sensible default value.
    * <p>
-   * Should be overwritten by subclasses.
+   * Should be overwritten by subclasses but will default to null.
    * 
    * @category helper
    * @return A default value for elements of this DataSet.
@@ -118,7 +118,7 @@ public abstract class DataSet<T> implements Collection<T> {
    * sensible value based on the two surrounding values (the currently last and the newly added
    * one).
    * <p>
-   * Should be overwritten by subclasses.
+   * Should be overwritten by subclasses but will default to null.
    * 
    * @category helper
    * @param value1 The currently last value in {@link #values}
@@ -178,10 +178,15 @@ public abstract class DataSet<T> implements Collection<T> {
     }
     try {
       this.values.set(index, value);
-    } catch (IndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException e1) {
       this.values.ensureCapacity(index);
       int lastIndex = this.values.size() - 1;
-      T initValue = this.initialisationValue(value, this.values.get(lastIndex));
+      T initValue;
+      try {
+        initValue = this.initialisationValue(value, this.values.get(lastIndex));
+      } catch (IndexOutOfBoundsException e2) {
+        initValue = value;
+      }
       for (int i = lastIndex + 1; i < index; i++) {
         this.values.add(initValue); // the index of this value will be i
       }
@@ -271,6 +276,26 @@ public abstract class DataSet<T> implements Collection<T> {
    */
   public T getByIndex(int index) {
     return this.values.get(index);
+  }
+
+  /**
+   * Check whether this collection contains an entry corresponding to the {@code independentValue}.
+   * <p>
+   * More formally, returns {@code true} if {@link #get(double) get(independentValue)} would return
+   * an entry and {@code false} if it is out of bounds.
+   * <p>
+   * Entries of {@code null} are considered valid and will return {@code true}.
+   * 
+   * @param independentValue The xValue
+   * @return
+   */
+  public boolean hasEntryAt(double independentValue) {
+    try {
+      this.get(independentValue);
+      return true;
+    } catch (IndexOutOfBoundsException e) {
+      return false;
+    }
   }
 
   // other inheritances from Collection
@@ -430,19 +455,6 @@ public abstract class DataSet<T> implements Collection<T> {
   @Override
   public boolean retainAll(Collection<?> c) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
-  }
-
-  // main for testing
-  // ****************************************************************************************
-
-  /**
-   * This main method is only for testing purposes and should be removed when development is
-   * complete.
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-
   }
 
 }

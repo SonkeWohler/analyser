@@ -3,13 +3,13 @@ package hyperDap.base.types.value;
 /**
  * An immutable pair of number values. While there is no programmatic relation between the two
  * values, they are assumed to be related usually as a yValue dependent on an xValue, as if
- * representing a single point on a one dimensional function..
+ * representing a single point on a one dimensional function.
  * 
  * @author soenk
  *
  * @param <T> The subclass of {@link Number} that the values should be stored in.
  */
-public class ValuePair<T extends Number> {
+public final class ValuePair<T extends Number> {
 
   private final T xValue; // independentValue
   private final T yValue; // dependentValue
@@ -19,10 +19,22 @@ public class ValuePair<T extends Number> {
     this.yValue = dependentValue;
   }
 
+  /**
+   * Returns the first of the two stored values, which is considered the independent value or
+   * {@code xValue}.
+   * 
+   * @return {@code xValue}
+   */
   public T getX() {
     return this.xValue;
   }
 
+  /**
+   * Returns the second of the two stored values, which is considered the dependent value or
+   * {@code yValue}.
+   * 
+   * @return {@code yValue}
+   */
   public T getY() {
     return this.yValue;
   }
@@ -62,5 +74,17 @@ public class ValuePair<T extends Number> {
   @SuppressWarnings("unchecked")
   private ValuePair<T> castToThis(Object o) {
     return (ValuePair<T>) o;
+  }
+
+  //
+  // **********************************************************************************************************************
+
+  /**
+   * A main for testing purposes that should be removed upon completion.
+   * 
+   * @param args
+   */
+  public static void main(String[] args) {
+
   }
 }

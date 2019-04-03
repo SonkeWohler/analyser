@@ -1,4 +1,4 @@
-package hyperDap.base.maths;
+package hyperDap.base.helpers;
 
 /**
  * An abstract helper class for frequently used number comparisons that exceed one line. Its purpose
