@@ -1,6 +1,8 @@
 package hyperDap.base.types.dataSets;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import hyperDap.base.types.dataSet.DataSet;
@@ -245,4 +247,85 @@ public class TestDataSet {
     });
     assertEquals(Integer.valueOf(set.size()), Integer.valueOf(4));
   }
+
+  @Test
+  void addNegative() {
+    double base = 0.0;
+    double step = 1.0;
+    int index = 3;
+    double xValue = 3.0;
+    Double entry = 3.0;
+    // double xValue = 3s3x.0;
+    ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
+    assertThrows(IndexOutOfBoundsException.class, () -> {
+      set.add(-1, entry);
+    });
+    assertThrows(IndexOutOfBoundsException.class, () -> {
+      set.add(-1.0, entry);
+    });
+    assertThrows(IndexOutOfBoundsException.class, () -> {
+      set.add(-0.5000000000000001, entry);
+    });
+  }
+
+  // empty
+  // *******************************************************************************************************************************
+
+  @Test
+  void testEmpty() {
+    double base = 0.0;
+    double step = 1.0;
+    int index = 3;
+    double xValue = 3.0;
+    Double entry = 3.0;
+    ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
+    assertEquals(set.size(), 0);
+    assertTrue(set.isEmpty());
+    assertThrows(IndexOutOfBoundsException.class, () -> {
+      set.getByIndex(0);
+    });
+    set.add(entry);
+    assertEquals(set.size(), 1);
+    assertFalse(set.isEmpty());
+    set.getByIndex(0);
+  }
+
+  @Test
+  void testClear() {
+    double base = 0.0;
+    double step = 1.0;
+    int index = 3;
+    double xValue = 3.0;
+    Double entry = 3.0;
+    ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
+    for (int i = 0; i <= index; i++) {
+      set.add(entry);
+    }
+    assertFalse(set.isEmpty());
+    set.clear();
+    assertTrue(set.isEmpty());
+  }
+
+  // iterator
+  // *******************************************************************************************************************************
+
+  @Test
+  void testIterator() {
+    double base = 0.0;
+    double step = 1.0;
+    int index = 3;
+    double xValue = 3.0;
+    Double entry = 3.0;
+    ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
+    for (int i = 0; i <= index; i++) {
+      set.add(entry);
+    }
+    for (Double e : set) {
+      assertEquals(entry, e);
+    }
+  }
+
+  // TODO other inherited methods from Collection
+  // *******************************************************************************************************************************
+
 }
