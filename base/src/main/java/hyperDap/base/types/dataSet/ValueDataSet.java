@@ -33,6 +33,11 @@ public class ValueDataSet<T extends Number> extends DataSet<T> {
   // write
   // ****************************************************************************************
 
+  /**
+   * Encapsulation of {@link #add(double, Object)} using {@link ValuePair} input.
+   * 
+   * @param valuePair Data that is to be unboxed to add an entry.
+   */
   public void add(ValuePair<T> valuePair) {
     double xValue = valuePair.getX().doubleValue();
     T yValue = valuePair.getY();

@@ -252,8 +252,6 @@ public class TestDataSet {
   void addNegative() {
     double base = 0.0;
     double step = 1.0;
-    int index = 3;
-    double xValue = 3.0;
     Double entry = 3.0;
     // double xValue = 3s3x.0;
     ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
@@ -275,8 +273,6 @@ public class TestDataSet {
   void testEmpty() {
     double base = 0.0;
     double step = 1.0;
-    int index = 3;
-    double xValue = 3.0;
     Double entry = 3.0;
     ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
     assertEquals(set.size(), 0);
@@ -295,7 +291,6 @@ public class TestDataSet {
     double base = 0.0;
     double step = 1.0;
     int index = 3;
-    double xValue = 3.0;
     Double entry = 3.0;
     ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
     for (int i = 0; i <= index; i++) {
@@ -314,7 +309,6 @@ public class TestDataSet {
     double base = 0.0;
     double step = 1.0;
     int index = 3;
-    double xValue = 3.0;
     Double entry = 3.0;
     ConcreteDataSet<Double> set = new ConcreteDataSet<>(base, step);
     for (int i = 0; i <= index; i++) {

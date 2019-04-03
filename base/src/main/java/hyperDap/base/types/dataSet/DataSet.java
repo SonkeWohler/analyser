@@ -109,7 +109,6 @@ public abstract class DataSet<T> implements Collection<T> {
    * @category helper
    * @return A default value for elements of this DataSet.
    */
-  @SuppressWarnings("unused")
   private T initialisationValue() {
     return null;
   }

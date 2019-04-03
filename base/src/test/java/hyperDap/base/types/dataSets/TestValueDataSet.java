@@ -13,7 +13,6 @@ public class TestValueDataSet {
   void testContainsDouble() {
     double base = 0.0;
     double step = 1.0;
-    int index = 3;
     double xValue = 3.0;
     double precision = 0.5;
     Double entry = 5.0;
@@ -30,7 +29,6 @@ public class TestValueDataSet {
   void testContainsPrecision() {
     double base = 0.0;
     double step = 1.0;
-    int index = 3;
     double xValue = 3.0;
     double precision = 0.5;
     double xPrecision = 2.0;
@@ -54,8 +52,6 @@ public class TestValueDataSet {
     int index = 3;
     double xValue = 3.0;
     double precision = 0.5;
-    double xPrecision = 2.0;
-    double yPrecision = 2.0;
     Double entry = 5.0;
     ValueDataSet<Double> set = new ValueDataSet<>(base, step, precision);
     set.add(xValue, entry);
@@ -68,7 +64,6 @@ public class TestValueDataSet {
   void testContainsPair() {
     double base = 0.0;
     double step = 1.0;
-    int index = 3;
     double xValue = 3.0;
     double precision = 0.5;
     Double entry = 5.0;
@@ -86,11 +81,8 @@ public class TestValueDataSet {
   void testAddPair() {
     double base = 0.0;
     double step = 1.0;
-    int index = 3;
     double xValue = 3.0;
     double precision = 0.5;
-    double xPrecision = 2.0;
-    double yPrecision = 2.0;
     Double entry = 5.0;
     ValueDataSet<Double> set = new ValueDataSet<>(base, step, precision);
     set.add(new ValuePair<Double>(xValue, entry));
