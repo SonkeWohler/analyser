@@ -91,15 +91,4 @@ public final class Parser {
             classReference.getName()));
   }
 
-  public static void main(String[] args) {
-    Double test1 = 123.45;
-    Object test2 = test1;
-    double p1 = Double.valueOf(parse(test1.toString(), double.class).toString());
-    Double p2 = (Double) parse(test2.toString(), Double.class);
-    BigDecimal p3 = (BigDecimal) parse(test1.toString(), BigDecimal.class);
-    System.out.println(p1);
-    System.out.println(p2);
-    System.out.println(p3);
-  }
-
 }
