@@ -16,7 +16,7 @@ import hyperDap.base.types.value.ValuePair;
  *
  * @param <T>
  */
-public class ValueDataSet<T extends Number> extends DataSet<T> {
+public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
 
   ArrayList<T> values;
   /**

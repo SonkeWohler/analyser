@@ -2,11 +2,11 @@ package hyperDap.base.types.dataSet;
 
 import java.util.ArrayList;
 
-public class ValidityDataSet<T> extends DataSet<T> {
+public abstract class ValidityDataSet<T> extends DataSet<T> {
 
   private ArrayList<Boolean> valids;
 
-  public ValidityDataSet(double base, double step) {
+  public ValidityDataSet(Number base, Number step) {
     super(base, step);
     this.valids = new ArrayList<Boolean>();
   }
