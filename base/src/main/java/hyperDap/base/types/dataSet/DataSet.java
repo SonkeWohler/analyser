@@ -138,7 +138,7 @@ public abstract class DataSet<T> implements Collection<T> {
    * @return The cast of {@code o} if this is possible.
    * @throws ClassCastException Thrown if there is no legal cast from {@code o} to {@code T}.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "unused"})
   private T castToT(Object o) throws ClassCastException {
     return (T) o;
   }
@@ -206,15 +206,8 @@ public abstract class DataSet<T> implements Collection<T> {
    * @category writing
    */
   @Override
-  public boolean add(Object e) {
-    T e2;
-    try {
-      e2 = this.castToT(e);
-    } catch (ClassCastException exception) {
-      return false;
-    }
-    T value = e2;
-    return this.values.add(value);
+  public boolean add(T e) {
+    return this.values.add(e);
   }
 
   /**
