@@ -102,10 +102,10 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
   // ***************************************************************************************************************************
 
   /**
-   * Check whether an entry is considered valid or not.
+   * Check whether an value is considered valid or not.
    * 
-   * @param index
-   * @return
+   * @param index The index of the value to be checked
+   * @return The validity of the entry at position {@code index}
    */
   public boolean getValidByIndex(int index) {
     try {
@@ -118,8 +118,8 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
   /**
    * Check whether the value corresponding to this xValue is valid.
    * 
-   * @param independentValue
-   * @return
+   * @param independentValue The {@code xValue}
+   * @return The validity of the value stored under this xValue
    */
   public boolean getValid(double independentValue) {
     return this.getValidByIndex(this.getIndex(independentValue));
@@ -128,11 +128,70 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
   /**
    * {@link Number} encapsulation of {@link #getValid(double)}.
    * 
-   * @param independentValue
-   * @return
+   * @param independentValue The {@code xValue}
+   * @return The validity of the value stored under this {@code xValue}
    */
   public boolean getValid(Number independentValue) {
     return this.getValid(independentValue.doubleValue());
+  }
+
+  // edit validity
+  // ***************************************************************************************************************************
+
+  /**
+   * Edit whether a value is considered valid or not.
+   * <p>
+   * If needed {@link #cleanLength()} is called.
+   * 
+   * @param index The index of the value
+   * @param validity Whether the value should be valid ({@code true}) or invalid ({@code false})
+   * @return If this Set was altered as a result of this operation ({@code true}) or not
+   *         ({@code false})
+   * @throws IndexOutOfBoundsException if there is no corresponding value, after calling
+   *         {@link #cleanLength()} first.
+   */
+  public boolean editValidityByIndex(int index, boolean validity) throws IndexOutOfBoundsException {
+    boolean ret;
+    try {
+      ret = this.valids.set(index, validity);
+    } catch (IndexOutOfBoundsException e) {
+      this.cleanLength();
+      ret = true;
+    }
+    this.valids.set(index, validity);
+    return ret;
+  }
+
+  /**
+   * Edit whether a value is considered valid or not.
+   * <p>
+   * If needed {@link #cleanLength()} is called.
+   * 
+   * @param index The {@code xValue} this value is stored under
+   * @param validity Whether the value should be valid ({@code true}) or invalid ({@code false})
+   * @return If this Set was altered as a result of this operation ({@code true}) or not
+   *         ({@code false})
+   * @throws IndexOutOfBoundsException if there is no corresponding value, after calling
+   *         {@link #cleanLength()} first.
+   */
+  public boolean editValidity(double xValue, boolean validity) throws IndexOutOfBoundsException {
+    return this.editValidityByIndex(this.getIndex(xValue), validity);
+  }
+
+  /**
+   * A {@link Number} encapsulation of {@link #editValidity(double, boolean)}.
+   * <p>
+   * If needed {@link #cleanLength()} is called.
+   * 
+   * @param index The {@code xValue} this value is stored under
+   * @param validity Whether the value should be valid ({@code true}) or invalid ({@code false})
+   * @return If this Set was altered as a result of this operation ({@code true}) or not
+   *         ({@code false})
+   * @throws IndexOutOfBoundsException if there is no corresponding value, after calling
+   *         {@link #cleanLength()} first.
+   */
+  public boolean editValidity(Number xValue, boolean validity) throws IndexOutOfBoundsException {
+    return this.editValidity(xValue.doubleValue(), validity);
   }
 
   // other
