@@ -106,13 +106,18 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
    * 
    * @param index The index of the value to be checked
    * @return The validity of the entry at position {@code index}
+   * @throws IndeOutOfBoundsException When there is no such value
    */
-  public boolean getValidByIndex(int index) {
+  public boolean getValidByIndex(int index) throws IndexOutOfBoundsException {
+    if (index < 0 || index >= this.size()) {
+      throw new IndexOutOfBoundsException();
+    }
     try {
       return this.valids.get(index);
     } catch (IndexOutOfBoundsException e) {
-      return false;
+      this.cleanLength();
     }
+    return this.valids.get(index);
   }
 
   /**
@@ -120,8 +125,9 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
    * 
    * @param independentValue The {@code xValue}
    * @return The validity of the value stored under this xValue
+   * @throws IndeOutOfBoundsException When there is no such value
    */
-  public boolean getValid(double independentValue) {
+  public boolean getValid(double independentValue) throws IndexOutOfBoundsException {
     return this.getValidByIndex(this.getIndex(independentValue));
   }
 
@@ -130,8 +136,9 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
    * 
    * @param independentValue The {@code xValue}
    * @return The validity of the value stored under this {@code xValue}
+   * @throws IndeOutOfBoundsException When there is no such value
    */
-  public boolean getValid(Number independentValue) {
+  public boolean getValid(Number independentValue) throws IndexOutOfBoundsException {
     return this.getValid(independentValue.doubleValue());
   }
 
@@ -151,15 +158,11 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
    *         {@link #cleanLength()} first.
    */
   public boolean editValidityByIndex(int index, boolean validity) throws IndexOutOfBoundsException {
-    boolean ret;
-    try {
-      ret = this.valids.set(index, validity);
-    } catch (IndexOutOfBoundsException e) {
-      this.cleanLength();
-      ret = true;
+    if (index < 0 || index >= this.size()) {
+      throw new IndexOutOfBoundsException();
     }
-    this.valids.set(index, validity);
-    return ret;
+    this.cleanLength();
+    return this.valids.set(index, validity);
   }
 
   /**
