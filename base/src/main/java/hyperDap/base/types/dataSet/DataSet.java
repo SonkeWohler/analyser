@@ -236,6 +236,23 @@ public abstract class DataSet<T> implements Collection<T> {
 
   // reading/getters
   // *************************************************************************************
+  /**
+   * Get the {@code base} used to convert between {@code index} and {@code xValue}.
+   * 
+   * @return The {@code base} value used by this {@link DataSet}
+   */
+  public double getBase() {
+    return this.base;
+  }
+
+  /**
+   * Get the {@code step} used to convert between {@code index} and {@code xValue}.
+   * 
+   * @return The {@code step} value used by this {@link DataSet}
+   */
+  public double getStep() {
+    return this.step;
+  }
 
   /**
    * Returns the dependent value from the index corresponding to {@code independentValue}.

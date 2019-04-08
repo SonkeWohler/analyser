@@ -1,5 +1,6 @@
 package hyperDap.base.helpers;
 
+import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.base.types.value.ValuePair;
 
 /**
@@ -70,6 +71,28 @@ public final class Tangenter {
         Tangenter.tangentSinmple(v1, v2));
   }
 
+  public static void calcDerivDepth(ValueDataSet<? extends Number> dataset, int maxDepth) {
+    double base = dataset.getBase();
+    double step = dataset.getStep();
+    int size = dataset.size();
+    double[][] derivs = new double[size][maxDepth];
+    int X;
+    if (step < 0) {
+      X = 0;
+    } else {
+      X = size - 1;
+    }
+    derivs[0][0] = dataset.getByIndex(X).doubleValue();
+    for (int k = 1; k < size - 1; k++) {
+      derivs[k][0] = dataset.getByIndex(Math.abs(X - k)).doubleValue();
+      for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
+        derivs[i][j] = tangentSimple(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
+      }
+    }
+  }
 
+  public static void calcDerivDepth(ValueDataSet<? extends Number> dataset) {
+    Tangenter.calcDerivDepth(dataset, 10);
+  }
 
 }
