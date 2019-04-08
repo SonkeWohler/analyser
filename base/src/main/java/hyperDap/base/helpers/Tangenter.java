@@ -85,6 +85,7 @@ public final class Tangenter {
     } else {
       X = size - 1;
     }
+    // calculate trace by trace derivatives
     derivs[0][0] = dataset.getByIndex(X).doubleValue();
     for (int k = 1; k < size - 1; k++) {
       derivs[k][0] = dataset.getByIndex(Math.abs(X - k)).doubleValue();
@@ -92,7 +93,24 @@ public final class Tangenter {
         derivs[i][j] = tangentSimple(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
       }
     }
-    // TODO
+    // count derivDepth
+    int depth;
+    for (int i = 0; i < size; i++) {
+      depth = Integer.MAX_VALUE;
+      for (int j = 1; j < maxDepth; j++) {
+        if (derivs[i][j] == 0) {
+          depth = j - 1;
+        }
+        depths.add(depth);
+      }
+    }
+    // detect and mark points of change
+    for (int i = 0; i < size; i++) {
+      depth = depths.get(i);
+      if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
+        depths.set(i + depth - 1, -1);
+      }
+    }
     return depths;
   }
 
