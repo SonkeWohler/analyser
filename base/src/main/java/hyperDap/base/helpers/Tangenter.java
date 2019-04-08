@@ -74,13 +74,12 @@ public final class Tangenter {
 
   public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
       int maxDepth) {
-    double base = dataset.getBase();
     double step = dataset.getStep();
     int size = dataset.size();
     ArrayList<Integer> depths = new ArrayList<Integer>(size - maxDepth);
     double[][] derivs = new double[size][maxDepth];
-    int X;
-    if (step < 0) {
+    int X; // this variable helps ensure that tangents are calculated left to right on the x-axis
+    if (step > 0) {
       X = 0;
     } else {
       X = size - 1;
@@ -100,15 +99,22 @@ public final class Tangenter {
       for (int j = 1; j < maxDepth; j++) {
         if (derivs[i][j] == 0) {
           depth = j - 1;
+          break;
         }
-        depths.add(depth);
       }
+      depths.add(depth);
     }
     // detect and mark points of change
+    boolean tracking = false;
     for (int i = 0; i < size; i++) {
       depth = depths.get(i);
       if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
-        depths.set(i + depth - 1, -1);
+        if (tracking == false) {
+          depths.set(i + maxDepth - 2, -1);
+          tracking = true;
+        }
+      } else {
+        tracking = false;
       }
     }
     return depths;
