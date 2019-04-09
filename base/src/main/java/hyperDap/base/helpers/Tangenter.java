@@ -13,7 +13,12 @@ import hyperDap.base.types.value.ValuePair;
 
 public final class Tangenter {
 
-  private Tangenter() {}
+  /**
+   * Private constructor to prevent implementing this class.
+   */
+  private Tangenter() {
+    throw new AssertionError("No helper class instances for anyone!");
+  }
 
   /**
    * Calculate the tangent between two values, given the distance between them.

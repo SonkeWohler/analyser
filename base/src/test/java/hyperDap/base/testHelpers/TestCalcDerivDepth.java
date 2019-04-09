@@ -1,6 +1,7 @@
 package hyperDap.base.testHelpers;
 
 import static org.junit.Assert.assertEquals;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import hyperDap.base.types.dataSet.ValueDataSet;
 
@@ -217,6 +218,33 @@ public class TestCalcDerivDepth {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(0, set.getDerivDepthsByIndex(i));
     }
+  }
+
+  // further polynomial
+  // **********************************************************************************************************************
+
+  /**
+   * This demonstrates a floating point error in Tangenter.
+   */
+  // @Test
+  void squareOverZero() {
+    BigDecimal step = BigDecimal.valueOf(0.1);
+    BigDecimal base = BigDecimal.valueOf(-10);
+    ValueDataSet<BigDecimal> set =
+        new ValueDataSet<BigDecimal>(base.doubleValue(), step.doubleValue(), 0.1);
+
+    BigDecimal value;
+    for (int i = 0; i < 500; i++) {
+      value = step.multiply(BigDecimal.valueOf(i));
+      value = value.add(base);
+      value = value.pow(2);
+      set.add(value);
+    }
+    for (int i = 0; i < 500; i++) {
+      System.out
+          .println(String.format("%s => %s", set.getByIndex(i), set.getDerivDepthsByIndex(i)));
+    }
+
   }
 
 }
