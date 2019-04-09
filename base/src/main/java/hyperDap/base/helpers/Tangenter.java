@@ -16,7 +16,9 @@ import hyperDap.base.types.value.ValuePair;
 
 public final class Tangenter {
 
-  private int bigDecimalPrecision = 10;
+  private static int bigDecimalPrecision = 10;
+  private static MathContext standardContext =
+      new MathContext(bigDecimalPrecision, RoundingMode.HALF_UP);
 
   /**
    * Private constructor to prevent implementing this class.
@@ -35,11 +37,11 @@ public final class Tangenter {
    * @return The slope of the tangent between the points.
    */
   public static double tangentExact(double step, double y1, double y2) {
-    BigDecimal val1 = new BigDecimal(y1, new MathContext(10, RoundingMode.HALF_UP));
-    BigDecimal val2 = new BigDecimal(y2, new MathContext(10, RoundingMode.HALF_UP));
+    BigDecimal val1 = new BigDecimal(y1, standardContext);
+    BigDecimal val2 = new BigDecimal(y2, standardContext);
     val1 = val2.subtract(val1);
-    val2 = new BigDecimal(step, new MathContext(10, RoundingMode.HALF_UP));
-    val1 = val1.divide(val2);
+    val2 = new BigDecimal(step, standardContext);
+    val1 = val1.divide(val2, standardContext);
     return val1.doubleValue();
   }
 

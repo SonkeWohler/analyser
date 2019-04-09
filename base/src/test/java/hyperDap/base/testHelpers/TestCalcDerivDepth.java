@@ -225,6 +225,30 @@ public class TestCalcDerivDepth {
   // **********************************************************************************************************************
 
   @Test
+  void sqareWithinConstant() {
+    int power = 2;
+    double base = 0;
+    double step = 1;
+    double value = 5.0;
+    ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1);
+    for (int i = 0; i < 30; i++) {
+      set.add(value);
+    }
+    double temp = 0;
+    for (int i = 0; i < 10; i++) {
+      temp = value + Math.pow(base + i * step, power);
+      set.add(temp);
+    }
+    for (int i = 0; i < 30; i++) {
+      set.add(temp);
+    }
+    for (int i = 0; i < set.size() - 10; i++) {
+      System.out
+          .println(String.format("%s => %s", set.getByIndex(i), set.getDerivDepthsByIndex(i)));
+    }
+  }
+
+  @Test
   void squareOverZero() {
     int power = 2;
     double base = -10;
