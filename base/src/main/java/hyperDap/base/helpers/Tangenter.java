@@ -1,0 +1,149 @@
+package hyperDap.base.helpers;
+
+import java.util.ArrayList;
+import hyperDap.base.types.dataSet.ValueDataSet;
+import hyperDap.base.types.value.ValuePair;
+
+/**
+ * A helper class that allows finding tangents on data points.
+ * 
+ * @author soenk
+ *
+ */
+
+public final class Tangenter {
+
+  private Tangenter() {}
+
+  /**
+   * Calculate the tangent between two values, given the distance between them.
+   * 
+   * @param step The distance between the two xValues
+   * @param y1 The first value (with a lower xValue)
+   * @param y2 The second value (with the higher xValue)
+   * @return The value of the tangent in this point.
+   */
+  public static double tangentSimple(double step, double y1, double y2) {
+    return (y2 - y1) / step;
+  }
+
+  /**
+   * Calculate the tangent between two x-y data points.
+   * 
+   * @param v1
+   * @param v2
+   * @return The value of the tangent between the two points.
+   */
+  public static double tangentSinmple(ValuePair<? extends Number> v1,
+      ValuePair<? extends Number> v2) {
+    double x1 = v1.getX().doubleValue();
+    double x2 = v2.getX().doubleValue();
+    double y1;
+    double y2;
+
+    if (x1 < x2) {
+      y1 = v1.getY().doubleValue();
+      y2 = v2.getY().doubleValue();
+    } else {
+      y1 = x1;
+      x1 = x2;
+      x2 = y1;
+      y1 = v2.getY().doubleValue();
+      y2 = v1.getY().doubleValue();
+    }
+
+    return Tangenter.tangentSimple(x2 - x1, y1, y2);
+  }
+
+  /**
+   * Calculate the tangent between two x-y data points. The order of points does not matter.
+   * <p>
+   * This implementation calculates the derivative data point, that is its return is an x-y data
+   * point of the derivative data set of the original data set that {@code v1} and {@code v2} belong
+   * to.
+   * 
+   * @param v1
+   * @param v2
+   * @return A {@link ValuePair} of type {@link Double} representing the derivative data point.
+   */
+  public static ValuePair<Double> tangent(ValuePair<? extends Number> v1,
+      ValuePair<? extends Number> v2) {
+    return new ValuePair<Double>(Double.valueOf(v1.getX().doubleValue()),
+        Tangenter.tangentSinmple(v1, v2));
+  }
+
+  /**
+   * Calls {@link #calcDerivDepth(ValueDataSet, 10)}.
+   * 
+   * @param dataset
+   * @return
+   */
+  public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset) {
+    return Tangenter.calcDerivDepth(dataset, 10);
+  }
+
+  /**
+   * Calculates and returns the depth of derivative ({@code derivDepth}) for {@code dataset}.
+   * <p>
+   * The {@code derivDepth} is the number of times a trace derivative (the tangent between two
+   * points, see {@link #tangentSimple(double, double, double)}) is NOT zero. For each point this
+   * indicates the degree of the polynomial the data is representing, if it is polynomial. If not
+   * the {@code derivDepth} will be assigned {@link Integer#MAX_VALUE} to represent infinity. This
+   * will also be assigned if the derivDepth would be larger than {@code maxDepth - 1}.
+   * 
+   * @param dataset The {@link ValueDataSSet} that is to be analysed.
+   * @param maxDepth The maximum depth to which the derivative should be calculated.
+   *        {@code derivDepth} larger than this will be assigned {@link Integer#MAX_VALUE},
+   *        representing infinity.
+   * @return An {@link ArrayList ArrayList<Integer>} of the {@code derivDepth} for each value of
+   *         {@code dataset} up to its {@code size - maxDepth}.
+   */
+  public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
+      int maxDepth) {
+    double step = dataset.getStep();
+    int size = dataset.size();
+    ArrayList<Integer> depths = new ArrayList<Integer>(size - maxDepth);
+    double[][] derivs = new double[size][maxDepth];
+    int X; // this variable helps ensure that tangents are calculated left to right on the x-axis
+    if (step > 0) {
+      X = 0;
+    } else {
+      X = size - 1;
+    }
+    // calculate trace by trace derivatives
+    derivs[0][0] = dataset.getByIndex(X).doubleValue();
+    for (int k = 1; k < size - 1; k++) {
+      derivs[k][0] = dataset.getByIndex(Math.abs(X - k)).doubleValue();
+      for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
+        derivs[i][j] = tangentSimple(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
+      }
+    }
+    // count derivDepth
+    int depth;
+    for (int i = 0; i < size; i++) {
+      depth = Integer.MAX_VALUE;
+      for (int j = 1; j < maxDepth; j++) {
+        if (derivs[i][j] == 0) {
+          depth = j - 1;
+          break;
+        }
+      }
+      depths.add(depth);
+    }
+    // detect and mark points of change
+    boolean tracking = false;
+    for (int i = 0; i < size; i++) {
+      depth = depths.get(i);
+      if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
+        if (tracking == false) {
+          depths.set(i + maxDepth - 2, -1);
+          tracking = true;
+        }
+      } else {
+        tracking = false;
+      }
+    }
+    return depths;
+  }
+
+}
