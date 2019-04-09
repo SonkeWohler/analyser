@@ -235,17 +235,27 @@ public class TestCalcDerivDepth {
       set.add(value);
     }
     double temp = 0;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
       temp = value + Math.pow(base + i * step, power);
       set.add(temp);
     }
     for (int i = 0; i < 30; i++) {
       set.add(temp);
     }
-    for (int i = 0; i < set.size() - 10; i++) {
-      System.out
-          .println(String.format("%s => %s", set.getByIndex(i), set.getDerivDepthsByIndex(i)));
+    for (int i = 0; i < 30; i++) {
+      assertEquals(0, set.getDerivDepthsByIndex(i));
     }
+    assertEquals(-1, set.getDerivDepthsByIndex(30));
+    for (int i = 31; i < 30 + 14; i++) {
+      assertEquals(power, set.getDerivDepthsByIndex(i));
+    }
+    assertEquals(-1, set.getDerivDepthsByIndex(30 + 14));
+    for (int i = 30 + 15; i < set.size(); i++) {
+      assertEquals(0, set.getDerivDepthsByIndex(i));
+    }
+    // for (int i = 0; i < set.size() - 10; i++) {
+    // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
+    // }
   }
 
   @Test

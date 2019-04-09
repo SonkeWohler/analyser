@@ -162,17 +162,27 @@ public final class Tangenter {
     }
     // detect and mark points of change
     boolean tracking = false;
+    int depthTemp = 0;
     for (int i = 0; i < size; i++) {
       depth = depths.get(i);
-      if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
-        if (tracking == false) {
-          depths.set(i + maxDepth - 2, -1);
-          tracking = true;
+      if (tracking == true) {
+        if (depth != -1) {
+          depths.set(i, depthTemp);
         }
       } else {
+        if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
+          depthTemp = depth;
+          depths.set(i + maxDepth - 2, -1);
+          tracking = true;
+        } else {
+          // tracking = false;
+        }
+      }
+      if (depth == -1) {
         tracking = false;
       }
     }
+    // finished
     return depths;
   }
 
