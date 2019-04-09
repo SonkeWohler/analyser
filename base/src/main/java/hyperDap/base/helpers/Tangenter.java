@@ -72,6 +72,32 @@ public final class Tangenter {
         Tangenter.tangentSinmple(v1, v2));
   }
 
+  /**
+   * Calls {@link #calcDerivDepth(ValueDataSet, 10)}.
+   * 
+   * @param dataset
+   * @return
+   */
+  public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset) {
+    return Tangenter.calcDerivDepth(dataset, 10);
+  }
+
+  /**
+   * Calculates and returns the depth of derivative ({@code derivDepth}) for {@code dataset}.
+   * <p>
+   * The {@code derivDepth} is the number of times a trace derivative (the tangent between two
+   * points, see {@link #tangentSimple(double, double, double)}) is NOT zero. For each point this
+   * indicates the degree of the polynomial the data is representing, if it is polynomial. If not
+   * the {@code derivDepth} will be assigned {@link Integer#MAX_VALUE} to represent infinity. This
+   * will also be assigned if the derivDepth would be larger than {@code maxDepth - 1}.
+   * 
+   * @param dataset The {@link ValueDataSSet} that is to be analysed.
+   * @param maxDepth The maximum depth to which the derivative should be calculated.
+   *        {@code derivDepth} larger than this will be assigned {@link Integer#MAX_VALUE},
+   *        representing infinity.
+   * @return An {@link ArrayList ArrayList<Integer>} of the {@code derivDepth} for each value of
+   *         {@code dataset} up to its {@code size - maxDepth}.
+   */
   public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
       int maxDepth) {
     double step = dataset.getStep();
@@ -118,10 +144,6 @@ public final class Tangenter {
       }
     }
     return depths;
-  }
-
-  public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset) {
-    return Tangenter.calcDerivDepth(dataset, 10);
   }
 
 }
