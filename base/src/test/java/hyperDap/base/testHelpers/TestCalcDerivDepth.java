@@ -147,7 +147,7 @@ public class TestCalcDerivDepth {
   }
 
   // combined polynomials
-  // ********************************************************************************************************************#
+  // ********************************************************************************************************************
 
   @Test
   void constantToLinear() {
@@ -158,12 +158,8 @@ public class TestCalcDerivDepth {
     for (int i = 0; i < 50; i++) {
       set.add(5.0 + i);
     }
-    System.out.println("\nentries:");
-    for (int i = 0; i < set.size(); i++) {
-      System.out.println(String.format("%s: %s", i, set.getByIndex(i)));
-    }
     set.calcDerivDepths();
-    System.out.println("\nderivDepths:");
+    // System.out.println("\nderivDepths:");
     for (int i = 0; i < 50; i++) {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(0, set.getDerivDepthsByIndex(i));
@@ -200,5 +196,28 @@ public class TestCalcDerivDepth {
     }
   }
 
-  // end of class
+  @Test
+  void biasInConstant() {
+    ValueDataSet<Double> set = new ValueDataSet<Double>(0, 1, 0.5);
+    for (int i = 0; i < 50; i++) {
+      set.add(5.0);
+    }
+    for (int i = 0; i < 50; i++) {
+      set.add(10.0);
+    }
+    set.calcDerivDepths();
+    System.out.println("\nderivDepths:");
+    for (int i = 0; i < 50; i++) {
+      System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
+      // assertEquals(0, set.getDerivDepthsByIndex(i));
+    }
+    System.out.println(String.format("%s: %s", 50, set.getDerivDepthsByIndex(50)));
+    // assertEquals(-1, set.getDerivDepthsByIndex(50));
+    for (int i = 51; i < set.size() - 10; i++) {
+      System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
+      // assertEquals(0, set.getDerivDepthsByIndex(i));
+    }
+  }
+
 }
+// end of class
