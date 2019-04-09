@@ -1,5 +1,8 @@
 package hyperDap.base.helpers;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.base.types.value.ValuePair;
@@ -13,11 +16,31 @@ import hyperDap.base.types.value.ValuePair;
 
 public final class Tangenter {
 
+  private int bigDecimalPrecision = 10;
+
   /**
    * Private constructor to prevent implementing this class.
    */
   private Tangenter() {
     throw new AssertionError("No helper class instances for anyone!");
+  }
+
+  /**
+   * An exact implementation of {@link #tangentSimple(double, double, double)} to calculate the
+   * tangent between two points, making use of {@link BigDecimal}.
+   * 
+   * @param step The difference in {@code xValue} between the values.
+   * @param y1 The first of the values with a lower {@code xValue}.
+   * @param y2 The second of the values with the higher {@code xValue}
+   * @return The slope of the tangent between the points.
+   */
+  public static double tangentExact(double step, double y1, double y2) {
+    BigDecimal val1 = new BigDecimal(y1, new MathContext(10, RoundingMode.HALF_UP));
+    BigDecimal val2 = new BigDecimal(y2, new MathContext(10, RoundingMode.HALF_UP));
+    val1 = val2.subtract(val1);
+    val2 = new BigDecimal(step, new MathContext(10, RoundingMode.HALF_UP));
+    val1 = val1.divide(val2);
+    return val1.doubleValue();
   }
 
   /**
@@ -120,7 +143,7 @@ public final class Tangenter {
     for (int k = 1; k < size - 1; k++) {
       derivs[k][0] = dataset.getByIndex(Math.abs(X - k)).doubleValue();
       for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
-        derivs[i][j] = tangentSimple(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
+        derivs[i][j] = tangentExact(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
       }
     }
     // count derivDepth
