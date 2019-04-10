@@ -138,11 +138,19 @@ public final class Tangenter {
     // count derivDepth
     countDerivDepths(derivs, depths);
     // detect and mark points of change
-    detectDepthChanges_1(derivs, depths);
+    detectDepthChanges(derivs, depths);
     // finished
     return depths;
   }
 
+  /**
+   * This method populates the derivative matrix used in {@link #calcDerivDepth(ValueDataSet, int)}.
+   * 
+   * @category helper
+   * @param derivs A reference to the initialised derivative matrix.
+   * @param set The {@link ValueDataSet} that is to be analysed.
+   * @see ValueDataSet
+   */
   private static void calcDerivs(double[][] derivs, ValueDataSet<? extends Number> set) {
     int size = derivs.length;
     int maxDepth = derivs[0].length;
@@ -162,6 +170,15 @@ public final class Tangenter {
     }
   }
 
+  /**
+   * This method counts the depth of the derivatives in the derivative matrix, used in
+   * {@link #calcDerivDepth(ValueDataSet, int)}.
+   * 
+   * @category helper
+   * @param derivs
+   * @param depths
+   * @see ValueDataSet
+   */
   private static void countDerivDepths(double[][] derivs, ArrayList<Integer> depths) {
     int maxDepth = derivs[0].length;
     int size = derivs.length;
@@ -178,7 +195,17 @@ public final class Tangenter {
     }
   }
 
-  private static void detectDepthChanges_1(double[][] derivs, ArrayList<Integer> depths) {
+  /**
+   * This method uses the derivative depths over the derivative matrix, used in
+   * {@link #calcDerivDepth(ValueDataSet, int)}, to detect changes iin the {@link ValueDataSet} that
+   * is being analysed.
+   * 
+   * @category helper
+   * @param derivs
+   * @param depths
+   * @see ValueDataSet
+   */
+  private static void detectDepthChanges(double[][] derivs, ArrayList<Integer> depths) {
     int maxDepth = derivs[0].length;
     int size = derivs.length;
     boolean tracking = false;
@@ -203,10 +230,6 @@ public final class Tangenter {
         tracking = false;
       }
     }
-  }
-
-  private static void detectDepthChanges_2(double[][] derivs, ArrayList<Integer> deppths) {
-
   }
 
 }
