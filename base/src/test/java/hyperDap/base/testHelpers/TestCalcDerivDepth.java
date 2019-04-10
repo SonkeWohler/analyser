@@ -198,6 +198,30 @@ public class TestCalcDerivDepth {
   }
 
   @Test
+  void squareToConstant() {
+    int power = 2;
+    ValueDataSet<Double> set = new ValueDataSet<Double>(0, 1, 0.5);
+    ArrayList<Integer> depthsExpected = new ArrayList<Integer>();
+    double temp = 0;
+    for (int i = 0; i < 25; i++) {
+      temp = Math.pow(i, power);
+      set.add(temp);
+      depthsExpected.add(power);
+    }
+    depthsExpected.remove(depthsExpected.size() - 1);
+    depthsExpected.add(-1);
+    for (int i = 0; i < 25; i++) {
+      set.add(temp);
+      depthsExpected.add(0);
+    }
+    for (int i = 0; i < set.size() - 10; i++) {
+      // System.out.println(String.format("%s: %s ?= %s", i, set.getDerivDepthsByIndex(i),
+      // depthsExpected.get(i)));
+      assertEquals(depthsExpected.get(i).intValue(), set.getDerivDepthsByIndex(i));
+    }
+  }
+
+  @Test
   void linearToSquare() {
     int power = 2;
     double base = 0.0;
