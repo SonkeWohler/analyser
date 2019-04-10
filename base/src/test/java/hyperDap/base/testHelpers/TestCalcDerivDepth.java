@@ -1,9 +1,8 @@
 package hyperDap.base.testHelpers;
 
 import static org.junit.Assert.assertEquals;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
-import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 
 public class TestCalcDerivDepth {
@@ -199,6 +198,54 @@ public class TestCalcDerivDepth {
   }
 
   @Test
+  void squareToConstant() {
+    int power = 2;
+    ValueDataSet<Double> set = new ValueDataSet<Double>(0, 1, 0.5);
+    ArrayList<Integer> depthsExpected = new ArrayList<Integer>();
+    double temp = 0;
+    for (int i = 0; i < 25; i++) {
+      temp = Math.pow(i, power);
+      set.add(temp);
+      depthsExpected.add(power);
+    }
+    depthsExpected.remove(depthsExpected.size() - 1);
+    depthsExpected.add(-1);
+    for (int i = 0; i < 25; i++) {
+      set.add(temp);
+      depthsExpected.add(0);
+    }
+    for (int i = 0; i < set.size() - 10; i++) {
+      // System.out.println(String.format("%s: %s ?= %s", i, set.getDerivDepthsByIndex(i),
+      // depthsExpected.get(i)));
+      assertEquals(depthsExpected.get(i).intValue(), set.getDerivDepthsByIndex(i));
+    }
+  }
+
+  @Test
+  void linearToSquare() {
+    int power = 2;
+    double base = 0.0;
+    double step = 1.0;
+    ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1);
+    ArrayList<Integer> depthsExpected = new ArrayList<Integer>();
+    double temp = 0;
+    for (int i = 0; i < 25; i++) {
+      temp = i;
+      set.add(temp);
+      depthsExpected.add(1);
+    }
+    depthsExpected.add(-1);
+    for (int i = 1; i < 25; i++) {
+      set.add(temp + Math.pow(i, power));
+      depthsExpected.add(power);
+    }
+    for (int i = 0; i < set.size() - 10; i++) {
+      // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
+      assertEquals(depthsExpected.get(i).intValue(), set.getDerivDepthsByIndex(i));
+    }
+  }
+
+  @Test
   void biasInConstant() {
     ValueDataSet<Double> set = new ValueDataSet<Double>(0, 1, 0.5);
     for (int i = 0; i < 50; i++) {
@@ -235,17 +282,27 @@ public class TestCalcDerivDepth {
       set.add(value);
     }
     double temp = 0;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 15; i++) {
       temp = value + Math.pow(base + i * step, power);
       set.add(temp);
     }
     for (int i = 0; i < 30; i++) {
       set.add(temp);
     }
-    for (int i = 0; i < set.size() - 10; i++) {
-      System.out
-          .println(String.format("%s => %s", set.getByIndex(i), set.getDerivDepthsByIndex(i)));
+    for (int i = 0; i < 30; i++) {
+      assertEquals(0, set.getDerivDepthsByIndex(i));
     }
+    assertEquals(-1, set.getDerivDepthsByIndex(30));
+    for (int i = 31; i < 30 + 14; i++) {
+      assertEquals(power, set.getDerivDepthsByIndex(i));
+    }
+    assertEquals(-1, set.getDerivDepthsByIndex(30 + 14));
+    for (int i = 30 + 15; i < set.size(); i++) {
+      assertEquals(0, set.getDerivDepthsByIndex(i));
+    }
+    // for (int i = 0; i < set.size() - 10; i++) {
+    // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
+    // }
   }
 
   @Test
@@ -261,31 +318,6 @@ public class TestCalcDerivDepth {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
-  }
-
-  /**
-   * This demonstrates a floating point error in {@link Tangenter} when using
-   * {@link Tangenter#tangentSimple(double,double,double)}.
-   */
-  // @Test
-  void squareOverZeroBIG() {
-    BigDecimal step = BigDecimal.valueOf(0.1);
-    BigDecimal base = BigDecimal.valueOf(-10);
-    ValueDataSet<BigDecimal> set =
-        new ValueDataSet<BigDecimal>(base.doubleValue(), step.doubleValue(), 0.1);
-
-    BigDecimal value;
-    for (int i = 0; i < 500; i++) {
-      value = step.multiply(BigDecimal.valueOf(i));
-      value = value.add(base);
-      value = value.pow(2);
-      set.add(value);
-    }
-    for (int i = 0; i < 500; i++) {
-      System.out
-          .println(String.format("%s => %s", set.getByIndex(i), set.getDerivDepthsByIndex(i)));
-    }
-
   }
 
 }

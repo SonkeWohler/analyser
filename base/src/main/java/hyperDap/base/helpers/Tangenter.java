@@ -130,25 +130,58 @@ public final class Tangenter {
    */
   public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
       int maxDepth) {
-    double step = dataset.getStep();
     int size = dataset.size();
-    ArrayList<Integer> depths = new ArrayList<Integer>(size - maxDepth);
+    ArrayList<Integer> depths = new ArrayList<Integer>(size);
     double[][] derivs = new double[size][maxDepth];
+    // calculate trace by trace derivatives
+    calcDerivs(derivs, dataset);
+    // count derivDepth
+    countDerivDepths(derivs, depths);
+    // detect and mark points of change
+    detectDepthChanges(derivs, depths);
+    // finished
+    return depths;
+  }
+
+  /**
+   * This method populates the derivative matrix used in {@link #calcDerivDepth(ValueDataSet, int)}.
+   * 
+   * @category helper
+   * @param derivs A reference to the initialised derivative matrix.
+   * @param set The {@link ValueDataSet} that is to be analysed.
+   * @see ValueDataSet
+   */
+  private static void calcDerivs(double[][] derivs, ValueDataSet<? extends Number> set) {
+    int size = derivs.length;
+    int maxDepth = derivs[0].length;
+    double step = set.getStep();
     int X; // this variable helps ensure that tangents are calculated left to right on the x-axis
     if (step > 0) {
       X = 0;
     } else {
       X = size - 1;
     }
-    // calculate trace by trace derivatives
-    derivs[0][0] = dataset.getByIndex(X).doubleValue();
+    derivs[0][0] = set.getByIndex(X).doubleValue();
     for (int k = 1; k < size - 1; k++) {
-      derivs[k][0] = dataset.getByIndex(Math.abs(X - k)).doubleValue();
+      derivs[k][0] = set.getByIndex(Math.abs(X - k)).doubleValue();
       for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
         derivs[i][j] = tangentExact(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
       }
     }
-    // count derivDepth
+  }
+
+  /**
+   * This method counts the depth of the derivatives in the derivative matrix, used in
+   * {@link #calcDerivDepth(ValueDataSet, int)}.
+   * 
+   * @category helper
+   * @param derivs
+   * @param depths
+   * @see ValueDataSet
+   */
+  private static void countDerivDepths(double[][] derivs, ArrayList<Integer> depths) {
+    int maxDepth = derivs[0].length;
+    int size = derivs.length;
     int depth;
     for (int i = 0; i < size; i++) {
       depth = Integer.MAX_VALUE;
@@ -160,20 +193,43 @@ public final class Tangenter {
       }
       depths.add(depth);
     }
-    // detect and mark points of change
+  }
+
+  /**
+   * This method uses the derivative depths over the derivative matrix, used in
+   * {@link #calcDerivDepth(ValueDataSet, int)}, to detect changes iin the {@link ValueDataSet} that
+   * is being analysed.
+   * 
+   * @category helper
+   * @param derivs
+   * @param depths
+   * @see ValueDataSet
+   */
+  private static void detectDepthChanges(double[][] derivs, ArrayList<Integer> depths) {
+    int maxDepth = derivs[0].length;
+    int size = derivs.length;
     boolean tracking = false;
+    int depth;
+    int depthTemp = 0;
     for (int i = 0; i < size; i++) {
       depth = depths.get(i);
-      if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
-        if (tracking == false) {
-          depths.set(i + maxDepth - 2, -1);
-          tracking = true;
+      if (tracking == true) {
+        if (depth != -1) {
+          depths.set(i, depthTemp);
         }
       } else {
+        if (derivs[i][maxDepth - 1] != 0 && depth < maxDepth - 1) {
+          depthTemp = depth;
+          depths.set(i + maxDepth - 2, -1);
+          tracking = true;
+        } else {
+          // tracking = false;
+        }
+      }
+      if (depth == -1) {
         tracking = false;
       }
     }
-    return depths;
   }
 
 }
