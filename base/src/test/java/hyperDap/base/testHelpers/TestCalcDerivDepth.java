@@ -2,6 +2,7 @@ package hyperDap.base.testHelpers;
 
 import static org.junit.Assert.assertEquals;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
@@ -195,6 +196,30 @@ public class TestCalcDerivDepth {
     for (int i = 50; i < set.size() - 10; i++) {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(power, set.getDerivDepthsByIndex(i));
+    }
+  }
+
+  @Test
+  void linearToSquare() {
+    int power = 2;
+    double base = 0.0;
+    double step = 1.0;
+    ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1);
+    ArrayList<Integer> depthsExpected = new ArrayList<Integer>();
+    double temp = 0;
+    for (int i = 0; i < 25; i++) {
+      temp = i;
+      set.add(temp);
+      depthsExpected.add(1);
+    }
+    depthsExpected.add(-1);
+    for (int i = 1; i < 25; i++) {
+      set.add(temp + Math.pow(i, power));
+      depthsExpected.add(power);
+    }
+    for (int i = 0; i < set.size() - 10; i++) {
+      // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
+      assertEquals(depthsExpected.get(i).intValue(), set.getDerivDepthsByIndex(i));
     }
   }
 
