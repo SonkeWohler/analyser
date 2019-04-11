@@ -74,10 +74,14 @@ public final class GUIMain extends Application {
 
   /**
    * {@inheritDoc}
+   * 
+   * @see javafx.application.Application
+   * @see <a href=
+   *      "https://stackoverflow.com/questions/33881046/how-to-connect-fx-controller-with-main-app">
+   *      this StackOverflow post<a/>
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
-    // TODO Auto-generated method stub
 
   }
 
