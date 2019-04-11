@@ -1,17 +1,20 @@
 package hyperDap.guiPres.application;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 /**
  * 
  * @author soenk
  *
  */
-public final class GUIMain {
+public final class GUIMain extends Application {
 
   private static GUIMain instance;
 
   public synchronized static GUIMain newGUIMain() {
     if (instance == null) {
-      // TODO
+      Application.launch(GUIMain.class);
     }
     while (instance == null) {
       try {
@@ -24,7 +27,7 @@ public final class GUIMain {
   }
 
   public synchronized static GUIMain getGUIMain() {
-    if (instance==null) {
+    if (instance == null) {
       return newGUIMain();
     }
     return instance;
@@ -37,6 +40,12 @@ public final class GUIMain {
       throw new AssertionError(
           String.format("%s has already been instantiated! Only one allowed.", GUIMain.class));
     }
+  }
+
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    // TODO Auto-generated method stub
+
   }
 
   // main ********************* main ********************** main *********************** main
