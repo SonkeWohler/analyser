@@ -1,5 +1,7 @@
 package hyperDap.guiPres.application;
 
+import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
+import hyperDap.guiPres.views.honoursMainView.HonoursMainController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,7 +25,7 @@ import javafx.stage.Stage;
  * @author soenk
  *
  */
-public final class GUIMain extends Application {
+public final class GUIMain extends Application implements GUIMainForFX {
 
   private static GUIMain instance;
 
@@ -85,6 +87,7 @@ public final class GUIMain extends Application {
   // real class begins here
   // ************************************************************************************************************************
 
+  private HonoursMainController mainController;
   private Stage primaryStage;
 
   /**
@@ -106,8 +109,9 @@ public final class GUIMain extends Application {
           new FXMLLoader(getClass().getResource("/hyperDap/guiPres/views/honoursMainView.fxml"));
 
       root = loader.load();
+      this.mainController = loader.getController();
+      this.mainController.giveGUIMain(this);
 
-      // TODO Controller
       System.out.println("fxml files have been loaded.");
     } catch (Exception e) {
       e.printStackTrace();
@@ -139,6 +143,7 @@ public final class GUIMain extends Application {
    * <p>
    * Will call {@link Stage#close()} and ask Business Logic to release all resources.
    */
+  @Override
   public void terminate() {
     System.out.println("Terminating Application");
     this.primaryStage.close();

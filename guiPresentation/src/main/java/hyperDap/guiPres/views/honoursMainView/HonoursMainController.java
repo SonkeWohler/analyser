@@ -1,5 +1,6 @@
 package hyperDap.guiPres.views.honoursMainView;
 
+import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -12,6 +13,8 @@ import javafx.scene.control.TextField;
  *
  */
 public class HonoursMainController {
+
+  GUIMainForFX main;
 
   @FXML
   TextField baseField;
@@ -53,11 +56,18 @@ public class HonoursMainController {
   // **************************************************************************************************************************
 
   public void terminate() {
-    // TODO
+    this.main.terminate();
   }
 
   public void execute() {
     // TODO
+  }
+
+  // for GUIMain
+  // **************************************************************************************************************************
+
+  public void giveGUIMain(GUIMainForFX guiMain) {
+    this.main = guiMain;
   }
 
 }
