@@ -1,6 +1,14 @@
 package hyperDap.guiPres.application;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -72,6 +80,12 @@ public final class GUIMain extends Application {
     }
   }
 
+  // ************************************************************************************************************************
+  // real class begins here
+  // ************************************************************************************************************************
+
+  private Stage primaryStage;
+
   /**
    * {@inheritDoc}
    * 
@@ -82,7 +96,46 @@ public final class GUIMain extends Application {
    */
   @Override
   public void start(Stage primaryStage) throws Exception {
+    this.primaryStage = primaryStage;
+    Parent root;
+    Scene scene;
+    FXMLLoader loader;
+    try {
+      loader =
+          new FXMLLoader(getClass().getResource("/hyperDap/guiPres/views/honoursMainView.fxml"));
 
+      root = loader.load();
+      scene = new Scene(root);
+
+      // TODO Controller
+    } catch (Exception e) {
+      e.printStackTrace();
+
+      Button button = new Button("Quit");
+      root = new AnchorPane(
+          new TextField(
+              "An error has occurred loading UI files. \nThe application will now terminate."),
+          button);
+
+      button.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent ae) {
+          terminate();
+        }
+      });
+
+      scene = new Scene(root);
+      this.primaryStage.setScene(scene);
+      this.primaryStage.show();
+    }
+  }
+
+  // fxEncapsulation
+  // *************************************************************************************************************************
+
+  public void terminate() {
+    System.out.println("Terminating Application");
+    this.primaryStage.close();
   }
 
   // main ********************* main ********************** main *********************** main
