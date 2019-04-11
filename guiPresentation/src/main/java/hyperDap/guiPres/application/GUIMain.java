@@ -1,5 +1,6 @@
 package hyperDap.guiPres.application;
 
+import java.util.Map;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import hyperDap.guiPres.views.honoursMainView.HonoursMainController;
 import javafx.application.Application;
@@ -138,10 +139,19 @@ public final class GUIMain extends Application implements GUIMainForFX {
   // fxEncapsulation
   // *************************************************************************************************************************
 
+  @Override
+  public void execute(Map<String, Double> map) {
+    System.out.println("-- execution not implemented --");
+    for (String didi : map.keySet()) {
+      System.out.println(String.format("%s: %s", didi, map.get(didi)));
+    }
+    // TODO
+  }
+
   /**
    * Terminate the Application.
    * <p>
-   * Will call {@link Stage#close()} and ask Business Logic to release all resources.
+   * Will call {@link Stage#close()} and ask the Business Logic to release all resources.
    */
   @Override
   public void terminate() {

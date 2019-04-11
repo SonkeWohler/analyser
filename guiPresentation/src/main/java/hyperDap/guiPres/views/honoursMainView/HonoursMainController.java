@@ -1,8 +1,11 @@
 package hyperDap.guiPres.views.honoursMainView;
 
+import java.util.HashMap;
+import java.util.Map;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 /**
@@ -30,6 +33,25 @@ public class HonoursMainController {
   Button lengthRandButton;
 
   @FXML
+  CheckBox didi1;
+  @FXML
+  CheckBox didi2;
+  @FXML
+  CheckBox didi3;
+  @FXML
+  CheckBox didi4;
+  @FXML
+  CheckBox didi5;
+  @FXML
+  CheckBox didi6;
+  @FXML
+  CheckBox didi7;
+  @FXML
+  CheckBox didi8;
+
+  Map<CheckBox, String> didiMap;
+
+  @FXML
   Button executeButton;
   @FXML
   Button exitButton;
@@ -50,6 +72,16 @@ public class HonoursMainController {
    */
   public void initialize() {
 
+    this.didiMap = new HashMap<CheckBox, String>();
+    this.didiMap.put(didi1, "constant");
+    this.didiMap.put(didi2, "linear");
+    this.didiMap.put(didi3, "square");
+    this.didiMap.put(didi4, "cubic");
+    this.didiMap.put(didi5, "exp");
+    this.didiMap.put(didi6, "sine");
+    this.didiMap.put(didi7, "bias");
+    this.didiMap.put(didi8, "gap");
+
   }
 
   // fx buttons
@@ -60,7 +92,19 @@ public class HonoursMainController {
   }
 
   public void execute() {
-    // TODO
+    Map<String, Double> map = new HashMap<String, Double>();
+
+    map.put("base", Double.valueOf(this.baseField.getText()));
+    map.put("step", Double.valueOf(this.stepField.getText()));
+    map.put("length", Double.valueOf(this.lengthField.getText()));
+
+    for (CheckBox didi : didiMap.keySet()) {
+      if (didi.isSelected() == true) {
+        map.put(this.didiMap.get(didi), 1.0);
+      }
+    }
+
+    this.main.execute(map);
   }
 
   // for GUIMain

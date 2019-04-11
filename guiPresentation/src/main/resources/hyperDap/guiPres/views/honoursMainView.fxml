@@ -76,14 +76,14 @@
                         <Label text="y= a  " GridPane.columnIndex="1" />
                         <Label text="y= a*x +  b" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="y= a*x^2 + b*x + c" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox mnemonicParsing="false" text="Constant" />
-                        <CheckBox mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
-                        <CheckBox mnemonicParsing="false" text="Square" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="didi1" mnemonicParsing="false" text="Constant" />
+                        <CheckBox fx:id="didi2" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="didi3" mnemonicParsing="false" text="Square" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="didi4" mnemonicParsing="false" text="Cubic" GridPane.rowIndex="3" />
                         <Label text="y= a*x^3 + b*x^2 + c*x + d" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <CheckBox mnemonicParsing="false" text="Cubic" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
-                  <GridPane disable="true" hgap="10.0">
+                  <GridPane hgap="10.0">
                      <columnConstraints>
                         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
                         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
@@ -98,11 +98,11 @@
                         <Label text="y=a*exp(b*x + c) + d" GridPane.columnIndex="1" />
                         <Label text="y= a* sin(b*x + c) + d" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="A point without derivative" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox mnemonicParsing="false" text="Exponential" />
-                        <CheckBox mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
-                        <CheckBox mnemonicParsing="false" text="Bias" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="didi5" mnemonicParsing="false" text="Exponential" />
+                        <CheckBox fx:id="didi6" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="didi8" mnemonicParsing="false" text="Gap" GridPane.rowIndex="3" />
                         <Label text="Missing Data" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <CheckBox mnemonicParsing="false" text="Gap" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </children>
@@ -119,7 +119,7 @@
             </Label>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Button fx:id="executeButton" disable="true" mnemonicParsing="false" text="Execute" />
+                  <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
                </children>
             </HBox>
             <Separator prefWidth="200.0">
