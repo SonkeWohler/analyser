@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" pannable="true" vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" pannable="true" vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hyperDap.guiPres.views.honoursMainView.HonoursMainController">
    <content>
       <VBox fx:id="bigBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
@@ -36,9 +36,9 @@
               </rowConstraints>
                <children>
                   <Label text="Base" />
-                  <TextField GridPane.columnIndex="1" />
-                  <Button disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" />
-                  <Label text="Step" GridPane.rowIndex="1" />
+                  <TextField fx:id="baseField" GridPane.columnIndex="1" />
+                  <Button fx:id="stepField" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" />
+                  <Label fx:id="lengthField" text="Step" GridPane.rowIndex="1" />
                   <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="Length" GridPane.rowIndex="2" />
@@ -119,9 +119,15 @@
             </Label>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Button disable="true" mnemonicParsing="false" text="Execute" />
+                  <Button fx:id="executeButton" disable="true" mnemonicParsing="false" text="Execute" />
                </children>
             </HBox>
+            <Separator prefWidth="200.0">
+               <padding>
+                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+               </padding>
+            </Separator>
+            <Button fx:id="exitButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Exit" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

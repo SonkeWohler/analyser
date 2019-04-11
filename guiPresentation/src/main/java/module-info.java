@@ -12,6 +12,7 @@
  */
 module guiPresentation {
   exports hyperDap.guiPres.application;
+  exports hyperDap.guiPres.views.honoursMainView;
 
   requires javafx.base;
   requires javafx.controls;
@@ -19,4 +20,5 @@ module guiPresentation {
   requires transitive javafx.graphics;
 
   opens hyperDap.guiPres.application to javafx.graphics, javafx.fxml;
+  opens hyperDap.guiPres.views.honoursMainView to javafx.graphics, javafx.fxml;
 }

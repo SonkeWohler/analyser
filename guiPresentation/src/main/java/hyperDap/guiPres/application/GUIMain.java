@@ -134,6 +134,11 @@ public final class GUIMain extends Application {
   // fxEncapsulation
   // *************************************************************************************************************************
 
+  /**
+   * Terminate the Application.
+   * <p>
+   * Will call {@link Stage#close()} and ask Business Logic to release all resources.
+   */
   public void terminate() {
     System.out.println("Terminating Application");
     this.primaryStage.close();
@@ -141,6 +146,11 @@ public final class GUIMain extends Application {
 
   // main ********************* main ********************** main *********************** main
 
+  /**
+   * Main for running and testing.
+   * 
+   * @param args
+   */
   public static void main(String[] args) {
     newGUIMain();
   }
