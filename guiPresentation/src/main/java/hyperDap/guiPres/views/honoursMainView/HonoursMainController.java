@@ -6,6 +6,7 @@ import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
@@ -52,6 +53,9 @@ public class HonoursMainController {
   Map<CheckBox, String> didiMap;
 
   @FXML
+  Label functionErrorLabel;
+
+  @FXML
   Button executeButton;
   @FXML
   Button exitButton;
@@ -93,15 +97,52 @@ public class HonoursMainController {
 
   public void execute() {
     Map<String, Double> map = new HashMap<String, Double>();
+    double temp;
 
-    map.put("base", Double.valueOf(this.baseField.getText()));
-    map.put("step", Double.valueOf(this.stepField.getText()));
-    map.put("length", Double.valueOf(this.lengthField.getText()));
+    try {
+      temp = Double.valueOf(this.baseField.getText());
+      map.put("base", temp);
+    } catch (NumberFormatException e) {
+      this.baseField.setPromptText("This must be a number e.g. '5.0'");
+      this.baseField.setText("");
+      return;
+    }
+    try {
+      temp = Double.valueOf(this.stepField.getText());
+      map.put("step", temp);
+    } catch (NumberFormatException e) {
+      this.stepField.setPromptText("This must be a number e.g. '5.0'");
+      this.stepField.setText("");
+      return;
+    }
+    try {
+      temp = Double.valueOf(this.lengthField.getText()).intValue();
+      if (temp < 10) {
+        this.lengthField.setText("");
+        this.lengthField.setPromptText("This must be above 10");
+        return;
+      }
+      map.put("length", temp);
+    } catch (NumberFormatException e) {
+      this.lengthField.setPromptText("This must be a number e.g. '15'");
+      this.lengthField.setText("");
+      return;
+    }
 
+    temp = 0;
     for (CheckBox didi : didiMap.keySet()) {
       if (didi.isSelected() == true) {
         map.put(this.didiMap.get(didi), 1.0);
+        temp = temp + 1.0;
       }
+    }
+    if (temp == 0.0) {
+      map.put("constant", 1.0);
+    }
+    temp = temp * 10;
+    if ((map.get("length").doubleValue() / temp) < 1.0) {
+      this.functionErrorLabel.setText("The data set is too short for this many functions.");
+      return;
     }
 
     this.main.execute(map);
