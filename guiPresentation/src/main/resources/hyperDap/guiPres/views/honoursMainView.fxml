@@ -14,8 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<ScrollPane fx:id="rootScroll" fitToWidth="true" pannable="true" vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" pannable="true" vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox fx:id="bigBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
@@ -120,7 +119,7 @@
             </Label>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Button disable="true" mnemonicParsing="false" text="Button" />
+                  <Button disable="true" mnemonicParsing="false" text="Execute" />
                </children>
             </HBox>
          </children>

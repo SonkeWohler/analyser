@@ -71,13 +71,14 @@ public final class GUIMain extends Application {
    * "https://stackoverflow.com/questions/33881046/how-to-connect-fx-controller-with-main-app">this
    * StackOverflow post<a/>
    */
-  private GUIMain() {
+  public GUIMain() {
     if (instance == null) {
       instance = this;
     } else {
       throw new AssertionError(
           String.format("%s has already been instantiated! Only one allowed.", GUIMain.class));
     }
+    System.out.println("GUIMain is instantiated.");
   }
 
   // ************************************************************************************************************************
@@ -105,9 +106,9 @@ public final class GUIMain extends Application {
           new FXMLLoader(getClass().getResource("/hyperDap/guiPres/views/honoursMainView.fxml"));
 
       root = loader.load();
-      scene = new Scene(root);
 
       // TODO Controller
+      System.out.println("fxml files have been loaded.");
     } catch (Exception e) {
       e.printStackTrace();
 
@@ -123,11 +124,11 @@ public final class GUIMain extends Application {
           terminate();
         }
       });
-
-      scene = new Scene(root);
-      this.primaryStage.setScene(scene);
-      this.primaryStage.show();
     }
+
+    scene = new Scene(root);
+    this.primaryStage.setScene(scene);
+    this.primaryStage.show();
   }
 
   // fxEncapsulation
@@ -141,7 +142,7 @@ public final class GUIMain extends Application {
   // main ********************* main ********************** main *********************** main
 
   public static void main(String[] args) {
-
+    newGUIMain();
   }
 
 }
