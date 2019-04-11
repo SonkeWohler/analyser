@@ -38,5 +38,6 @@
   </build>
   <modules>
   	<module>base</module>
+  	<module>guiPresentation</module>
   </modules>
 </project>
