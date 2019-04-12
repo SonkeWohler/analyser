@@ -38,5 +38,6 @@
   </build>
   <modules>
   	<module>base</module>
+  	<module>generator</module>
   </modules>
 </project>
