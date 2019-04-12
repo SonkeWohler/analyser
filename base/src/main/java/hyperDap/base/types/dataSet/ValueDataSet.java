@@ -25,7 +25,7 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
    */
   protected final double yPrecision;
 
-  private ArrayList<Integer> derivDepths;
+  protected ArrayList<Integer> derivDepths;
 
   public ValueDataSet(Number base, Number step, Number yPrecision) {
     super(base, step);
@@ -192,8 +192,17 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
     return this.contains(valuePair.getX().doubleValue(), valuePair.getY().doubleValue());
   }
 
-  //
+  // other
   // ****************************************************************************************
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void ensureCapacity(int capacity) {
+    super.ensureCapacity(capacity);
+    this.derivDepths.ensureCapacity(capacity);
+  }
 
 
 }
