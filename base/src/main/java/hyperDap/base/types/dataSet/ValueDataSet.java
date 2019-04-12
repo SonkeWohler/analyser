@@ -57,6 +57,9 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
     this.fromDouble = convertFromDouble;
   }
 
+  // conversion function
+  // **************************************************************************************************************************
+
   /**
    * Assigns the fromDouble {@link Double Function Function} if not already assigned.
    * <p>
@@ -72,6 +75,18 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
     } else {
       throw new Exception("Conversion Function has already been assigned!");
     }
+  }
+
+  /**
+   * Check whether the conversion function used in {@link #add(double)} has been assigned.
+   * 
+   * @return {@code true} if the function is defined, {@code false} otherwise.
+   */
+  public boolean hasConversionFunction() {
+    if (this.fromDouble == null) {
+      return false;
+    }
+    return true;
   }
 
   // helpers

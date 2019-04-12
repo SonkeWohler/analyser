@@ -1,6 +1,7 @@
 package hyperDap.generator.main;
 
 import java.util.ArrayList;
+import java.util.function.DoubleFunction;
 import java.util.function.Function;
 import hyperDap.base.types.dataSet.DataSet;
 import hyperDap.base.types.dataSet.ValueDataSet;
@@ -119,11 +120,37 @@ public class GenSegment {
    * <p>
    * Noise is not modelled yet.
    * 
-   * @param set
-   * @param step
-   * @param N
+   * @param set The {@link CalueDataSet} that the data points should be added to.
+   * @param step The distance between data points on the x-axis.
+   * @param N The number of data points that should be added.
    */
-  public void addToDataSet(ValueDataSet<Double> set, double step, int N) {
+  public void addToDoubleDataSet(ValueDataSet<Double> set, double step, int N) {
+    set.ensureCapacity(N + set.size());
+    for (Integer i = 0; i < N; i++) {
+      set.add(Double.valueOf(f(i.doubleValue() * step)));
+    }
+  }
+
+  /**
+   * Generate the specified data points and add them to the end of {@code set}.
+   * <p>
+   * This method requires that {@code set} has an assigned {@code convertFromDouble}
+   * {@link DoubleFunction Function} assigned.
+   * <p>
+   * {@link ValueDataSet#ensureCapacity(int)} is called before adding data points.
+   * 
+   * @param set The {@link CalueDataSet} that the data points should be added to.
+   * @param step The distance between data points on the x-axis.
+   * @param N The number of data points that should be added.
+   * @throws IllegalArgumentException If {@link ValueDataSet#hasConversionFunction()} returns
+   *         {@code false}.
+   */
+  public void addToDataSet(ValueDataSet<? extends Number> set, double step, int N)
+      throws IllegalArgumentException {
+    if (set.hasConversionFunction() == false) {
+      throw new IllegalArgumentException(
+          "ValueDataSet must have a convertFromDouble function defined!");
+    }
     set.ensureCapacity(N + set.size());
     for (Integer i = 0; i < N; i++) {
       set.add(f(i.doubleValue() * step));
