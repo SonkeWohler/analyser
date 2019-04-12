@@ -1,9 +1,18 @@
 package hyperDap.generator.main;
 
+import java.util.ArrayList;
 import java.util.function.Function;
 
 /**
  * This class generates a section of data specific to one function.
+ * <p>
+ * The intended use is to initialise a {@code GenSegment} with the intended values and then retrieve
+ * lists of data points from {@link #generateValues(double, int)} as needed, before leaving the
+ * Object to be garbage-collected.
+ * <p>
+ * The class generates data points starting from {@code x=0}, advancing with {@code x=i*step}, such
+ * that the first value is equal to the {@code intercept} specified at initialisation. The function
+ * can be shifted in the x-axis with {@code shiftX} and scaled with {@code scale}.
  * 
  * @author soenk
  *
@@ -15,6 +24,13 @@ public class GenSegment {
   private double c;
   private Function<Double, Double> func;
 
+  /**
+   * 
+   * @param functionEnccoding
+   * @param scale
+   * @param shiftX
+   * @param intercept
+   */
   public GenSegment(String functionEnccoding, double scale, double shiftX, double intercept) {
     a = scale;
     b = shiftX;
@@ -51,6 +67,14 @@ public class GenSegment {
 
   private double f(double x) {
     return a * this.func.apply(x + b) + c;
+  }
+
+  public ArrayList<Double> generateValues(double step, int N) {
+    ArrayList<Double> list = new ArrayList<Double>();
+    for (Integer i = 0; i < N; i++) {
+      list.add(f(i.doubleValue() * step));
+    }
+    return list;
   }
 
 }
