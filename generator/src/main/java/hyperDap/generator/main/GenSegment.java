@@ -124,8 +124,9 @@ public class GenSegment {
    * @param step The distance between data points on the x-axis.
    * @param N The number of data points that should be added.
    */
-  public void addToDoubleDataSet(ValueDataSet<Double> set, double step, int N) {
+  public void addToDoubleDataSet(ValueDataSet<Double> set, int N) {
     set.ensureCapacity(N + set.size());
+    double step = set.getStep();
     for (Integer i = 0; i < N; i++) {
       set.add(Double.valueOf(f(i.doubleValue() * step)));
     }
@@ -145,12 +146,13 @@ public class GenSegment {
    * @throws IllegalArgumentException If {@link ValueDataSet#hasConversionFunction()} returns
    *         {@code false}.
    */
-  public void addToDataSet(ValueDataSet<? extends Number> set, double step, int N)
+  public void addToDataSet(ValueDataSet<? extends Number> set, int N)
       throws IllegalArgumentException {
     if (set.hasConversionFunction() == false) {
       throw new IllegalArgumentException(
           "ValueDataSet must have a convertFromDouble function defined!");
     }
+    double step = set.getStep();
     set.ensureCapacity(N + set.size());
     for (Integer i = 0; i < N; i++) {
       set.add(f(i.doubleValue() * step));

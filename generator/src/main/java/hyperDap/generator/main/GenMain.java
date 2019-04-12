@@ -2,16 +2,47 @@ package hyperDap.generator.main;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import hyperDap.base.types.dataSet.DataSet;
 import hyperDap.base.types.dataSet.ValueDataSet;
 
 public class GenMain {
 
-
-
-  public void newDataSet(List<String> functionEncodings, Number numberOfBiases, double base,
-      double step, int length) {
-    ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1);
+  /**
+   * Create a new {@link ValueDataSet} made up of any number of mathematical functions combined.
+   * 
+   * @param functionEncodings The {@code encoding} specifying what functions should be represented.
+   *        See {@link GenSegment} for details.
+   * @param numberOfBiases The number of times that the value of the functions should abruptly
+   *        change, affecting all subsequent values.
+   * @param base The {@code base} of the {@link DataSet}.
+   * @param step The {@code step} of the {@link DataSet}.
+   * @param length A rough number of the data points that is to be generated.
+   * @return The generated {@link ValueDataSet}
+   */
+  public static ValueDataSet<Double> newDataSet(List<String> functionEncodings, int numberOfBiases,
+      double base, double step, int length) {
+    Random rand = new Random();
+    int size = functionEncodings.size();
+    ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1, d -> Double.valueOf(d));
+    set.add(5.0);
+    double lastVal;
+    GenSegment generator;
+    for (String encoding : functionEncodings) {
+      lastVal = set.getByIndex(set.size() - 1);
+      generator = new GenSegment(encoding, Double.valueOf(rand.nextInt(10)) - 4.0,
+          Double.valueOf(rand.nextInt(30)) - 15.0, lastVal);
+      generator.addToDoubleDataSet(set, length / size);
+      if (numberOfBiases != 0) { // doesn't work yet!
+        lastVal += rand.nextInt(10) - 5.0;
+        numberOfBiases--;
+        lastVal = set.getByIndex(set.size() - 1);
+        generator = new GenSegment(encoding, Double.valueOf(rand.nextInt(10)) - 4.0,
+            Double.valueOf(rand.nextInt(30)) - 15.0, lastVal);
+        generator.addToDoubleDataSet(set, length / size);
+      }
+    }
+    return set;
   }
 
   /**
