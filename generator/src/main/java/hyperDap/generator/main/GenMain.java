@@ -23,23 +23,26 @@ public class GenMain {
   public static ValueDataSet<Double> newDataSet(List<String> functionEncodings, int numberOfBiases,
       double base, double step, int length) {
     Random rand = new Random();
-    int size = functionEncodings.size();
+    int number = length / functionEncodings.size(); // the number of data points to be added
     ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1, d -> Double.valueOf(d));
-    set.add(5.0);
-    double lastVal;
+    set.add(5.0); // add an initial value
     GenSegment generator;
+    double scale;
+    double shiftX;
+    double lastVal;
     for (String encoding : functionEncodings) {
       lastVal = set.getByIndex(set.size() - 1);
-      generator = new GenSegment(encoding, Double.valueOf(rand.nextInt(10)) - 4.0,
-          Double.valueOf(rand.nextInt(30)) - 15.0, lastVal);
-      generator.addToDoubleDataSet(set, length / size);
-      if (numberOfBiases != 0) { // doesn't work yet!
-        lastVal += rand.nextInt(10) - 5.0;
+      scale = Double.valueOf(rand.nextInt(10)) - 4.0;
+      shiftX = Double.valueOf(rand.nextInt(30)) - 15.0;
+      generator = new GenSegment(encoding, scale, shiftX, lastVal);
+      generator.addToDoubleDataSet(set, number);
+      if (numberOfBiases != 0) {
         numberOfBiases--;
-        lastVal = set.getByIndex(set.size() - 1);
-        generator = new GenSegment(encoding, Double.valueOf(rand.nextInt(10)) - 4.0,
-            Double.valueOf(rand.nextInt(30)) - 15.0, lastVal);
-        generator.addToDoubleDataSet(set, length / size);
+        // the same function but shifted by the already added data points in X and by the intended
+        // bias in Y
+        generator = new GenSegment(encoding, scale, shiftX - number, lastVal + rand.nextInt(7) + 2);
+        // for demonstration purposes only use visible and positive bias
+        generator.addToDoubleDataSet(set, number); // length is liberally extended here
       }
     }
     return set;
