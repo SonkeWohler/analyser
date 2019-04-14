@@ -11,7 +11,9 @@ import hyperDap.base.types.dataSet.ValueDataSet;
  * <p>
  * The intended use is to initialise a {@code GenSegment} with the intended values and then retrieve
  * lists of data points from {@link #generateValues(double, int)} as needed, before leaving the
- * Object to be garbage-collected.
+ * Object to be garbage-collected. calling data generation methods repeatedly with the same
+ * parameters will produce the same data points within limits given to any randomness (this will be
+ * added later to simulate noise).
  * <p>
  * Each Object represents a function of the format {@code a * Func(x + b) + c}, where {@code Func}
  * is a mathematical function specified by {@code functionEncoding} at construction time. The
@@ -47,7 +49,8 @@ public class GenSegment {
    * @param shiftX
    * @param intercept
    */
-  public GenSegment(String functionEnccoding, double scale, double shiftX, double intercept) {
+  public GenSegment(String functionEnccoding, double scale, double shiftX, double intercept)
+      throws IllegalArgumentException {
     a = scale;
     b = shiftX;
     c = 0;
@@ -60,7 +63,8 @@ public class GenSegment {
    * 
    * @param encoding
    */
-  private void defineFunction(String encoding) {
+  private void defineFunction(String encoding) throws IllegalArgumentException {
+    encoding = encoding.toLowerCase();
     switch (encoding) {
       case "constant":
         func = x -> 0.0;
