@@ -1,6 +1,8 @@
 package hyperDap.guiPres.application;
 
 import java.util.Map;
+import hyperDap.base.types.dataSet.ValueDataSet;
+import hyperDap.generator.presInterface.PresGenerator;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import hyperDap.guiPres.views.honoursMainView.HonoursMainController;
 import javafx.application.Application;
@@ -141,11 +143,14 @@ public final class GUIMain extends Application implements GUIMainForFX {
 
   @Override
   public void execute(Map<String, Double> map) {
-    System.out.println("-- execution not implemented --");
+    System.out.println("Generating Data");
     for (String didi : map.keySet()) {
       System.out.println(String.format("%s: %s", didi, map.get(didi)));
     }
-    // TODO
+    System.out.println("Generation in progress...");
+    ValueDataSet<? extends Number> set = PresGenerator.generate(map);
+    System.out.println("Generation complete.");
+    this.mainController.displayDataSet(set);
   }
 
   /**

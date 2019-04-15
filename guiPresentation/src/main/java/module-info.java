@@ -15,7 +15,8 @@ module guiPresentation {
   exports hyperDap.guiPres.fxEncapsulation;
   exports hyperDap.guiPres.views.honoursMainView;
 
-  requires base;
+  requires transitive base;
+  requires transitive generator;
   requires javafx.base;
   requires javafx.controls;
   requires javafx.fxml;

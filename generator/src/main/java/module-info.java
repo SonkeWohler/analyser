@@ -6,7 +6,7 @@
  *
  */
 module generator {
-  exports hyperDap.generator.main;
+  exports hyperDap.generator.presInterface;
 
   requires base;
 }

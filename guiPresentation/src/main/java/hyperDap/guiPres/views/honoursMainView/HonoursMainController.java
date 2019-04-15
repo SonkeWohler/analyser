@@ -2,6 +2,7 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
+import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
@@ -162,6 +163,11 @@ public class HonoursMainController {
 
   public void giveGUIMain(GUIMainForFX guiMain) {
     this.main = guiMain;
+  }
+
+  public void displayDataSet(ValueDataSet<? extends Number> dataSet) {
+    this.setChart.setDataSet(dataSet);
+    this.setChart.show();
   }
 
 }
