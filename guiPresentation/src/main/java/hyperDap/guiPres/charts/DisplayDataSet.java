@@ -26,9 +26,21 @@ public class DisplayDataSet extends VBox {
   private ValueDataSet<? extends Number> set;
 
   private LineChart<Number, Number> setChart;
-  private XYChart.Series<Number, Number> series;
-  private ValueAxis<Number> xAxis;
-  private ValueAxis<Number> yAxis;
+  private LineChart<Number, Number> derivChart;
+  private ValueAxis<Number> xSetAxis;
+  private ValueAxis<Number> xDerivAxis;
+  private ValueAxis<Number> ySetAxis;
+  private ValueAxis<Number> yDerivAxis;
+
+  private XYChart.Series<Number, Number> setSeries;
+  private XYChart.Series<Number, Number> constSeries;
+  private XYChart.Series<Number, Number> linearSeries;
+  private XYChart.Series<Number, Number> SquareSeries;
+  private XYChart.Series<Number, Number> cubicSeries;
+  private XYChart.Series<Number, Number> expSeries;
+  private XYChart.Series<Number, Number> sinSeries;
+  private XYChart.Series<Number, Number> changeSeries;
+  private XYChart.Series<Number, Number> undefinedSeries;
 
   // Constructors
   // **************************************************************************************************************************
@@ -64,17 +76,40 @@ public class DisplayDataSet extends VBox {
    * @category constructor
    */
   private void setUp() {
-    this.xAxis = new NumberAxis();
-    this.yAxis = new NumberAxis();
-    this.setChart = new LineChart<>(xAxis, yAxis);
-
-    this.series = new XYChart.Series<>();
-    this.series.setName("DataSet");
-    this.setChart.getData().add(this.series);
+    this.xSetAxis = new NumberAxis();
+    this.ySetAxis = new NumberAxis();
+    this.setChart = new LineChart<>(xSetAxis, ySetAxis);
 
     this.addToChildren(this.setChart);
 
-    // TODO add derivDepth chart
+    this.setSeries = new XYChart.Series<>();
+    this.setSeries.setName("DataSet");
+    this.setChart.getData().add(this.setSeries);
+
+    this.xDerivAxis = new NumberAxis();
+    this.yDerivAxis = new NumberAxis();
+    this.derivChart = new LineChart<>(this.xDerivAxis, this.yDerivAxis);
+
+    this.addToChildren(this.derivChart);
+
+    this.constSeries = new XYChart.Series<>();
+    this.linearSeries = new XYChart.Series<>();
+    this.SquareSeries = new XYChart.Series<>();
+    this.cubicSeries = new XYChart.Series<>();
+    this.expSeries = new XYChart.Series<>();
+    this.sinSeries = new XYChart.Series<>();
+    this.changeSeries = new XYChart.Series<>();
+    this.undefinedSeries = new XYChart.Series<>();
+
+    this.constSeries.setName("Constant");
+    this.linearSeries.setName("Linear");
+    this.SquareSeries.setName("Square");
+    this.cubicSeries.setName("Cubic");
+    this.expSeries.setName("Exponential");
+    this.sinSeries.setName("Trigonometric");
+    this.changeSeries.setName("Point of Interest");
+    this.undefinedSeries.setName("Undefined");
+
     // TODO size chart better
   }
 
@@ -126,12 +161,46 @@ public class DisplayDataSet extends VBox {
     }
 
     this.set.calcDerivDepths();
-    this.series.getData().clear();
+    this.setSeries.getData().clear();
+    double xVal;
+    int depth;
     for (int i = 0; i < this.set.size(); i++) {
-      this.series.getData().add(new XYChart.Data<Number, Number>(this.set.getIndependentValue(i),
+      xVal = this.set.getIndependentValue(i);
+      this.setSeries.getData().add(new XYChart.Data<Number, Number>(xVal,
           this.set.getByIndex(i)/* ,this.set.getDerivDepthsByIndex(i) */));
+      depth = this.set.getDerivDepthsByIndex(i);
+      this.switchSeries(depth).getData().add(new XYChart.Data<Number, Number>(xVal, depth));
     }
-    // TODO do the same to derivDepthChart
+  }
+
+  private XYChart.Series<Number, Number> switchSeries(int derivDepth) {
+    XYChart.Series<Number, Number> ser;
+    switch (derivDepth) {
+      case 0:
+        ser = this.constSeries;
+        break;
+      case 1:
+        ser = this.linearSeries;
+        break;
+      case 2:
+        ser = this.SquareSeries;
+        break;
+      case 3:
+        ser = this.cubicSeries;
+        break;
+      case -1:
+        ser = this.changeSeries;
+        break;
+      case -2:
+        ser = this.expSeries;
+        break;
+      case -3:
+        ser = this.sinSeries;
+        break;
+      default:
+        ser = this.undefinedSeries;
+    }
+    return ser;
   }
 
 }
