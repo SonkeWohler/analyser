@@ -9,6 +9,7 @@
  *
  */
 module base {
+  exports hyperDap.base.helpers;
   exports hyperDap.base.types.value;
   exports hyperDap.base.types.dataSet;
 }
