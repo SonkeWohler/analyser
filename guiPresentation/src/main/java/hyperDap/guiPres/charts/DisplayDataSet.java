@@ -122,7 +122,10 @@ public class DisplayDataSet extends VBox {
       return;
     }
     this.series.getData().clear();
-    // TODO add data points
+    for (int i = 0; i < this.set.size(); i++) {
+      this.series.getData().add(new XYChart.Data<Number, Number>(this.set.getIndependentValue(i),
+          this.set.getByIndex(i)));
+    }
   }
 
 }
