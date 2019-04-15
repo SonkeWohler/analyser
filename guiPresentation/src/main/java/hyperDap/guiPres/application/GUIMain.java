@@ -81,7 +81,7 @@ public final class GUIMain extends Application implements GUIMainForFX {
       throw new AssertionError(
           String.format("%s has already been instantiated! Only one allowed.", GUIMain.class));
     }
-    System.out.println("GUIMain is instantiated.");
+    System.out.println(String.format("%s has been instantiated.", GUIMain.class));
   }
 
   // ************************************************************************************************************************

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,130 +15,136 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" pannable="true" vbarPolicy="ALWAYS" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hyperDap.guiPres.views.honoursMainView.HonoursMainController">
-   <content>
-      <VBox fx:id="bigBox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
-         <children>
-            <Label fx:id="generatorLabel" text="Data Generation">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <GridPane alignment="TOP_CENTER" hgap="10.0" vgap="5.0">
-              <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+
+<AnchorPane fx:id="rootAnchor" prefHeight="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hyperDap.guiPres.views.honoursMainView.HonoursMainController">
+   <children>
+      <ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" layoutY="0.3333333432674408" pannable="true" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <VBox fx:id="bigBox" alignment="TOP_CENTER" spacing="10.0">
                <children>
-                  <Label text="Base" />
-                  <TextField fx:id="baseField" GridPane.columnIndex="1" />
-                  <Button fx:id="baseRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" />
-                  <Label text="Step" GridPane.rowIndex="1" />
-                  <TextField fx:id="stepField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Button fx:id="stepRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label text="Length" GridPane.rowIndex="2" />
-                  <TextField fx:id="lengthField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Button fx:id="lengthRanndButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-               </children>
-               <padding>
-                  <Insets left="10.0" right="10.0" />
-               </padding>
-            </GridPane>
-            <Separator prefWidth="200.0">
-               <padding>
-                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
-               </padding>
-            </Separator>
-            <Label text="Functions to be Generated">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <HBox alignment="TOP_CENTER" spacing="10.0">
-               <children>
-                  <GridPane hgap="10.0">
+                  <Label fx:id="generatorLabel" text="Data Generation">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <GridPane alignment="TOP_CENTER" hgap="10.0" vgap="5.0">
                     <columnConstraints>
-                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
-                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="y= a  " GridPane.columnIndex="1" />
-                        <Label text="y= a*x +  b" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="y= a*x^2 + b*x + c" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="didi1" mnemonicParsing="false" text="Constant" />
-                        <CheckBox fx:id="didi2" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="didi3" mnemonicParsing="false" text="Square" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="didi4" mnemonicParsing="false" text="Cubic" GridPane.rowIndex="3" />
-                        <Label text="y= a*x^3 + b*x^2 + c*x + d" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Base" />
+                        <TextField fx:id="baseField" GridPane.columnIndex="1" />
+                        <Button fx:id="baseRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" />
+                        <Label text="Step" GridPane.rowIndex="1" />
+                        <TextField fx:id="stepField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="stepRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="Length" GridPane.rowIndex="2" />
+                        <TextField fx:id="lengthField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Button fx:id="lengthRanndButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
                   </GridPane>
-                  <GridPane hgap="10.0">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                     </padding>
+                  </Separator>
+                  <Label text="Functions to be Generated">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="TOP_CENTER" spacing="10.0">
                      <children>
-                        <Label text="y=a*exp(b*x + c) + d" GridPane.columnIndex="1" />
-                        <Label text="y= a* sin(b*x + c) + d" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="A point without derivative" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="didi5" mnemonicParsing="false" text="Exponential" />
-                        <CheckBox fx:id="didi6" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2" />
-                        <CheckBox fx:id="didi8" mnemonicParsing="false" text="Gap" GridPane.rowIndex="3" />
-                        <Label text="Missing Data" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <GridPane hgap="10.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="y= a  " GridPane.columnIndex="1" />
+                              <Label text="y= a*x +  b" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="y= a*x^2 + b*x + c" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="didi1" mnemonicParsing="false" text="Constant" />
+                              <CheckBox fx:id="didi2" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="didi3" mnemonicParsing="false" text="Square" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="didi4" mnemonicParsing="false" text="Cubic" GridPane.rowIndex="3" />
+                              <Label text="y= a*x^3 + b*x^2 + c*x + d" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                        <GridPane hgap="10.0">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="y=a*exp(b*x + c) + d" GridPane.columnIndex="1" />
+                              <Label text="y= a* sin(b*x + c) + d" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="A point without derivative" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="didi5" mnemonicParsing="false" text="Exponential" />
+                              <CheckBox fx:id="didi6" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="didi8" mnemonicParsing="false" text="Gap" GridPane.rowIndex="3" />
+                              <Label text="Missing Data" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </HBox>
+                  <Label fx:id="functionErrorLabel" text="Select the Types of Function to be Generated" />
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                     </padding>
+                  </Separator>
+                  <Label text="Display">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
+                     </children>
+                  </HBox>
+                  <VBox fx:id="graphBox" />
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                     </padding>
+                  </Separator>
+                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#terminate" prefHeight="25.0" prefWidth="279.0" text="Exit" />
+                  <Separator prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                     </padding>
+                  </Separator>
                </children>
-            </HBox>
-            <Label fx:id="functionErrorLabel" text="Select thhe Types of Function to be Generated" />
-            <Separator prefWidth="200.0">
                <padding>
-                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
-            </Separator>
-            <Label text="Display">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <children>
-                  <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
-               </children>
-            </HBox>
-            <Separator prefWidth="200.0">
-               <padding>
-                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
-               </padding>
-            </Separator>
-            <Button fx:id="exitButton" mnemonicParsing="false" onAction="#terminate" prefHeight="25.0" prefWidth="279.0" text="Exit" />
-            <Separator prefWidth="200.0">
-               <padding>
-                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
-               </padding>
-            </Separator>
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-   </content>
-</ScrollPane>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

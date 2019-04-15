@@ -2,12 +2,14 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
+import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 /**
  * This is the {@code Controller} to the honoursMainView, to demonstrate application features at the
@@ -56,9 +58,14 @@ public class HonoursMainController {
   Label functionErrorLabel;
 
   @FXML
+  VBox graphBox;
+
+  @FXML
   Button executeButton;
   @FXML
   Button exitButton;
+
+  private DisplayDataSet setChart;
 
   /**
    * Constructor.
@@ -66,8 +73,7 @@ public class HonoursMainController {
    * Remember that JavaFX elements can only be accessed later, in {@link #initialize()}
    */
   public HonoursMainController() {
-    System.out.println("HonoursMainController has been instantiated.");
-
+    System.out.println(String.format("%s has been instantiated", HonoursMainController.class));
   }
 
   /**
@@ -85,6 +91,9 @@ public class HonoursMainController {
     this.didiMap.put(didi6, "sine");
     this.didiMap.put(didi7, "bias");
     this.didiMap.put(didi8, "gap");
+
+    this.setChart = new DisplayDataSet();
+    this.graphBox.getChildren().add(this.setChart);
 
   }
 

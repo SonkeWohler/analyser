@@ -1,7 +1,6 @@
 package hyperDap.guiPres.charts;
 
 import hyperDap.base.types.dataSet.ValueDataSet;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -32,6 +31,7 @@ public class DisplayDataSet extends VBox {
   private ValueAxis<Number> yAxis;
 
   // Constructors
+  // **************************************************************************************************************************
 
   public DisplayDataSet() {
     super();
@@ -71,7 +71,12 @@ public class DisplayDataSet extends VBox {
     this.series = new XYChart.Series<>();
     this.series.setName("DataSet");
     this.chart.getData().add(this.series);
+
+    this.addToChildren(this.chart);
   }
+
+  // setters
+  // *************************************************************************************************************************
 
   /**
    * A private helper that allows internally editing children {@link Node Nodes} without exposing
@@ -82,17 +87,6 @@ public class DisplayDataSet extends VBox {
    */
   private void addToChildren(Node node) {
     super.getChildren().add(node);
-  }
-
-  /**
-   * This method is disabled as the children of this {@link Node} should be hidden unless otherwise
-   * made accessible
-   * 
-   * @throws AssertionError Always.
-   */
-  @Override
-  public ObservableList<Node> getChildren() throws AssertionError {
-    throw new AssertionError(assertionErrorMessage);
   }
 
   /**
@@ -128,7 +122,7 @@ public class DisplayDataSet extends VBox {
       return;
     }
     this.series.getData().clear();
-    // add data points
+    // TODO add data points
   }
 
 }
