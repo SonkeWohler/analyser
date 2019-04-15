@@ -3,12 +3,15 @@ package hyperDap.guiPres.charts;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 
 /**
  * This display element is used to show the values of a {@link ValueDataSet} using a
- * {@link XYChart}.
+ * {@link LineChart}.
  * <p>
  * It retains a reference to the {@link ValueDataSet} that it displays, allowing the set to be
  * altered externally, as long as {@link #show()} is not executed at the same time.
@@ -23,16 +26,21 @@ public class DisplayDataSet extends VBox {
 
   private ValueDataSet<? extends Number> set;
 
+  private LineChart<Number, Number> chart;
+  private XYChart.Series<Number, Number> series;
+  private ValueAxis<Number> xAxis;
+  private ValueAxis<Number> yAxis;
+
   // Constructors
 
   public DisplayDataSet() {
     super();
-    // TODO
+    this.setUp();
   }
 
   public DisplayDataSet(double spacing) {
     super(spacing);
-    // TODO
+    this.setUp();
   }
 
   public DisplayDataSet(double spacing, Node... children) throws AssertionError {
@@ -45,20 +53,67 @@ public class DisplayDataSet extends VBox {
 
   public DisplayDataSet(ValueDataSet<Number> dataSet) {
     this.set = dataSet;
+    this.setUp();
     this.show();
-    // TODO
   }
 
+  /**
+   * This setup is performed independently of the constructor that is called.
+   * 
+   * @category helper
+   * @category constructor
+   */
+  private void setUp() {
+    this.xAxis = new NumberAxis();
+    this.yAxis = new NumberAxis();
+    this.chart = new LineChart<>(xAxis, yAxis);
+
+    this.series = new XYChart.Series<>();
+    this.series.setName("DataSet");
+    this.chart.getData().add(this.series);
+  }
+
+  /**
+   * A private helper that allows internally editing children {@link Node Nodes} without exposing
+   * this to external classes.
+   * 
+   * @param node The {@link Node} that is to be added.
+   * @category helper
+   */
+  private void addToChildren(Node node) {
+    super.getChildren().add(node);
+  }
+
+  /**
+   * This method is disabled as the children of this {@link Node} should be hidden unless otherwise
+   * made accessible
+   * 
+   * @throws AssertionError Always.
+   */
   @Override
-  public ObservableList<Node> getChildren() {
+  public ObservableList<Node> getChildren() throws AssertionError {
     throw new AssertionError(assertionErrorMessage);
   }
 
+  /**
+   * Allows setting or altering the {@link ValueDataSet} that is displayed in this chart.
+   * <p>
+   * If a reference to this set is retained it can be edited without using this method again, as
+   * long as no race conditions are provoked with {@link #show()}.
+   * 
+   * @param dataSet
+   */
   public void setDataSet(ValueDataSet<? extends Number> dataSet) {
     this.set = dataSet;
     this.show();
   }
 
+  /**
+   * Clear the current data display and display the current data points from the currently stored
+   * {@link ValueDataSet}.
+   * <p>
+   * If the {@link ValueDataSet} is undefined a warning is printed and no data is displayed.
+   */
   public void show() {
     if (this.set == null) {
       System.err.println(String.format("%s.set is undefined!", DisplayDataSet.class));
@@ -72,9 +127,8 @@ public class DisplayDataSet extends VBox {
       }
       return;
     }
-    // TODO
-    // remove all data points and replace them with the current set.
-    // use extraValue to display derivDepth?
+    this.series.getData().clear();
+    // add data points
   }
 
 }
