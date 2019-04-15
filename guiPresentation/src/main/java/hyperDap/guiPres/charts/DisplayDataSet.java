@@ -25,7 +25,7 @@ public class DisplayDataSet extends VBox {
 
   private ValueDataSet<? extends Number> set;
 
-  private LineChart<Number, Number> chart;
+  private LineChart<Number, Number> setChart;
   private XYChart.Series<Number, Number> series;
   private ValueAxis<Number> xAxis;
   private ValueAxis<Number> yAxis;
@@ -66,13 +66,16 @@ public class DisplayDataSet extends VBox {
   private void setUp() {
     this.xAxis = new NumberAxis();
     this.yAxis = new NumberAxis();
-    this.chart = new LineChart<>(xAxis, yAxis);
+    this.setChart = new LineChart<>(xAxis, yAxis);
 
     this.series = new XYChart.Series<>();
     this.series.setName("DataSet");
-    this.chart.getData().add(this.series);
+    this.setChart.getData().add(this.series);
 
-    this.addToChildren(this.chart);
+    this.addToChildren(this.setChart);
+
+    // TODO add derivDepth chart
+    // TODO size chart better
   }
 
   // setters
@@ -121,11 +124,14 @@ public class DisplayDataSet extends VBox {
       }
       return;
     }
+
+    this.set.calcDerivDepths();
     this.series.getData().clear();
     for (int i = 0; i < this.set.size(); i++) {
       this.series.getData().add(new XYChart.Data<Number, Number>(this.set.getIndependentValue(i),
-          this.set.getByIndex(i)));
+          this.set.getByIndex(i)/* ,this.set.getDerivDepthsByIndex(i) */));
     }
+    // TODO do the same to derivDepthChart
   }
 
 }
