@@ -39,5 +39,6 @@
   <modules>
   	<module>base</module>
   	<module>generator</module>
+  	<module>guiPresentation</module>
   </modules>
 </project>
