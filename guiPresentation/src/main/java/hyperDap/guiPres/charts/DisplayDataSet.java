@@ -217,6 +217,23 @@ public class DisplayDataSet extends VBox {
     return ser;
   }
 
+  private void clearSeries() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        setSeries.getData().clear();
+        constSeries.getData().clear();
+        linearSeries.getData().clear();
+        SquareSeries.getData().clear();
+        cubicSeries.getData().clear();
+        expSeries.getData().clear();
+        sinSeries.getData().clear();
+        changeSeries.getData().clear();
+        undefinedSeries.getData().clear();
+      }
+    });
+  }
+
   /**
    * Initiates the recursive addition of data points from the internal {@link ValueDataSet} to the
    * two displayed graphs. The {@link #runLaterCall()} and {@link #displayPoints()} methods are
@@ -254,6 +271,7 @@ public class DisplayDataSet extends VBox {
       System.out.println("Initiation runLater recursion to display DataSet");
     }
     // Platform.runLater for every 10 data points
+    this.clearSeries();
     this.counter = 0;
     this.displayRunning = true;
     this.runLaterCall();

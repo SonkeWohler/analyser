@@ -17,8 +17,9 @@ import hyperDap.base.types.dataSet.ValueDataSet;
  * <p>
  * Each Object represents a function of the format {@code a * Func(x + b) + c}, where {@code Func}
  * is a mathematical function specified by {@code functionEncoding} at construction time. The
- * function is shifted such that it passes through the {@code intercept} at {@code x=0}, which is
- * the first value that is generated.
+ * function is shifted such that it passes through the {@code intercept} at {@code x= -step}, which
+ * is expected to be the last value before this function begins. This aligns it with the previous
+ * values to transition smoothly.
  * <p>
  * The {@code functionEncding} may specify: <br>
  * {@code constant} : {@code y = c} <br>
@@ -30,13 +31,14 @@ import hyperDap.base.types.dataSet.ValueDataSet;
  * <p>
  * Here {@code a} translates to the {@code scale} specified at construction, {@code b} to
  * {@code shiftX}, while {@code c} is defined at construction such that the function
- * returns @{@code intercept} for {@code x=0}.
+ * returns @{@code intercept} for {@code x=-step}.
  * 
  * @author soenk
  *
  */
 public class GenSegment {
 
+  private double step;
   private double a;
   private double b;
   private double c;
@@ -49,13 +51,14 @@ public class GenSegment {
    * @param shiftX
    * @param intercept
    */
-  public GenSegment(String functionEnccoding, double scale, double shiftX, double intercept)
-      throws IllegalArgumentException {
+  public GenSegment(String functionEnccoding, double scale, double shiftX, double intercept,
+      double step) throws IllegalArgumentException {
+    this.step = step;
     a = scale;
     b = shiftX;
     c = 0;
     this.defineFunction(functionEnccoding);
-    c = intercept - f(0);
+    c = intercept - f(-step);
     System.out.println(String.format("%s Generating Segment of %s with a= %s, b= %s c= %s",
         GenSegment.class, functionEnccoding, this.a, this.b, this.c));
   }
@@ -111,7 +114,7 @@ public class GenSegment {
    * @param N The number of data points to be generated.
    * @return An {@link ArrayList} of the generated data points.
    */
-  public ArrayList<Double> generateValues(double step, int N) {
+  public ArrayList<Double> generateValues(int N) {
     ArrayList<Double> list = new ArrayList<Double>();
     for (Integer i = 0; i < N; i++) {
       list.add(f(i.doubleValue() * step));
@@ -131,8 +134,12 @@ public class GenSegment {
    * @param N The number of data points that should be added.
    */
   public void addToDoubleDataSet(ValueDataSet<Double> set, int N) {
+    if (this.step != set.getStep()) {
+      throw new IllegalArgumentException(
+          String.format("%s. addToDoubleDataSet() does not match preset step! %s!=%s",
+              GenSegment.class, this.step, set.getStep()));
+    }
     set.ensureCapacity(N + set.size());
-    double step = set.getStep();
     for (Integer i = 0; i < N; i++) {
       set.add(Double.valueOf(f(i.doubleValue() * step)));
     }
@@ -158,7 +165,11 @@ public class GenSegment {
       throw new IllegalArgumentException(
           "ValueDataSet must have a convertFromDouble function defined!");
     }
-    double step = set.getStep();
+    if (this.step != set.getStep()) {
+      throw new IllegalArgumentException(
+          String.format("%s. addToDoubleDataSet() does not match preset step! %s!=%s",
+              GenSegment.class, this.step, set.getStep()));
+    }
     set.ensureCapacity(N + set.size());
     for (Integer i = 0; i < N; i++) {
       set.add(f(i.doubleValue() * step));

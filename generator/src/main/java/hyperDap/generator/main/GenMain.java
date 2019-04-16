@@ -56,14 +56,15 @@ public class GenMain {
       lastVal = set.getByIndex(set.size() - 1);
       scale = Double.valueOf(rand.nextInt(10)) - 4.0;
       shiftX = Double.valueOf(rand.nextInt(30)) - 15.0;
-      generator = new GenSegment(encoding, scale, shiftX, lastVal);
+      generator = new GenSegment(encoding, scale, shiftX, lastVal, step);
       generator.addToDoubleDataSet(set, number);
       // add a bias if needed
       if (numberOfBiases != 0) {
         numberOfBiases--;
         // the same function but shifted by the already added data points in X and by the intended
         // bias in Y
-        generator = new GenSegment(encoding, scale, shiftX - number, lastVal + rand.nextInt(7) + 2);
+        generator =
+            new GenSegment(encoding, scale, shiftX - number, lastVal + rand.nextInt(7) + 2, step);
         // for demonstration purposes only use visible and positive bias
         generator.addToDoubleDataSet(set, number); // length is liberally extended here
       }
