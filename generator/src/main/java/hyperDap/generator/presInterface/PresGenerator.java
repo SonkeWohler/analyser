@@ -16,14 +16,32 @@ import hyperDap.generator.main.GenMain;
 public class PresGenerator {
 
   public static ValueDataSet<Double> generate(Map<String, Double> map) {
+    Random rand = new Random();
     double base = map.remove("base");
     double step = map.remove("step");
     int length = map.remove("length").intValue();
     int biasNumber = 0;
-    ArrayList<String> encodings = new ArrayList<>();
     if (map.remove("bias") != null) {
-      Random rand = new Random();
       biasNumber = rand.nextInt(length / 20);
+    }
+    // convert encodings to correct format
+    ArrayList<String> encodings = new ArrayList<>();
+    for (String encoding : map.keySet()) {
+      encodings.add(encoding);
+    }
+    // add some randomness to encodings
+    if (encodings.size() > 1) {
+      for (int i = 0; i < encodings.size(); i++) {
+        if (rand.nextBoolean() == true) {
+          encodings.add(0, encodings.remove(i));
+        }
+      }
+      for (int i = 0; i < encodings.size(); i++) {
+        if (rand.nextInt(7) < 5) {
+          encodings.add(encodings.get(i));
+          length += 10;
+        }
+      }
     }
     // TODO encodings
     return GenMain.newDataSet(encodings, biasNumber, base, step, length);
