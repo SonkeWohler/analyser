@@ -2,6 +2,7 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
+import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
@@ -63,6 +64,10 @@ public class HonoursMainController {
 
   @FXML
   Button executeButton;
+  @FXML
+  TextField precisionField;
+  @FXML
+  Button precisionButton;
   @FXML
   Button exitButton;
 
@@ -169,6 +174,24 @@ public class HonoursMainController {
     System.out.println("Displaying new DataSet");
     this.setChart.setDataSet(dataSet);
     // this.setChart.showData();
+  }
+
+  public void setPrecision() {
+    Double precision;
+    try {
+      precision = Double.parseDouble(this.precisionField.getText());
+    } catch (NumberFormatException ne) {
+      this.precisionField.setPromptText("Invalid Number Format!");
+      this.precisionField.setText("");
+      return;
+    } catch (NullPointerException e) {
+      return;
+    }
+    Tangenter.setPrecision(precision);
+    this.precisionField.setPromptText("Adjust Precision");
+    this.precisionField.setText("");
+    System.out
+        .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
   }
 
 }
