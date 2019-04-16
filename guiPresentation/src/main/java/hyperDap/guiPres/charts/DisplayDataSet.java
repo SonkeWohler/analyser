@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 
@@ -31,10 +30,10 @@ public class DisplayDataSet extends VBox {
 
   private LineChart<Number, Number> setChart;
   private LineChart<Number, Number> derivChart;
-  private ValueAxis<Number> xSetAxis;
-  private ValueAxis<Number> xDerivAxis;
-  private ValueAxis<Number> ySetAxis;
-  private ValueAxis<Number> yDerivAxis;
+  private NumberAxis xSetAxis;
+  private NumberAxis xDerivAxis;
+  private NumberAxis ySetAxis;
+  private NumberAxis yDerivAxis;
 
   private XYChart.Series<Number, Number> setSeries;
   private XYChart.Series<Number, Number> constSeries;
@@ -94,6 +93,12 @@ public class DisplayDataSet extends VBox {
     this.yDerivAxis = new NumberAxis();
     this.derivChart = new LineChart<>(this.xDerivAxis, this.yDerivAxis);
 
+    this.yDerivAxis.setLowerBound(-5.0);
+    this.yDerivAxis.setUpperBound(5.0);
+    this.yDerivAxis.setTickUnit(1.0);
+    this.yDerivAxis.setAutoRanging(false);
+    this.yDerivAxis.setMinorTickVisible(false);
+
     this.addToChildren(this.derivChart);
 
     this.constSeries = new XYChart.Series<>();
@@ -105,14 +110,14 @@ public class DisplayDataSet extends VBox {
     this.changeSeries = new XYChart.Series<>();
     this.undefinedSeries = new XYChart.Series<>();
 
-    this.constSeries.setName("Constant");
-    this.linearSeries.setName("Linear");
-    this.SquareSeries.setName("Square");
-    this.cubicSeries.setName("Cubic");
-    this.expSeries.setName("Exponential");
-    this.sinSeries.setName("Trigonometric");
-    this.changeSeries.setName("Point of Interest");
-    this.undefinedSeries.setName("Undefined");
+    this.constSeries.setName("Constant: 1");
+    this.linearSeries.setName("Linear: 2");
+    this.SquareSeries.setName("Square: 3");
+    this.cubicSeries.setName("Cubic: 4");
+    this.expSeries.setName("Exponential: -1");
+    this.sinSeries.setName("Trigonometric: -2");
+    this.changeSeries.setName("Point of Interest: 0");
+    this.undefinedSeries.setName("Undefined: -5");
 
     this.derivChart.getData().add(this.constSeries);
     this.derivChart.getData().add(this.linearSeries);
@@ -326,6 +331,7 @@ public class DisplayDataSet extends VBox {
       } catch (NullPointerException e) {
         System.err.println(String.format("Undefined derivDepth for %s at index %s!",
             DisplayDataSet.class, counter));
+        this.undefinedSeries.getData().add(new XYChart.Data<Number, Number>(xVal, -5.0));
       }
       // TODO do not show last 10 derivDepths on chart. could remove them
       // counter

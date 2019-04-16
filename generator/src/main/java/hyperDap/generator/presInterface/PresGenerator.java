@@ -22,7 +22,7 @@ public class PresGenerator {
     int length = map.remove("length").intValue();
     int biasNumber = 0;
     if (map.remove("bias") != null) {
-      biasNumber = rand.nextInt(length / 20);
+      biasNumber = rand.nextInt(length / 10) + 1;
     }
     Double noise = map.remove("noise");
     if (noise == null) {
