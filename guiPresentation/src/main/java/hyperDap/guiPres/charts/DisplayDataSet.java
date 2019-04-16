@@ -114,6 +114,15 @@ public class DisplayDataSet extends VBox {
     this.changeSeries.setName("Point of Interest");
     this.undefinedSeries.setName("Undefined");
 
+    this.derivChart.getData().add(this.constSeries);
+    this.derivChart.getData().add(this.linearSeries);
+    this.derivChart.getData().add(this.SquareSeries);
+    this.derivChart.getData().add(this.cubicSeries);
+    this.derivChart.getData().add(this.expSeries);
+    this.derivChart.getData().add(this.sinSeries);
+    this.derivChart.getData().add(this.changeSeries);
+    this.derivChart.getData().add(this.undefinedSeries);
+
     // TODO size chart better
   }
 
@@ -135,13 +144,13 @@ public class DisplayDataSet extends VBox {
    * Allows setting or altering the {@link ValueDataSet} that is displayed in this chart.
    * <p>
    * If a reference to this set is retained it can be edited without using this method again, as
-   * long as no race conditions are provoked with {@link #show()}.
+   * long as no race conditions are provoked with {@link #showData()}.
    * 
    * @param dataSet
    */
   public void setDataSet(ValueDataSet<? extends Number> dataSet) {
     this.set = dataSet;
-    this.show();
+    this.showData();
   }
 
   /**
@@ -241,6 +250,8 @@ public class DisplayDataSet extends VBox {
           e.printStackTrace();
         }
       }
+    } else {
+      System.out.println("Initiation runLater recursion to display DataSet");
     }
     // Platform.runLater for every 10 data points
     this.counter = 0;
@@ -256,6 +267,8 @@ public class DisplayDataSet extends VBox {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
+        System.out.println(String.format("Executing runLater for DataSet display, counter: %s/%s",
+            counter, set.size()));
         displayPoints();
       }
     });
@@ -275,10 +288,10 @@ public class DisplayDataSet extends VBox {
       this.displayRunning = true;
       return;
     }
-    // only add the next 10 values, or until the end of the set, now
+    // only add the next 10 values, or until the end of the set
     int max = this.counter + 10;
     if (max > this.set.size()) {
-      max = this.set.size() - 1;
+      max = this.set.size();
     }
     // add values
     double xVal;
@@ -290,7 +303,12 @@ public class DisplayDataSet extends VBox {
           .add(new XYChart.Data<Number, Number>(xVal, this.set.getByIndex(counter)));
       // add derivDepth to the correct series
       depth = this.set.getDerivDepthsByIndex(counter);
-      this.switchSeries(depth).getData().add(new XYChart.Data<Number, Number>(xVal, depth));
+      try {
+        this.switchSeries(depth).getData().add(new XYChart.Data<Number, Number>(xVal, depth + 1));
+      } catch (NullPointerException e) {
+        System.err.println(String.format("Undefined derivDepth for %s at index %s!",
+            DisplayDataSet.class, counter));
+      }
       // counter
       this.counter++;
     }

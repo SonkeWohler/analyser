@@ -43,7 +43,7 @@ public class PresGenerator {
         }
       }
     }
-    // TODO encodings
+    // complete
     return GenMain.newDataSet(encodings, biasNumber, base, step, length);
   }
 

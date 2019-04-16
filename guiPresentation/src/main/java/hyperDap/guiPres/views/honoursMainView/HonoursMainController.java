@@ -166,8 +166,9 @@ public class HonoursMainController {
   }
 
   public void displayDataSet(ValueDataSet<? extends Number> dataSet) {
+    System.out.println("Displaying new DataSet");
     this.setChart.setDataSet(dataSet);
-    this.setChart.showData();
+    // this.setChart.showData();
   }
 
 }
