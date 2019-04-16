@@ -22,10 +22,25 @@ public class GenMain {
    */
   public static ValueDataSet<Double> newDataSet(List<String> functionEncodings, int numberOfBiases,
       double base, double step, int length) {
+    // protect from bad arguments
+    if (functionEncodings.isEmpty()) {
+      throw new IllegalArgumentException(
+          String.format("%s was passed an empty list of functionEncodings", GenMain.class));
+    }
+    if (step == 0.0) {
+      throw new IllegalArgumentException(
+          String.format("%s has been passed illegal step size of 0.0!", GenMain.class));
+    }
+    if (length <= 0) {
+      throw new IllegalArgumentException(
+          String.format("%s has been passed illegal length argument of %s", GenMain.class, length));
+    }
+    // prepare data generation
     Random rand = new Random();
     int number = length / functionEncodings.size(); // the number of data points to be added
     ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1, d -> Double.valueOf(d));
     set.add(5.0); // add an initial value
+    // for each functionEncoding generate and add a list of data points
     GenSegment generator;
     double scale;
     double shiftX;
@@ -36,6 +51,7 @@ public class GenMain {
       shiftX = Double.valueOf(rand.nextInt(30)) - 15.0;
       generator = new GenSegment(encoding, scale, shiftX, lastVal);
       generator.addToDoubleDataSet(set, number);
+      // add a bias if needed
       if (numberOfBiases != 0) {
         numberOfBiases--;
         // the same function but shifted by the already added data points in X and by the intended
@@ -45,6 +61,7 @@ public class GenMain {
         generator.addToDoubleDataSet(set, number); // length is liberally extended here
       }
     }
+    // complete
     return set;
   }
 

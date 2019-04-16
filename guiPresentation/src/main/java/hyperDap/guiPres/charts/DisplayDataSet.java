@@ -1,6 +1,7 @@
 package hyperDap.guiPres.charts;
 
 import hyperDap.base.types.dataSet.ValueDataSet;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -22,6 +23,9 @@ public class DisplayDataSet extends VBox {
 
   private static String assertionErrorMessage = String
       .format("%s are not editable and no children may be added to it.", DisplayDataSet.class);
+
+  private int counter = 0;
+  private boolean displayRunning = false;
 
   private ValueDataSet<? extends Number> set;
 
@@ -146,6 +150,7 @@ public class DisplayDataSet extends VBox {
    * <p>
    * If the {@link ValueDataSet} is undefined a warning is printed and no data is displayed.
    */
+  @Deprecated
   public void show() {
     if (this.set == null) {
       System.err.println(String.format("%s.set is undefined!", DisplayDataSet.class));
@@ -201,6 +206,98 @@ public class DisplayDataSet extends VBox {
         ser = this.undefinedSeries;
     }
     return ser;
+  }
+
+  /**
+   * Initiates the recursive addition of data points from the internal {@link ValueDataSet} to the
+   * two displayed graphs. The {@link #runLaterCall()} and {@link #displayPoints()} methods are
+   * called recursively to count through the entire {@link ValueDataSet}.
+   * <p>
+   * This is done successively to prevent a slow-down of the gui while
+   * {@link Platform#runLater(Runnable)} is executed, which is necessary to prevent race conditions
+   * in relation to JavaFX elements.
+   */
+  public void showData() {
+    // in case showData is already in progress
+    if (this.displayRunning) {
+      // notify the progress to terminate
+      this.displayRunning = false;
+      // print warning
+      System.err.println(String.format("%s aborting the running display!", DisplayDataSet.class));
+      boolean first = true;
+      for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+        if (first == true) {
+          first = false;
+          continue;
+        }
+        System.err.println(element.toString());
+      }
+      // wait for progress to terminate
+      while (this.displayRunning == false) {
+        // TODO timeout -> throw runtime-exception
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    // Platform.runLater for every 10 data points
+    this.counter = 0;
+    this.displayRunning = true;
+    this.runLaterCall();
+  }
+
+  /**
+   * Calls {@link Platform#runLater(Runnable)} to update data points in charts by calling
+   * {@link #displayPoints()} without causing race conditions.
+   */
+  private void runLaterCall() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        displayPoints();
+      }
+    });
+  }
+
+  /**
+   * This method should only be called by {@link Platform#runLater(Runnable)} to prevent race
+   * conditions within JavaFX elements.
+   * <p>
+   * It adds the next 10 data points and their derivDepths to the respective graphs, before calling
+   * {@link #runLaterCall()} to recursively continue he process, if necessary. A class internal
+   * counter is used to count through the entire set in the recursive method invocations.
+   */
+  public void displayPoints() {
+    // terminate if showData() was called again
+    if (this.displayRunning == false) {
+      this.displayRunning = true;
+      return;
+    }
+    // only add the next 10 values, or until the end of the set, now
+    int max = this.counter + 10;
+    if (max > this.set.size()) {
+      max = this.set.size() - 1;
+    }
+    // add values
+    double xVal;
+    int depth;
+    while (this.counter < max) {
+      // add data point to setSeries
+      xVal = this.set.getIndependentValue(counter);
+      this.setSeries.getData()
+          .add(new XYChart.Data<Number, Number>(xVal, this.set.getByIndex(counter)));
+      // add derivDepth to the correct series
+      depth = this.set.getDerivDepthsByIndex(counter);
+      this.switchSeries(depth).getData().add(new XYChart.Data<Number, Number>(xVal, depth));
+      // counter
+      this.counter++;
+    }
+    // add another runLater if needed
+    if (this.counter < this.set.size()) {
+      this.runLaterCall();
+    }
   }
 
 }
