@@ -64,7 +64,7 @@ public class GenSegment {
   }
 
   /**
-   * Classifies the function represented by this OObject based on {@code encoding.}
+   * Classifies the function represented by this Object based on {@code encoding.}
    * 
    * @param encoding
    */
@@ -133,7 +133,13 @@ public class GenSegment {
    * @param step The distance between data points on the x-axis.
    * @param N The number of data points that should be added.
    */
-  public void addToDoubleDataSet(ValueDataSet<Double> set, int N) {
+  public void addToDoubleDataSet(ValueDataSet<Double> set, int N) throws IllegalArgumentException {
+    this.addToDoubleDataSet(set, N, 0.0);
+  }
+
+  public void addToDoubleDataSet(ValueDataSet<Double> set, int N, double noise)
+      throws IllegalArgumentException {
+    // TODO noise
     if (this.step != set.getStep()) {
       throw new IllegalArgumentException(
           String.format("%s. addToDoubleDataSet() does not match preset step! %s!=%s",
@@ -161,6 +167,12 @@ public class GenSegment {
    */
   public void addToDataSet(ValueDataSet<? extends Number> set, int N)
       throws IllegalArgumentException {
+    this.addToDataSet(set, N, 0.0);
+  }
+
+  public void addToDataSet(ValueDataSet<? extends Number> set, int N, double noise)
+      throws IllegalArgumentException {
+    // TODO noise
     if (set.hasConversionFunction() == false) {
       throw new IllegalArgumentException(
           "ValueDataSet must have a convertFromDouble function defined!");

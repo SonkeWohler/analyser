@@ -91,7 +91,7 @@ public class HonoursMainController {
     this.didiMap.put(didi5, "exp");
     this.didiMap.put(didi6, "sine");
     this.didiMap.put(didi7, "bias");
-    this.didiMap.put(didi8, "gap");
+    this.didiMap.put(didi8, "noise");
 
     this.setChart = new DisplayDataSet();
     this.graphBox.getChildren().add(this.setChart);

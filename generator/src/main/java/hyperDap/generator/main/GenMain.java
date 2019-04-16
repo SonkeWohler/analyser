@@ -18,10 +18,12 @@ public class GenMain {
    * @param base The {@code base} of the {@link DataSet}.
    * @param step The {@code step} of the {@link DataSet}.
    * @param length A rough number of the data points that is to be generated.
+   * @param noise Unused at this time.
    * @return The generated {@link ValueDataSet}
    */
   public static ValueDataSet<Double> newDataSet(List<String> functionEncodings, int numberOfBiases,
-      double base, double step, int length) {
+      double base, double step, int length, double noise) {
+    // TODO noise
     // protect from bad arguments
     if (functionEncodings.isEmpty()) {
       throw new IllegalArgumentException(
@@ -57,7 +59,7 @@ public class GenMain {
       scale = Double.valueOf(rand.nextInt(10)) - 4.0;
       shiftX = Double.valueOf(rand.nextInt(30)) - 15.0;
       generator = new GenSegment(encoding, scale, shiftX, lastVal, step);
-      generator.addToDoubleDataSet(set, number);
+      generator.addToDoubleDataSet(set, number, noise);
       // add a bias if needed
       if (numberOfBiases != 0) {
         numberOfBiases--;
@@ -66,7 +68,7 @@ public class GenMain {
         generator =
             new GenSegment(encoding, scale, shiftX - number, lastVal + rand.nextInt(7) + 2, step);
         // for demonstration purposes only use visible and positive bias
-        generator.addToDoubleDataSet(set, number); // length is liberally extended here
+        generator.addToDoubleDataSet(set, number, noise); // length is liberally extended here
       }
     }
     // complete

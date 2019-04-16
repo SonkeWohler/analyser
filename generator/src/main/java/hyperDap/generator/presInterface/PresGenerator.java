@@ -24,6 +24,10 @@ public class PresGenerator {
     if (map.remove("bias") != null) {
       biasNumber = rand.nextInt(length / 20);
     }
+    Double noise = map.remove("noise");
+    if (noise == null) {
+      noise = 0.0;
+    }
     // convert encodings to correct format
     ArrayList<String> encodings = new ArrayList<>();
     for (String encoding : map.keySet()) {
@@ -44,7 +48,7 @@ public class PresGenerator {
       }
     }
     // complete
-    return GenMain.newDataSet(encodings, biasNumber, base, step, length);
+    return GenMain.newDataSet(encodings, biasNumber, base, step, length, noise);
   }
 
 }
