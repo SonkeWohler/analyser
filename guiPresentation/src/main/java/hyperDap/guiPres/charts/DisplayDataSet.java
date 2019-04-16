@@ -309,12 +309,15 @@ public class DisplayDataSet extends VBox {
         System.err.println(String.format("Undefined derivDepth for %s at index %s!",
             DisplayDataSet.class, counter));
       }
+      // TODO do not show last 10 derivDepths on chart. could remove them
       // counter
       this.counter++;
     }
     // add another runLater if needed
-    if (this.counter < this.set.size()) {
+    if (this.counter < this.set.size() && this.displayRunning == true) {
       this.runLaterCall();
+    } else {
+      this.displayRunning = false;
     }
   }
 

@@ -37,7 +37,7 @@ public class PresGenerator {
         }
       }
       for (int i = 0; i < encodings.size(); i++) {
-        if (rand.nextInt(7) < 5) {
+        if (rand.nextInt(7) > 6) {
           encodings.add(encodings.get(i));
           length += 10;
         }

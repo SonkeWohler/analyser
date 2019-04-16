@@ -35,6 +35,13 @@ public class GenMain {
       throw new IllegalArgumentException(
           String.format("%s has been passed illegal length argument of %s", GenMain.class, length));
     }
+    // log and debugging
+    System.out.println(String.format("%s.newDataSet(encodings, %s, %s, %s)", GenMain.class,
+        numberOfBiases, base, step, length));
+    for (String encoding : functionEncodings) {
+      System.out.println(encoding);
+    }
+    System.out.println("generating now");
     // prepare data generation
     Random rand = new Random();
     int number = length / functionEncodings.size(); // the number of data points to be added

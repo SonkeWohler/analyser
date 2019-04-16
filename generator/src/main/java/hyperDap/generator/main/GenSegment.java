@@ -55,7 +55,9 @@ public class GenSegment {
     b = shiftX;
     c = 0;
     this.defineFunction(functionEnccoding);
-    c = f(0) + intercept;
+    c = intercept - f(0);
+    System.out.println(String.format("%s Generating Segment of %s with a= %s, b= %s c= %s",
+        GenSegment.class, functionEnccoding, this.a, this.b, this.c));
   }
 
   /**
