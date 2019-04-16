@@ -16,6 +16,7 @@ import hyperDap.base.types.value.ValuePair;
 
 public final class Tangenter {
 
+  private static double precision = 0.001;
   private static int bigDecimalPrecision = 10;
   private static MathContext standardContext =
       new MathContext(bigDecimalPrecision, RoundingMode.HALF_UP);
@@ -25,6 +26,27 @@ public final class Tangenter {
    */
   private Tangenter() {
     throw new AssertionError("No helper class instances for anyone!");
+  }
+
+  /**
+   * Calculates the slope of the tangent between two points with {@code yValues} {@code y1} and
+   * {@code y2} that are a distance {@code step} apart in their {@code xValues}. If the two values
+   * are too close, based on {@link Comparator#equalApprox(double, double, double)}, the slope will
+   * be approximated to zero. The precision argument for
+   * {@link Comparator#equalApprox(double, double, double)} can be adjusted in
+   * {@link #setPrecision(double)}.
+   * 
+   * @param step The difference in {@code xValue} between the values.
+   * @param y1 The first of the values with a lower {@code xValue}.
+   * @param y2 The second of the values with the higher {@code xValue}
+   * @return Zero if {@code y1} and {@code y2} are equal within the set precision, the slope of the
+   *         tangent between them otherwise.
+   */
+  public static double tangentApprox(double step, double y1, double y2) {
+    if (Comparator.equalApprox(y1, y2, precision)) {
+      return 0.0;
+    }
+    return tangentSimple(step, y1, y2);
   }
 
   /**
@@ -165,7 +187,7 @@ public final class Tangenter {
     for (int k = 1; k < size - 1; k++) {
       derivs[k][0] = set.getByIndex(Math.abs(X - k)).doubleValue();
       for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
-        derivs[i][j] = tangentExact(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
+        derivs[i][j] = tangentApprox(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
       }
     }
   }
@@ -230,6 +252,16 @@ public final class Tangenter {
         tracking = false;
       }
     }
+  }
+
+  /**
+   * Used to adjust the precision of {@link #tangentApprox(double, double, double)}, which by
+   * default is set to 0.001.
+   * 
+   * @param precision The new precision used.
+   */
+  public static void setPrecision(double precision) {
+    Tangenter.precision = precision;
   }
 
 }
