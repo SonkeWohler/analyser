@@ -1,10 +1,10 @@
 package hyperDap.guiPres.charts;
 
 import hyperDap.base.types.dataSet.ValueDataSet;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 
@@ -23,14 +23,17 @@ public class DisplayDataSet extends VBox {
   private static String assertionErrorMessage = String
       .format("%s are not editable and no children may be added to it.", DisplayDataSet.class);
 
+  private int counter = 0;
+  private boolean displayRunning = false;
+
   private ValueDataSet<? extends Number> set;
 
   private LineChart<Number, Number> setChart;
   private LineChart<Number, Number> derivChart;
-  private ValueAxis<Number> xSetAxis;
-  private ValueAxis<Number> xDerivAxis;
-  private ValueAxis<Number> ySetAxis;
-  private ValueAxis<Number> yDerivAxis;
+  private NumberAxis xSetAxis;
+  private NumberAxis xDerivAxis;
+  private NumberAxis ySetAxis;
+  private NumberAxis yDerivAxis;
 
   private XYChart.Series<Number, Number> setSeries;
   private XYChart.Series<Number, Number> constSeries;
@@ -90,6 +93,12 @@ public class DisplayDataSet extends VBox {
     this.yDerivAxis = new NumberAxis();
     this.derivChart = new LineChart<>(this.xDerivAxis, this.yDerivAxis);
 
+    this.yDerivAxis.setLowerBound(-5.0);
+    this.yDerivAxis.setUpperBound(5.0);
+    this.yDerivAxis.setTickUnit(1.0);
+    this.yDerivAxis.setAutoRanging(false);
+    this.yDerivAxis.setMinorTickVisible(false);
+
     this.addToChildren(this.derivChart);
 
     this.constSeries = new XYChart.Series<>();
@@ -101,14 +110,23 @@ public class DisplayDataSet extends VBox {
     this.changeSeries = new XYChart.Series<>();
     this.undefinedSeries = new XYChart.Series<>();
 
-    this.constSeries.setName("Constant");
-    this.linearSeries.setName("Linear");
-    this.SquareSeries.setName("Square");
-    this.cubicSeries.setName("Cubic");
-    this.expSeries.setName("Exponential");
-    this.sinSeries.setName("Trigonometric");
-    this.changeSeries.setName("Point of Interest");
-    this.undefinedSeries.setName("Undefined");
+    this.constSeries.setName("Constant: 1");
+    this.linearSeries.setName("Linear: 2");
+    this.SquareSeries.setName("Square: 3");
+    this.cubicSeries.setName("Cubic: 4");
+    this.expSeries.setName("Exponential: -1");
+    this.sinSeries.setName("Trigonometric: -2");
+    this.changeSeries.setName("Point of Interest: 0");
+    this.undefinedSeries.setName("Undefined: -5");
+
+    this.derivChart.getData().add(this.constSeries);
+    this.derivChart.getData().add(this.linearSeries);
+    this.derivChart.getData().add(this.SquareSeries);
+    this.derivChart.getData().add(this.cubicSeries);
+    this.derivChart.getData().add(this.expSeries);
+    this.derivChart.getData().add(this.sinSeries);
+    this.derivChart.getData().add(this.changeSeries);
+    this.derivChart.getData().add(this.undefinedSeries);
 
     // TODO size chart better
   }
@@ -131,13 +149,13 @@ public class DisplayDataSet extends VBox {
    * Allows setting or altering the {@link ValueDataSet} that is displayed in this chart.
    * <p>
    * If a reference to this set is retained it can be edited without using this method again, as
-   * long as no race conditions are provoked with {@link #show()}.
+   * long as no race conditions are provoked with {@link #showData()}.
    * 
    * @param dataSet
    */
   public void setDataSet(ValueDataSet<? extends Number> dataSet) {
     this.set = dataSet;
-    this.show();
+    this.showData();
   }
 
   /**
@@ -146,6 +164,7 @@ public class DisplayDataSet extends VBox {
    * <p>
    * If the {@link ValueDataSet} is undefined a warning is printed and no data is displayed.
    */
+  @Deprecated
   public void show() {
     if (this.set == null) {
       System.err.println(String.format("%s.set is undefined!", DisplayDataSet.class));
@@ -201,6 +220,129 @@ public class DisplayDataSet extends VBox {
         ser = this.undefinedSeries;
     }
     return ser;
+  }
+
+  private void clearSeries() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        setSeries.getData().clear();
+        constSeries.getData().clear();
+        linearSeries.getData().clear();
+        SquareSeries.getData().clear();
+        cubicSeries.getData().clear();
+        expSeries.getData().clear();
+        sinSeries.getData().clear();
+        changeSeries.getData().clear();
+        undefinedSeries.getData().clear();
+      }
+    });
+  }
+
+  /**
+   * Initiates the recursive addition of data points from the internal {@link ValueDataSet} to the
+   * two displayed graphs. The {@link #runLaterCall()} and {@link #displayPoints()} methods are
+   * called recursively to count through the entire {@link ValueDataSet}.
+   * <p>
+   * This is done successively to prevent a slow-down of the gui while
+   * {@link Platform#runLater(Runnable)} is executed, which is necessary to prevent race conditions
+   * in relation to JavaFX elements.
+   */
+  public void showData() {
+    // in case showData is already in progress
+    if (this.displayRunning) {
+      // notify the progress to terminate
+      this.displayRunning = false;
+      // print warning
+      System.err.println(String.format("%s aborting the running display!", DisplayDataSet.class));
+      boolean first = true;
+      for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+        if (first == true) {
+          first = false;
+          continue;
+        }
+        System.err.println(element.toString());
+      }
+      // wait for progress to terminate
+      while (this.displayRunning == false) {
+        // TODO timeout -> throw runtime-exception
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    } else {
+      System.out.println("Initiation runLater recursion to display DataSet");
+    }
+    // Platform.runLater for every 10 data points
+    this.clearSeries();
+    this.counter = 0;
+    this.displayRunning = true;
+    this.runLaterCall();
+  }
+
+  /**
+   * Calls {@link Platform#runLater(Runnable)} to update data points in charts by calling
+   * {@link #displayPoints()} without causing race conditions.
+   */
+  private void runLaterCall() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println(String.format("Executing runLater for DataSet display, counter: %s/%s",
+            counter, set.size()));
+        displayPoints();
+      }
+    });
+  }
+
+  /**
+   * This method should only be called by {@link Platform#runLater(Runnable)} to prevent race
+   * conditions within JavaFX elements.
+   * <p>
+   * It adds the next 10 data points and their derivDepths to the respective graphs, before calling
+   * {@link #runLaterCall()} to recursively continue he process, if necessary. A class internal
+   * counter is used to count through the entire set in the recursive method invocations.
+   */
+  public void displayPoints() {
+    // terminate if showData() was called again
+    if (this.displayRunning == false) {
+      this.displayRunning = true;
+      return;
+    }
+    // only add the next 10 values, or until the end of the set
+    int max = this.counter + 10;
+    if (max > this.set.size()) {
+      max = this.set.size();
+    }
+    // add values
+    double xVal;
+    int depth;
+    while (this.counter < max) {
+      // add data point to setSeries
+      xVal = this.set.getIndependentValue(counter);
+      this.setSeries.getData()
+          .add(new XYChart.Data<Number, Number>(xVal, this.set.getByIndex(counter)));
+      // add derivDepth to the correct series
+      depth = this.set.getDerivDepthsByIndex(counter);
+      try {
+        this.switchSeries(depth).getData().add(new XYChart.Data<Number, Number>(xVal, depth + 1));
+      } catch (NullPointerException e) {
+        System.err.println(String.format("Undefined derivDepth for %s at index %s!",
+            DisplayDataSet.class, counter));
+        this.undefinedSeries.getData().add(new XYChart.Data<Number, Number>(xVal, -5.0));
+      }
+      // TODO do not show last 10 derivDepths on chart. could remove them
+      // counter
+      this.counter++;
+    }
+    // add another runLater if needed
+    if (this.counter < this.set.size() && this.displayRunning == true) {
+      this.runLaterCall();
+    } else {
+      this.displayRunning = false;
+    }
   }
 
 }

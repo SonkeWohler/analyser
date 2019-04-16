@@ -15,10 +15,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="rootAnchor" prefHeight="500.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hyperDap.guiPres.views.honoursMainView.HonoursMainController">
    <children>
-      <ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" layoutY="0.3333333432674408" pannable="true" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fx:id="rootScroll" fitToWidth="true" hbarPolicy="NEVER" layoutY="0.3333333432674408" pannable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <VBox fx:id="bigBox" alignment="TOP_CENTER" spacing="10.0">
                <children>
@@ -103,10 +102,10 @@
                               <Label text="y= a* sin(b*x + c) + d" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="A point without derivative" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <CheckBox fx:id="didi5" mnemonicParsing="false" text="Exponential" />
-                              <CheckBox fx:id="didi6" mnemonicParsing="false" text="Linear" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="didi6" mnemonicParsing="false" text="Trigonometric" GridPane.rowIndex="1" />
                               <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2" />
-                              <CheckBox fx:id="didi8" mnemonicParsing="false" text="Gap" GridPane.rowIndex="3" />
-                              <Label text="Missing Data" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="didi8" disable="true" mnemonicParsing="false" text="Noise" GridPane.rowIndex="3" />
+                              <Label text="Random Discrepancies" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
                      </children>

@@ -341,6 +341,17 @@ public abstract class DataSet<T> implements Collection<T> {
   }
 
   /**
+   * Ensures that this {@code DataSet} can hold at least as many values as specified.
+   * <p>
+   * Compare to {@link ArrayList#ensureCapacity(int)}.
+   * 
+   * @param capacity
+   */
+  public void ensureCapacity(int capacity) {
+    this.values.ensureCapacity(capacity);
+  }
+
+  /**
    * {@inheritDoc}
    * <p>
    * Is applied to {@link #values}.

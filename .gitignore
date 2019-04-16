@@ -1,6 +1,9 @@
 ## my testing project
 testingGrounds/
 
+## experimentation files
+*Experiment.java
+
 ## eclipse files and directories
 .metadata/
 .recommenders/
@@ -31,4 +34,4 @@ hs_err_pid*
 *.bat
 .mtj.tmp/
 *.ctxt
-base/src/test/java/hyperDap/base/types/dataSets/Experiment.java
+

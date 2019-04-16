@@ -2,6 +2,7 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
+import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
@@ -90,7 +91,7 @@ public class HonoursMainController {
     this.didiMap.put(didi5, "exp");
     this.didiMap.put(didi6, "sine");
     this.didiMap.put(didi7, "bias");
-    this.didiMap.put(didi8, "gap");
+    this.didiMap.put(didi8, "noise");
 
     this.setChart = new DisplayDataSet();
     this.graphBox.getChildren().add(this.setChart);
@@ -162,6 +163,12 @@ public class HonoursMainController {
 
   public void giveGUIMain(GUIMainForFX guiMain) {
     this.main = guiMain;
+  }
+
+  public void displayDataSet(ValueDataSet<? extends Number> dataSet) {
+    System.out.println("Displaying new DataSet");
+    this.setChart.setDataSet(dataSet);
+    // this.setChart.showData();
   }
 
 }

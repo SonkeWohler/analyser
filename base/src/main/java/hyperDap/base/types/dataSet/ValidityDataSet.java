@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public abstract class ValidityDataSet<T> extends DataSet<T> {
 
-  private ArrayList<Boolean> valids;
+  protected ArrayList<Boolean> valids;
 
   public ValidityDataSet(Number base, Number step) {
     super(base, step);
@@ -207,6 +207,15 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
   public void clear() {
     super.clear();
     this.valids.clear();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void ensureCapacity(int capacity) {
+    super.ensureCapacity(capacity);
+    this.valids.ensureCapacity(capacity);
   }
 
 }

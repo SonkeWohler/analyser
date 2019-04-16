@@ -2,6 +2,7 @@ package hyperDap.base.types.dataSet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.DoubleFunction;
 import hyperDap.base.helpers.Comparator;
 import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.value.ValuePair;
@@ -25,13 +26,67 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
    */
   protected final double yPrecision;
 
-  private ArrayList<Integer> derivDepths;
+  protected ArrayList<Integer> derivDepths;
+
+  protected DoubleFunction<T> fromDouble;
 
   public ValueDataSet(Number base, Number step, Number yPrecision) {
     super(base, step);
     this.values = new ArrayList<T>();
     this.yPrecision = yPrecision.doubleValue();
     this.derivDepths = new ArrayList<Integer>();
+  }
+
+  /**
+   * A Constructor that provides a conversion function, that is used in {@link #add(double)} to
+   * convert to {@code T}.
+   * <p>
+   * This function must be provided when
+   * 
+   * @param base
+   * @param step
+   * @param yPrecision
+   * @param convertFromDouble
+   */
+  public ValueDataSet(Number base, Number step, Number yPrecision,
+      DoubleFunction<T> convertFromDouble) {
+    super(base, step);
+    this.values = new ArrayList<T>();
+    this.yPrecision = yPrecision.doubleValue();
+    this.derivDepths = new ArrayList<Integer>();
+    this.fromDouble = convertFromDouble;
+  }
+
+  // conversion function
+  // **************************************************************************************************************************
+
+  /**
+   * Assigns the fromDouble {@link Double Function Function} if not already assigned.
+   * <p>
+   * In the interest of consistency this function should only be assigned once.
+   * 
+   * @param convertFromDouble A {@link DoubleFunction} to convert to the {@code DataSet's} type
+   *        {@code T}
+   * @throws Exception When the function is already assigned.
+   */
+  public void addConversionFunction(DoubleFunction<T> convertFromDouble) throws Exception {
+    if (this.fromDouble == null) {
+      this.fromDouble = convertFromDouble;
+    } else {
+      throw new Exception("Conversion Function has already been assigned!");
+    }
+  }
+
+  /**
+   * Check whether the conversion function used in {@link #add(double)} has been assigned.
+   * 
+   * @return {@code true} if the function is defined, {@code false} otherwise.
+   */
+  public boolean hasConversionFunction() {
+    if (this.fromDouble == null) {
+      return false;
+    }
+    return true;
   }
 
   // helpers
@@ -43,6 +98,22 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
 
   // write
   // ****************************************************************************************
+
+  /**
+   * Encapsulation of {@link #add(Object)} that converts from {@link Double} to {@code T} if the
+   * required conversion function has been defined.
+   * 
+   * @param value
+   * @return
+   */
+  public boolean add(double value) throws NullPointerException {
+    try {
+      return this.add(this.fromDouble.apply(value));
+    } catch (NullPointerException e) {
+      throw new NullPointerException(
+          String.format("No conversion function has  been assigned to convert from double to T"));
+    }
+  }
 
   /**
    * Encapsulation of {@link #add(double, Object)} using {@link ValuePair} input.
@@ -192,8 +263,17 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
     return this.contains(valuePair.getX().doubleValue(), valuePair.getY().doubleValue());
   }
 
-  //
+  // other
   // ****************************************************************************************
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void ensureCapacity(int capacity) {
+    super.ensureCapacity(capacity);
+    this.derivDepths.ensureCapacity(capacity);
+  }
 
 
 }
