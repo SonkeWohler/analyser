@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -39,13 +40,22 @@
                     </rowConstraints>
                      <children>
                         <Label text="Base" />
-                        <TextField fx:id="baseField" GridPane.columnIndex="1" />
+                        <TextField fx:id="baseField" promptText="Where the data starts." GridPane.columnIndex="1">
+                           <tooltip>
+                              <Tooltip text="The first xValue in the data i.e. where it starts." />
+                           </tooltip></TextField>
                         <Button fx:id="baseRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" />
                         <Label text="Step" GridPane.rowIndex="1" />
-                        <TextField fx:id="stepField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="stepField" promptText="The distance between data points." GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <tooltip>
+                              <Tooltip text="The distance between data points on the x-axis." />
+                           </tooltip></TextField>
                         <Button fx:id="stepRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label text="Length" GridPane.rowIndex="2" />
-                        <TextField fx:id="lengthField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="lengthField" promptText="The number of data points." GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <tooltip>
+                              <Tooltip text="The number of data points." />
+                           </tooltip></TextField>
                         <Button fx:id="lengthRanndButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                      </children>
                      <padding>
@@ -103,8 +113,14 @@
                               <Label text="A point without derivative" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <CheckBox fx:id="didi5" mnemonicParsing="false" text="Exponential" />
                               <CheckBox fx:id="didi6" mnemonicParsing="false" text="Trigonometric" GridPane.rowIndex="1" />
-                              <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2" />
-                              <CheckBox fx:id="didi8" disable="true" mnemonicParsing="false" text="Noise" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2">
+                                 <tooltip>
+                                    <Tooltip text="Simulates a Sensor being &quot;knocked&quot; off true." />
+                                 </tooltip></CheckBox>
+                              <CheckBox fx:id="didi8" disable="true" mnemonicParsing="false" text="Noise" GridPane.rowIndex="3">
+                                 <tooltip>
+                                    <Tooltip text="Data points will be spread about 0.001 around their value in a gaussian distribution." />
+                                 </tooltip></CheckBox>
                               <Label text="Random Discrepancies" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
@@ -121,11 +137,29 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                  <GridPane hgap="10.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
                         <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2">
+                           <children>
+                              <TextField promptText="Adjust Precision">
+                                 <tooltip>
+                                    <Tooltip text="When calculating derivatives, by default a precision of 0.001 is used. This makes it more robust to noise and floating point errors." textAlignment="JUSTIFY" wrapText="true" />
+                                 </tooltip>
+                              </TextField>
+                              <Button mnemonicParsing="false" text="Set" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
+                  </GridPane>
                   <VBox fx:id="graphBox" />
                   <Separator prefWidth="200.0">
                      <padding>
