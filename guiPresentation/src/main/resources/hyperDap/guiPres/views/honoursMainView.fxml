@@ -117,7 +117,7 @@
                                  <tooltip>
                                     <Tooltip text="Simulates a Sensor being &quot;knocked&quot; off true." />
                                  </tooltip></CheckBox>
-                              <CheckBox fx:id="didi8" disable="true" mnemonicParsing="false" text="Noise" GridPane.rowIndex="3">
+                              <CheckBox fx:id="didi8" mnemonicParsing="false" text="Noise" GridPane.rowIndex="3">
                                  <tooltip>
                                     <Tooltip text="Data points will be spread about 0.001 around their value in a gaussian distribution." />
                                  </tooltip></CheckBox>
