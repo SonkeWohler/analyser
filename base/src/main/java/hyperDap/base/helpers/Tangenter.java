@@ -29,6 +29,26 @@ public final class Tangenter {
   }
 
   /**
+   * Used to adjust the precision of {@link #tangentApprox(double, double, double)}, which by
+   * default is set to 0.001.
+   * 
+   * @param precision The new precision used.
+   */
+  public static void setPrecision(double precision) {
+    Tangenter.precision = precision;
+  }
+
+  /**
+   * Gives the value of the precision currently used in
+   * {@link #tangentApprox(double, double, double)}.
+   * 
+   * @return The current value of precision.
+   */
+  public static double getPrecision() {
+    return precision;
+  }
+
+  /**
    * Calculates the slope of the tangent between two points with {@code yValues} {@code y1} and
    * {@code y2} that are a distance {@code step} apart in their {@code xValues}. If the two values
    * are too close, based on {@link Comparator#equalApprox(double, double, double)}, the slope will
@@ -254,24 +274,66 @@ public final class Tangenter {
     }
   }
 
-  /**
-   * Used to adjust the precision of {@link #tangentApprox(double, double, double)}, which by
-   * default is set to 0.001.
-   * 
-   * @param precision The new precision used.
-   */
-  public static void setPrecision(double precision) {
-    Tangenter.precision = precision;
+  private void checkInfs(ValueDataSet<? extends Number> set, int maxDepth) {
+    int size = set.size();
+    boolean checking = false;
+    int startI = 0;
+    int endI = 0;
+    int depth;
+    for (int i = 0; i < size; i++) {
+      if (set.getDerivDepthsByIndex(i) == Integer.MAX_VALUE) {
+        // depth is undefined until we know otherwise
+        set.setDerivDepth(i, -5);
+        // begin tracking a potential segment.
+        if (checking == false) {
+          startI = i;
+          checking = true;
+        }
+      } else if (checking == true) {
+        // end of segment
+        endI = i;
+        checking = false;
+        if (endI - startI < maxDepth) {
+          continue;
+        }
+        // TODO check
+      }
+    }
   }
 
-  /**
-   * Gives the value of the precision currently used in
-   * {@link #tangentApprox(double, double, double)}.
-   * 
-   * @return The current value of precision.
-   */
-  public static double getPrecision() {
-    return precision;
+  private void checkForFunctions(ValueDataSet<? extends Number> set, int startI, int endI) {
+    double val;
+    double smallest = Double.MIN_VALUE;
+    ArrayList<Double> values = new ArrayList<>();
+    for (int i = startI; i < endI; i++) {
+      val = set.getByIndex(i).doubleValue();
+      if (val < smallest) {
+        smallest = val;
+      }
+      values.add(val);
+    }
+    // if there are negative values, move all values up such that they are all positive
+    // this is required to prevent NaN or infinity values when taking the logarithm
+    // it does not affect the derivative values beyond possible floating point errors
+    if (smallest <= 0) {
+      for (int i = 0; i < values.size(); i++) {
+        values.set(i, values.get(i) + smallest + Double.MIN_VALUE);
+      }
+    }
+    ValueDataSet<Double> otherSet = new ValueDataSet<>(set.getBase(), set.getStep(),
+        set.getPrecision(), d -> Double.valueOf(d));
+
+    // --- Exponential ---
+    // add values to data set
+    for (Double element : values) {
+      otherSet.add(Math.log(element));
+    }
+    otherSet.calcDerivDepths(); // TODO prevent infinite recursion
+    // take logarithm for all values and add to otherSet
+    // calcDerivs for otherSet
+    // for depth==1 or -1 : set.setDerivDepth(startI+i,depth) and otherwise leave as -5
+    // set.setDerivDepth(endI-1,-1)
+    // Trigonometric
   }
 
 }

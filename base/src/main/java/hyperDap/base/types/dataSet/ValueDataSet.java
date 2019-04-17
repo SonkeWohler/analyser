@@ -126,8 +126,21 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
     this.add(xValue, yValue);
   }
 
+  public void setDerivDepth(int index, int depth) throws IndexOutOfBoundsException {
+    // TODO not complete?
+    this.derivDepths.set(index, depth);
+  }
+
+  public void addToDerivDepth(List<Integer> depths) {
+    this.derivDepths.addAll(depths);
+  }
+
   // getters
   // ***************************************************************************************
+
+  public double getPrecision() {
+    return this.yPrecision;
+  }
 
   /**
    * Returns the depths to which a trace by trace derivative for this value is not zero.
@@ -265,6 +278,15 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
 
   // other
   // ****************************************************************************************
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void clear() {
+    super.clear();
+    this.derivDepths.clear();
+  }
 
   /**
    * {@inheritDoc}
