@@ -9,7 +9,6 @@ import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -55,9 +54,6 @@ public class HonoursMainController {
   CheckBox didi8;
 
   Map<CheckBox, String> didiMap;
-
-  @FXML
-  Label functionErrorLabel;
 
   @FXML
   VBox graphBox;
@@ -156,8 +152,8 @@ public class HonoursMainController {
     if (temp == 0.0) {
       map.put("constant", 1.0);
     }
-    if ((map.get("length").doubleValue() / temp) < 10.00) {
-      temp = temp * 10.0;
+    if ((map.get("length").doubleValue() / temp) - 2.0 < 10.00) {
+      temp = temp * 12.0;
       this.lengthField.setPromptText(
           String.format("Must have at least %s points for these functions", temp.intValue()));
       this.lengthField.setText("");
