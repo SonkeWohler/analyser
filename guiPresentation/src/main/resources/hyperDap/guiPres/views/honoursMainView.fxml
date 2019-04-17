@@ -161,6 +161,11 @@
                      </children>
                   </GridPane>
                   <VBox fx:id="graphBox" />
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Button fx:id="executeButton2" mnemonicParsing="false" onAction="#execute" text="Execute" />
+                     </children>
+                  </HBox>
                   <Separator prefWidth="200.0">
                      <padding>
                         <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />

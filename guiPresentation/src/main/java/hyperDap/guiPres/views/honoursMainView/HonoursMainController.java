@@ -65,6 +65,8 @@ public class HonoursMainController {
   @FXML
   Button executeButton;
   @FXML
+  Button executeButton2;
+  @FXML
   TextField precisionField;
   @FXML
   Button precisionButton;
@@ -112,7 +114,7 @@ public class HonoursMainController {
 
   public void execute() {
     Map<String, Double> map = new HashMap<String, Double>();
-    double temp;
+    Double temp;
 
     try {
       temp = Double.valueOf(this.baseField.getText());
@@ -131,7 +133,7 @@ public class HonoursMainController {
       return;
     }
     try {
-      temp = Double.valueOf(this.lengthField.getText()).intValue();
+      temp = Integer.valueOf(this.lengthField.getText()).doubleValue();
       if (temp < 10) {
         this.lengthField.setText("");
         this.lengthField.setPromptText("This must be above 10");
@@ -139,12 +141,12 @@ public class HonoursMainController {
       }
       map.put("length", temp);
     } catch (NumberFormatException e) {
-      this.lengthField.setPromptText("This must be a number e.g. '15'");
+      this.lengthField.setPromptText("This must be a number e.g. '20'");
       this.lengthField.setText("");
       return;
     }
 
-    temp = 0;
+    temp = 0.0;
     for (CheckBox didi : didiMap.keySet()) {
       if (didi.isSelected() == true) {
         map.put(this.didiMap.get(didi), 1.0);
@@ -155,24 +157,14 @@ public class HonoursMainController {
       map.put("constant", 1.0);
     }
     if ((map.get("length").doubleValue() / temp) < 10.00) {
-      this.functionErrorLabel.setText("The data set is too short for this many functions.");
+      temp = temp * 10.0;
+      this.lengthField.setPromptText(
+          String.format("Must have at least %s points for these functions", temp.intValue()));
+      this.lengthField.setText("");
       return;
     }
 
     this.main.execute(map);
-  }
-
-  // for GUIMain
-  // **************************************************************************************************************************
-
-  public void giveGUIMain(GUIMainForFX guiMain) {
-    this.main = guiMain;
-  }
-
-  public void displayDataSet(ValueDataSet<? extends Number> dataSet) {
-    System.out.println("Displaying new DataSet");
-    this.setChart.setDataSet(dataSet);
-    // this.setChart.showData();
   }
 
   public void setPrecision() {
@@ -191,6 +183,19 @@ public class HonoursMainController {
     this.precisionField.setText("");
     System.out
         .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
+  }
+
+  // for GUIMain
+  // **************************************************************************************************************************
+
+  public void giveGUIMain(GUIMainForFX guiMain) {
+    this.main = guiMain;
+  }
+
+  public void displayDataSet(ValueDataSet<? extends Number> dataSet) {
+    System.out.println("Displaying new DataSet");
+    this.setChart.setDataSet(dataSet);
+    // this.setChart.showData();
   }
 
 }
