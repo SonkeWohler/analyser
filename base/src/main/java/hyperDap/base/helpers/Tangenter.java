@@ -309,8 +309,8 @@ public final class Tangenter {
    * @param maxDepth
    */
   private static void smoothEndOfDepths(ArrayList<Integer> depths, int maxDepth) {
-    int depth = depths.get(depths.size() - maxDepth - 1);
-    for (int i = depths.size() - maxDepth; i < depths.size(); i++) {
+    int depth = depths.get(depths.size() - maxDepth);
+    for (int i = depths.size() - maxDepth + 1; i < depths.size(); i++) {
       depths.set(i, depth);
     }
   }
