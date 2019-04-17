@@ -206,6 +206,7 @@ public final class Tangenter {
     if (doInfiniteDepths == true) {
       // TODO
     }
+    smoothEndOfDepths(depths, maxDepth);
     // TODO smooth over the last maxDepth elements
     // finished
     return depths;
@@ -300,7 +301,22 @@ public final class Tangenter {
     }
   }
 
-  private void checkInfs(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
+  /**
+   * Used within {@link #calcDerivDepth(ValueDataSet, int, boolean)} to ensure the last few values
+   * of {@code derivDepth} are consistent with the remaining ones. This does not mean that these are
+   * the true derivDepth values, but the true one cannot be calculated close to the end.
+   * 
+   * @param depths
+   * @param maxDepth
+   */
+  private static void smoothEndOfDepths(ArrayList<Integer> depths, int maxDepth) {
+    int depth = depths.get(depths.size() - maxDepth - 1);
+    for (int i = depths.size() - maxDepth; i < depths.size(); i++) {
+      depths.set(i, depth);
+    }
+  }
+
+  private static void checkInfs(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
       int maxDepth) {
     int size = depths.size();
     boolean checking = false;
@@ -328,8 +344,8 @@ public final class Tangenter {
     }
   }
 
-  private void checkForFunctions(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
-      int startI, int endI, int maxDepth) {
+  private static void checkForFunctions(ValueDataSet<? extends Number> set,
+      ArrayList<Integer> depths, int startI, int endI, int maxDepth) {
     double val;
     double smallest = Double.MIN_VALUE;
     ArrayList<Double> values = new ArrayList<>();

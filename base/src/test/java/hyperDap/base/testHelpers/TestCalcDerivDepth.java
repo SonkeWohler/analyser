@@ -18,7 +18,7 @@ public class TestCalcDerivDepth {
       set.add(value);
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       assertEquals(0, set.getDerivDepthsByIndex(i));
     }
   }
@@ -30,7 +30,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + i);
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(1, set.getDerivDepthsByIndex(i));
     }
@@ -43,7 +43,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, 2));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(2, set.getDerivDepthsByIndex(i));
     }
@@ -57,7 +57,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -71,7 +71,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -85,7 +85,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -99,7 +99,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -113,7 +113,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -127,7 +127,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -141,7 +141,7 @@ public class TestCalcDerivDepth {
       set.add(5.0 + Math.pow(i, power));
     }
     set.calcDerivDepths();
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(Integer.MAX_VALUE, set.getDerivDepthsByIndex(i));
     }
@@ -167,7 +167,7 @@ public class TestCalcDerivDepth {
     }
     // System.out.println(String.format("%s: %s", 49, set.getDerivDepthsByIndex(49)));
     assertEquals(-1, set.getDerivDepthsByIndex(49));
-    for (int i = 50; i < set.size() - 10; i++) {
+    for (int i = 50; i < set.size(); i++) {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(1, set.getDerivDepthsByIndex(i));
     }
@@ -191,7 +191,7 @@ public class TestCalcDerivDepth {
     }
     // System.out.println(String.format("%s: %s", 49, set.getDerivDepthsByIndex(49)));
     assertEquals(-1, set.getDerivDepthsByIndex(49));
-    for (int i = 50; i < set.size() - 10; i++) {
+    for (int i = 50; i < set.size(); i++) {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
@@ -214,7 +214,7 @@ public class TestCalcDerivDepth {
       set.add(temp);
       depthsExpected.add(0);
     }
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(String.format("%s: %s ?= %s", i, set.getDerivDepthsByIndex(i),
       // depthsExpected.get(i)));
       assertEquals(depthsExpected.get(i).intValue(), set.getDerivDepthsByIndex(i));
@@ -239,7 +239,7 @@ public class TestCalcDerivDepth {
       set.add(temp + Math.pow(i, power));
       depthsExpected.add(power);
     }
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(depthsExpected.get(i).intValue(), set.getDerivDepthsByIndex(i));
     }
@@ -262,7 +262,7 @@ public class TestCalcDerivDepth {
     }
     // System.out.println(String.format("%s: %s", 49, set.getDerivDepthsByIndex(49)));
     assertEquals(-1, set.getDerivDepthsByIndex(49));
-    for (int i = 50; i < set.size() - 10; i++) {
+    for (int i = 50; i < set.size(); i++) {
       // System.out.println(String.format("%s: %s", i, set.getDerivDepthsByIndex(i)));
       assertEquals(0, set.getDerivDepthsByIndex(i));
     }
@@ -314,7 +314,7 @@ public class TestCalcDerivDepth {
     for (int i = 0; i < 500; i++) {
       set.add(Math.pow(base + i * step, power));
     }
-    for (int i = 0; i < set.size() - 10; i++) {
+    for (int i = 0; i < set.size(); i++) {
       // System.out.println(set.getDerivDepthsByIndex(i));
       assertEquals(power, set.getDerivDepthsByIndex(i));
     }
