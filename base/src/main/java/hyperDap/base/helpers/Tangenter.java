@@ -204,10 +204,9 @@ public final class Tangenter {
     detectDepthChanges(derivs, depths);
     // further analysis
     if (doInfiniteDepths == true) {
-      // TODO
+      Tangenter.checkInfs(dataset, depths, maxDepth);
     }
     smoothEndOfDepths(depths, maxDepth);
-    // TODO smooth over the last maxDepth elements
     // finished
     return depths;
   }
@@ -316,36 +315,45 @@ public final class Tangenter {
     }
   }
 
+  /**
+   * Used within {@link #calcDerivDepth(ValueDataSet, int, boolean)} to check for {@code dericDepth}
+   * values of {@link Integer#MAX_VALUE} and initiate further analysis on these elements.
+   * 
+   * @param set
+   * @param depths
+   * @param maxDepth
+   */
   private static void checkInfs(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
       int maxDepth) {
     int size = depths.size();
     boolean checking = false;
     int startI = 0;
     int endI = 0;
-    int depth;
+    // check all derivDepths for yet undefined values
     for (int i = 0; i < size; i++) {
       if (depths.get(i) == Integer.MAX_VALUE) {
-        // depth is undefined until we know otherwise
-        set.setDerivDepth(i, -5);
-        // begin tracking a potential segment.
+        depths.set(i, -5); // depth is undefined until we know otherwise
         if (checking == false) {
+          // begin tracking a this segment for further analysis.
           startI = i;
           checking = true;
         }
       } else if (checking == true) {
-        // end of segment
+        // end of segment, stop tracking
         endI = i;
         checking = false;
         if (endI - startI < maxDepth) {
+          // if segment too small no point
           continue;
         }
-        // TODO check
+        // initate further analysis
+        // TODO
       }
     }
   }
 
-  private static void checkForFunctions(ValueDataSet<? extends Number> set,
-      ArrayList<Integer> depths, int startI, int endI, int maxDepth) {
+  private static void checkForExp(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
+      int startI, int endI, int maxDepth) {
     double val;
     double smallest = Double.MIN_VALUE;
     ArrayList<Double> values = new ArrayList<>();
