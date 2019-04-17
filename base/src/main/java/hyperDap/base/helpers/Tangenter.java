@@ -189,7 +189,7 @@ public final class Tangenter {
    * @param doInfiniteDepths Whether infinite derivDepths should be further analysed to exponential,
    *        trigonometric etc. (={@code true}) or not (={@code false}).
    * @return An {@link ArrayList ArrayList<Integer>} of the {@code derivDepth} for each value of
-   *         {@code dataset} up to its {@code size - maxDepth}.
+   *         {@code dataset}. Note that the last {@code maxDepth} values may be inaccurate.
    */
   public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
       int maxDepth, boolean doInfiniteDepths) {
@@ -206,6 +206,7 @@ public final class Tangenter {
     if (doInfiniteDepths == true) {
       // TODO
     }
+    // TODO smooth over the last maxDepth elements
     // finished
     return depths;
   }
@@ -299,14 +300,15 @@ public final class Tangenter {
     }
   }
 
-  private void checkInfs(ValueDataSet<? extends Number> set, int maxDepth) {
-    int size = set.size();
+  private void checkInfs(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
+      int maxDepth) {
+    int size = depths.size();
     boolean checking = false;
     int startI = 0;
     int endI = 0;
     int depth;
     for (int i = 0; i < size; i++) {
-      if (set.getDerivDepthsByIndex(i) == Integer.MAX_VALUE) {
+      if (depths.get(i) == Integer.MAX_VALUE) {
         // depth is undefined until we know otherwise
         set.setDerivDepth(i, -5);
         // begin tracking a potential segment.
@@ -326,7 +328,8 @@ public final class Tangenter {
     }
   }
 
-  private void checkForFunctions(ValueDataSet<? extends Number> set, int startI, int endI) {
+  private void checkForFunctions(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
+      int startI, int endI, int maxDepth) {
     double val;
     double smallest = Double.MIN_VALUE;
     ArrayList<Double> values = new ArrayList<>();
@@ -349,16 +352,44 @@ public final class Tangenter {
         set.getPrecision(), d -> Double.valueOf(d));
 
     // --- Exponential ---
-    // add values to data set
+    // add values to data set and calculate derivDepth
     for (Double element : values) {
       otherSet.add(Math.log(element));
     }
-    otherSet.calcDerivDepths(); // TODO prevent infinite recursion
-    // take logarithm for all values and add to otherSet
-    // calcDerivs for otherSet
-    // for depth==1 or -1 : set.setDerivDepth(startI+i,depth) and otherwise leave as -5
-    // set.setDerivDepth(endI-1,-1)
-    // Trigonometric
+    ArrayList<Integer> list = calcDerivDepth(otherSet, maxDepth, false); // prevent infinite
+                                                                         // recursion
+    int depth;
+    Integer otherStartI = null;
+    for (int i = 0; i < list.size(); i++) {
+      depth = list.get(i);
+      if (depth == Integer.MAX_VALUE) {
+        // track if not exponential for further analysis
+        if (otherStartI == null) {
+          otherStartI = i;
+        }
+      } else if (depth == 1) {
+        // mark as exponential
+        depths.set(i + startI, -2);
+        if (otherStartI != null) {
+          // if was tracking then mark change
+          depths.set(i + startI - 1, -1);
+          // TODO trig
+          otherStartI = null;
+        }
+      } else {
+        // else transfer value over (e.g. change within exponential or bias)
+        depths.set(i + startI, depth);
+        if (otherStartI != null) {
+          // if was tracking then mark change
+          depths.set(i + startI - 1, -1);
+          // TODO trig
+          otherStartI = null;
+        }
+
+      }
+    }
+    // mark the change
+    depths.set(endI - 1, -1);
   }
 
 }
