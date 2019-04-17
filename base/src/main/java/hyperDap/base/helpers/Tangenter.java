@@ -48,6 +48,13 @@ public final class Tangenter {
     return precision;
   }
 
+  public static double tangentProp(double step, double y1, double y2) {
+    if (Comparator.equalProportionate(y1, y2, precision)) {
+      return 0.0;
+    }
+    return tangentSimple(step, y1, y2);
+  }
+
   /**
    * Calculates the slope of the tangent between two points with {@code yValues} {@code y1} and
    * {@code y2} that are a distance {@code step} apart in their {@code xValues}. If the two values
