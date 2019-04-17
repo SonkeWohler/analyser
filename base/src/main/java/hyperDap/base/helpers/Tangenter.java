@@ -145,7 +145,7 @@ public final class Tangenter {
   }
 
   /**
-   * Calls {@link #calcDerivDepth(ValueDataSet, 10)}.
+   * Calls {@link #calcDerivDepth(ValueDataSet, int) calcDerivDepth(ValueDataSet, 10)}.
    * 
    * @param dataset
    * @return
@@ -155,23 +155,44 @@ public final class Tangenter {
   }
 
   /**
+   * Calls {@link #calcDerivDepth(ValueDataSet, int, boolean) calcDerivDepth(ValueDataSet, int,
+   * true)}.
+   * 
+   * @param dataset
+   * @param maxDepth
+   * @return
+   */
+  public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
+      int maxDepth) {
+    return calcDerivDepth(dataset, maxDepth, true);
+  }
+
+  /**
    * Calculates and returns the depth of derivative ({@code derivDepth}) for {@code dataset}.
    * <p>
    * The {@code derivDepth} is the number of times a trace derivative (the tangent between two
    * points, see {@link #tangentSimple(double, double, double)}) is NOT zero. For each point this
    * indicates the degree of the polynomial the data is representing, if it is polynomial. If not
-   * the {@code derivDepth} will be assigned {@link Integer#MAX_VALUE} to represent infinity. This
-   * will also be assigned if the derivDepth would be larger than {@code maxDepth - 1}.
+   * the {@code derivDepth} will be assigned {@link Integer#MAX_VALUE} until further analysis, to
+   * represent infinity. This will also be assigned if the derivDepth would be larger than
+   * {@code maxDepth - 1}.
+   * <p>
+   * If {@code doInfiniteDepths} is {@code true} any {@link Integer#MAX_VALUE} {@code derivDepth}
+   * values will be further analysed and assigned {@code -2} if exponential, {@code -3} for
+   * trigonometric and {@code -5} otherwise, with the correct change values of {@code -1} also
+   * assigned.
    * 
    * @param dataset The {@link ValueDataSSet} that is to be analysed.
    * @param maxDepth The maximum depth to which the derivative should be calculated.
    *        {@code derivDepth} larger than this will be assigned {@link Integer#MAX_VALUE},
    *        representing infinity.
+   * @param doInfiniteDepths Whether infinite derivDepths should be further analysed to exponential,
+   *        trigonometric etc. (={@code true}) or not (={@code false}).
    * @return An {@link ArrayList ArrayList<Integer>} of the {@code derivDepth} for each value of
    *         {@code dataset} up to its {@code size - maxDepth}.
    */
   public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
-      int maxDepth) {
+      int maxDepth, boolean doInfiniteDepths) {
     int size = dataset.size();
     ArrayList<Integer> depths = new ArrayList<Integer>(size);
     double[][] derivs = new double[size][maxDepth];
@@ -181,6 +202,10 @@ public final class Tangenter {
     countDerivDepths(derivs, depths);
     // detect and mark points of change
     detectDepthChanges(derivs, depths);
+    // further analysis
+    if (doInfiniteDepths == true) {
+      // TODO
+    }
     // finished
     return depths;
   }
