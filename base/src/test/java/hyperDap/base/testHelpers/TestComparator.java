@@ -20,6 +20,7 @@ public class TestComparator {
     assertFalse(Comparator.equalApprox(v1, v1 - 0.000000000000001, 0.0));
     assertTrue(Comparator.equalApprox(v1, v1 + 0.000000000000001, 0.1));
     assertTrue(Comparator.equalApprox(v1, v1 - 0.000000000000001, 0.1));
+    assertFalse(Comparator.equalApprox(v1, Double.MAX_VALUE, 1000000));
   }
 
 }

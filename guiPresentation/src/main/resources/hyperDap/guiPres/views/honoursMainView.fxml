@@ -119,7 +119,7 @@
                                  </tooltip></CheckBox>
                               <CheckBox fx:id="didi8" mnemonicParsing="false" text="Noise" GridPane.rowIndex="3">
                                  <tooltip>
-                                    <Tooltip text="Data points will be spread about 0.001 around their value in a gaussian distribution." />
+                                    <Tooltip text="Data points will be spread about 0.01 around their value in a gaussian distribution." />
                                  </tooltip></CheckBox>
                               <Label text="Random Discrepancies" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                            </children>
@@ -151,7 +151,7 @@
                            <children>
                               <TextField fx:id="precisionField" promptText="Adjust Precision">
                                  <tooltip>
-                                    <Tooltip text="When calculating derivatives, by default a precision of 0.001 is used. This makes it more robust to noise and floating point errors." textAlignment="JUSTIFY" wrapText="true" />
+                                    <Tooltip text="When calculating derivatives, by default a precision of 0.05 is used. This makes it more robust to noise and floating point errors." textAlignment="JUSTIFY" wrapText="true" />
                                  </tooltip>
                               </TextField>
                               <Button fx:id="precisionButton" mnemonicParsing="false" onAction="#setPrecision" text="Set" />

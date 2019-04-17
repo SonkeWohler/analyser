@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
+import hyperDap.base.helpers.Comparator;
 import hyperDap.base.types.dataSet.ValueDataSet;
 
 /**
@@ -90,6 +91,7 @@ public class GenSegment {
         break;
       case "exp":
         func = x -> Math.pow(Math.E, x);
+        a = a / 1000;
         break;
       case "sine":
         func = x -> Math.sin(x);
@@ -195,15 +197,20 @@ public class GenSegment {
    */
   public void addToDoubleDataSet(ValueDataSet<Double> set, int N, double noise)
       throws IllegalArgumentException {
-    // TODO noise
+    int size = set.size();
     if (this.step != set.getStep()) {
       throw new IllegalArgumentException(
           String.format("%s. addToDoubleDataSet() does not match preset step! %s!=%s",
               GenSegment.class, this.step, set.getStep()));
     }
     set.ensureCapacity(N + set.size());
+    double val;
     for (Integer i = 0; i < N; i++) {
-      set.add(Double.valueOf(noisyF(i.doubleValue() * step, noise)));
+      val = Double.valueOf(noisyF(i.doubleValue() * step, noise));
+      set.add(val);
+      if (Comparator.equalApprox(0.0, val, 10000.0) == false) {
+        set.editValidityByIndex((i + size), false);
+      }
     }
   }
 
@@ -244,7 +251,7 @@ public class GenSegment {
    */
   public void addToDataSet(ValueDataSet<? extends Number> set, int N, double noise)
       throws IllegalArgumentException {
-    // TODO noise
+    int size = set.size();
     if (set.hasConversionFunction() == false) {
       throw new IllegalArgumentException(
           "ValueDataSet must have a convertFromDouble function defined!");
@@ -255,8 +262,13 @@ public class GenSegment {
               GenSegment.class, this.step, set.getStep()));
     }
     set.ensureCapacity(N + set.size());
+    double val;
     for (Integer i = 0; i < N; i++) {
-      set.add(noisyF(i.doubleValue() * step, noise));
+      val = noisyF(i.doubleValue() * step, noise);
+      set.add(val);
+      if (Comparator.equalApprox(0.0, val, 10000) == false) {
+        set.editValidityByIndex(i + size, false);
+      }
     }
   }
 
