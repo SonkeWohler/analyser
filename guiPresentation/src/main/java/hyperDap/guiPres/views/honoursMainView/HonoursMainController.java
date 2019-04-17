@@ -154,8 +154,7 @@ public class HonoursMainController {
     if (temp == 0.0) {
       map.put("constant", 1.0);
     }
-    temp = temp * 10;
-    if ((map.get("length").doubleValue() / temp) < 1.0) {
+    if ((map.get("length").doubleValue() / temp) < 10.00) {
       this.functionErrorLabel.setText("The data set is too short for this many functions.");
       return;
     }

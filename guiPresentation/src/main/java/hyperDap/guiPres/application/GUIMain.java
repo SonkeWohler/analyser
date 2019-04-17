@@ -1,6 +1,7 @@
 package hyperDap.guiPres.application;
 
 import java.util.Map;
+import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.generator.presInterface.PresGenerator;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
@@ -92,6 +93,11 @@ public final class GUIMain extends Application implements GUIMainForFX {
 
   private HonoursMainController mainController;
   private Stage primaryStage;
+
+  @Override
+  public void init() {
+    Tangenter.setPrecision(0.05);;
+  }
 
   /**
    * {@inheritDoc}

@@ -1,9 +1,9 @@
 package hyperDap.generator.main;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
-import hyperDap.base.types.dataSet.DataSet;
 import hyperDap.base.types.dataSet.ValueDataSet;
 
 /**
@@ -43,13 +43,18 @@ public class GenSegment {
   private double b;
   private double c;
   private Function<Double, Double> func;
+  private Random rand = new Random();
 
   /**
+   * The default constructor.
    * 
-   * @param functionEnccoding
-   * @param scale
-   * @param shiftX
-   * @param intercept
+   * @param functionEnccoding A {@link String} endocing of the function to be generated.
+   * @param scale Used to scale and make the function more or less 'steep' {@code => a}
+   * @param shiftX Shifts the function right or left. Use to fit split up functions together (e.g.
+   *        bias) {@code => b}
+   * @param intercept Used to ensure the first value is in line with previous values and is assumed
+   *        to be the last value before this segment. {@code = f(-step) + c}
+   * 
    */
   public GenSegment(String functionEnccoding, double scale, double shiftX, double intercept,
       double step) throws IllegalArgumentException {
@@ -66,7 +71,7 @@ public class GenSegment {
   /**
    * Classifies the function represented by this Object based on {@code encoding.}
    * 
-   * @param encoding
+   * @param encoding A {@link String} encoding of the function that is to be modelled.
    */
   private void defineFunction(String encoding) throws IllegalArgumentException {
     encoding = encoding.toLowerCase();
@@ -108,16 +113,52 @@ public class GenSegment {
   }
 
   /**
-   * Generate a list of data points of length {@code N}, according to pre-set specifications.
+   * Returns a single value of the function specified by this Object with added noise. Noise here is
+   * a value added to {@link #f(double)}, that is randomly taken from a normal distribution around
+   * zero and of standard deviation {@code noise}.
    * 
-   * @param step The distance between values on the x-axis. See {@link DataSet}
+   * @param x The {@code xValue} that is passed to {@link #f(double)}
+   * @param noise The {@code standard deviation} of the value added (or subtracted).
+   * @return {@link #f(double) f(x)} {@code + noise *} {@link Random#nextGaussian()}.
+   */
+  private double noisyF(double x, double noise) {
+    return f(x) + noise * rand.nextGaussian();
+  }
+
+  /**
+   * Provides a means to reseed the internal instance of {@link Random}.
+   * <p>
+   * This may not mean that generated data can be used for machine learning, unless it is generated
+   * in small enough segments.
+   * 
+   * @param seed Passed to {@link Random#setSeed(long)}
+   */
+  public void seedRandom(long seed) {
+    this.rand.setSeed(seed);
+  }
+
+  /**
+   * Encapsulation of {@link #generateValues(int, double)} with {@code noise=0}.
+   * 
    * @param N The number of data points to be generated.
    * @return An {@link ArrayList} of the generated data points.
    */
   public ArrayList<Double> generateValues(int N) {
+    return this.generateValues(N, 0.0);
+  }
+
+  /**
+   * Generate a list of data points of length {@code N}, according to pre-set specifications and
+   * with the set amount of noise.
+   * 
+   * @param N The number of data points to be generated.
+   * @param noise The noise factor passed to {@link #noisyF(double, double)}
+   * @return An {@link ArrayList} of the generated data points.
+   */
+  public ArrayList<Double> generateValues(int N, double noise) {
     ArrayList<Double> list = new ArrayList<Double>();
     for (Integer i = 0; i < N; i++) {
-      list.add(f(i.doubleValue() * step));
+      list.add(noisyF(i.doubleValue() * step, noise));
     }
     return list;
   }
@@ -127,16 +168,31 @@ public class GenSegment {
    * <p>
    * Calls {@link ValueDataSet#ensureCapacity(int)} before generating data.
    * <p>
-   * Noise is not modelled yet.
+   * Encapsulates {@link #addToDoubleDataSet(ValueDataSet, int, double)} with {@code noise=0}.
    * 
    * @param set The {@link CalueDataSet} that the data points should be added to.
    * @param step The distance between data points on the x-axis.
    * @param N The number of data points that should be added.
+   * @throws IllegalArgumentException If {@link ValueDataSet#getStep()} is not equal to the pre-set
+   *         step.
    */
   public void addToDoubleDataSet(ValueDataSet<Double> set, int N) throws IllegalArgumentException {
     this.addToDoubleDataSet(set, N, 0.0);
   }
 
+  /**
+   * Generate the specified data points with noise and add them to the end of {@code set}.
+   * <p>
+   * Calls {@link ValueDataSet#ensureCapacity(int)} before generating data.
+   * <p>
+   * Noisy values are created using {@link #noisyF(double, double)}.
+   * 
+   * @param set The {@link CalueDataSet} that the data points should be added to.
+   * @param N The number of data points that should be added.
+   * @param noise The noise factor passed to {@link #noisyF(double, double)}.
+   * @throws IllegalArgumentException If {@link ValueDataSet#getStep()} is not equal to the pre-set
+   *         step.
+   */
   public void addToDoubleDataSet(ValueDataSet<Double> set, int N, double noise)
       throws IllegalArgumentException {
     // TODO noise
@@ -147,7 +203,7 @@ public class GenSegment {
     }
     set.ensureCapacity(N + set.size());
     for (Integer i = 0; i < N; i++) {
-      set.add(Double.valueOf(f(i.doubleValue() * step)));
+      set.add(Double.valueOf(noisyF(i.doubleValue() * step, noise)));
     }
   }
 
@@ -160,16 +216,32 @@ public class GenSegment {
    * {@link ValueDataSet#ensureCapacity(int)} is called before adding data points.
    * 
    * @param set The {@link CalueDataSet} that the data points should be added to.
-   * @param step The distance between data points on the x-axis.
    * @param N The number of data points that should be added.
    * @throws IllegalArgumentException If {@link ValueDataSet#hasConversionFunction()} returns
-   *         {@code false}.
+   *         {@code false}.<br>
+   *         If {@link ValueDataSet#getStep()} is not equal to the pre-set step.
    */
   public void addToDataSet(ValueDataSet<? extends Number> set, int N)
       throws IllegalArgumentException {
     this.addToDataSet(set, N, 0.0);
   }
 
+  /**
+   * Generate the specified data points and add them to the end of {@code set}.
+   * <p>
+   * This method requires that {@code set} has an assigned {@code convertFromDouble}
+   * {@link DoubleFunction Function} assigned.
+   * <p>
+   * {@link ValueDataSet#ensureCapacity(int)} is called before adding data points. Noisy values are
+   * created using {@link #noisyF(double, double)}.
+   * 
+   * @param set The {@link CalueDataSet} that the data points should be added to.
+   * @param N The number of data points that should be added.
+   * @param noise The noise factor passed to {@link #noisyF(double, double)}.
+   * @throws IllegalArgumentException If {@link ValueDataSet#hasConversionFunction()} returns
+   *         {@code false}.<br>
+   *         If {@link ValueDataSet#getStep()} is not equal to the pre-set step.
+   */
   public void addToDataSet(ValueDataSet<? extends Number> set, int N, double noise)
       throws IllegalArgumentException {
     // TODO noise
@@ -184,7 +256,7 @@ public class GenSegment {
     }
     set.ensureCapacity(N + set.size());
     for (Integer i = 0; i < N; i++) {
-      set.add(f(i.doubleValue() * step));
+      set.add(noisyF(i.doubleValue() * step, noise));
     }
   }
 

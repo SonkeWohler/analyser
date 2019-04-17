@@ -264,4 +264,14 @@ public final class Tangenter {
     Tangenter.precision = precision;
   }
 
+  /**
+   * Gives the value of the precision currently used in
+   * {@link #tangentApprox(double, double, double)}.
+   * 
+   * @return The current value of precision.
+   */
+  public static double getPrecision() {
+    return precision;
+  }
+
 }
