@@ -28,7 +28,7 @@ public class PresGenerator {
     if (noise == null) {
       noise = 0.0;
     } else {
-      noise = 0.01;
+      noise = 1.0;
     }
     // convert encodings to correct format
     ArrayList<String> encodings = new ArrayList<>();
