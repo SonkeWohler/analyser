@@ -126,8 +126,45 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
     this.add(xValue, yValue);
   }
 
+  /**
+   * Allows editing the {@code derivDepth} for specific values.
+   * <p>
+   * Intended only for use within {@link Tangenter#calcDerivDepth(ValueDataSet)}.
+   * 
+   * @param index The index of the value.
+   * @param depth The {@code derivDepth} that is to be set.
+   * @throws IndexOutOfBoundsException If there is no such value in the internal {@link ArrayList}
+   *         of {@code derivDepths}.
+   */
+  public void setDerivDepth(int index, int depth) throws IndexOutOfBoundsException {
+    // TODO not complete?
+    this.derivDepths.set(index, depth);
+  }
+
+  /**
+   * Concatenates {@code depths} to the end of the internal {@link ArrayList} of
+   * {@code derivDepths}.
+   * 
+   * @param depths
+   */
+  public void addToDerivDepth(List<Integer> depths) {
+    this.derivDepths.addAll(depths);
+  }
+
   // getters
   // ***************************************************************************************
+
+  /**
+   * Returns the {@code yPrecision} set at construction time. This value defines the precision used
+   * when comparing {@code yValues} and making use of
+   * {@link Comparator#equalApprox(double, double, double)}, e.g. in
+   * {@link #contains(double, double)}.
+   * 
+   * @return The set precision for {@code yValues}.
+   */
+  public double getPrecision() {
+    return this.yPrecision;
+  }
 
   /**
    * Returns the depths to which a trace by trace derivative for this value is not zero.
@@ -265,6 +302,15 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
 
   // other
   // ****************************************************************************************
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void clear() {
+    super.clear();
+    this.derivDepths.clear();
+  }
 
   /**
    * {@inheritDoc}

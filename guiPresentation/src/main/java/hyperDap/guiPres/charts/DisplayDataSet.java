@@ -322,8 +322,10 @@ public class DisplayDataSet extends VBox {
     while (this.counter < max) {
       // add data point to setSeries
       xVal = this.set.getIndependentValue(counter);
-      this.setSeries.getData()
-          .add(new XYChart.Data<Number, Number>(xVal, this.set.getByIndex(counter)));
+      if (this.set.getValidByIndex(counter) == true) {
+        this.setSeries.getData()
+            .add(new XYChart.Data<Number, Number>(xVal, this.set.getByIndex(counter)));
+      }
       // add derivDepth to the correct series
       depth = this.set.getDerivDepthsByIndex(counter);
       try {

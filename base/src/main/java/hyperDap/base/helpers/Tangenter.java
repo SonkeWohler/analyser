@@ -16,6 +16,7 @@ import hyperDap.base.types.value.ValuePair;
 
 public final class Tangenter {
 
+  private static double precision = 0.001;
   private static int bigDecimalPrecision = 10;
   private static MathContext standardContext =
       new MathContext(bigDecimalPrecision, RoundingMode.HALF_UP);
@@ -25,6 +26,54 @@ public final class Tangenter {
    */
   private Tangenter() {
     throw new AssertionError("No helper class instances for anyone!");
+  }
+
+  /**
+   * Used to adjust the precision of {@link #tangentApprox(double, double, double)}, which by
+   * default is set to 0.001.
+   * 
+   * @param precision The new precision used.
+   */
+  public static void setPrecision(double precision) {
+    Tangenter.precision = precision;
+  }
+
+  /**
+   * Gives the value of the precision currently used in
+   * {@link #tangentApprox(double, double, double)}.
+   * 
+   * @return The current value of precision.
+   */
+  public static double getPrecision() {
+    return precision;
+  }
+
+  public static double tangentProp(double step, double y1, double y2) {
+    if (Comparator.equalProportionate(y1, y2, precision)) {
+      return 0.0;
+    }
+    return tangentSimple(step, y1, y2);
+  }
+
+  /**
+   * Calculates the slope of the tangent between two points with {@code yValues} {@code y1} and
+   * {@code y2} that are a distance {@code step} apart in their {@code xValues}. If the two values
+   * are too close, based on {@link Comparator#equalApprox(double, double, double)}, the slope will
+   * be approximated to zero. The precision argument for
+   * {@link Comparator#equalApprox(double, double, double)} can be adjusted in
+   * {@link #setPrecision(double)}.
+   * 
+   * @param step The difference in {@code xValue} between the values.
+   * @param y1 The first of the values with a lower {@code xValue}.
+   * @param y2 The second of the values with the higher {@code xValue}
+   * @return Zero if {@code y1} and {@code y2} are equal within the set precision, the slope of the
+   *         tangent between them otherwise.
+   */
+  public static double tangentApprox(double step, double y1, double y2) {
+    if (Comparator.equalApprox(y1, y2, precision)) {
+      return 0.0;
+    }
+    return tangentSimple(step, y1, y2);
   }
 
   /**
@@ -103,7 +152,7 @@ public final class Tangenter {
   }
 
   /**
-   * Calls {@link #calcDerivDepth(ValueDataSet, 10)}.
+   * Calls {@link #calcDerivDepth(ValueDataSet, int) calcDerivDepth(ValueDataSet, 10)}.
    * 
    * @param dataset
    * @return
@@ -113,23 +162,44 @@ public final class Tangenter {
   }
 
   /**
+   * Calls {@link #calcDerivDepth(ValueDataSet, int, boolean) calcDerivDepth(ValueDataSet, int,
+   * true)}.
+   * 
+   * @param dataset
+   * @param maxDepth
+   * @return
+   */
+  public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
+      int maxDepth) {
+    return calcDerivDepth(dataset, maxDepth, true);
+  }
+
+  /**
    * Calculates and returns the depth of derivative ({@code derivDepth}) for {@code dataset}.
    * <p>
    * The {@code derivDepth} is the number of times a trace derivative (the tangent between two
    * points, see {@link #tangentSimple(double, double, double)}) is NOT zero. For each point this
    * indicates the degree of the polynomial the data is representing, if it is polynomial. If not
-   * the {@code derivDepth} will be assigned {@link Integer#MAX_VALUE} to represent infinity. This
-   * will also be assigned if the derivDepth would be larger than {@code maxDepth - 1}.
+   * the {@code derivDepth} will be assigned {@link Integer#MAX_VALUE} until further analysis, to
+   * represent infinity. This will also be assigned if the derivDepth would be larger than
+   * {@code maxDepth - 1}.
+   * <p>
+   * If {@code doInfiniteDepths} is {@code true} any {@link Integer#MAX_VALUE} {@code derivDepth}
+   * values will be further analysed and assigned {@code -2} if exponential, {@code -3} for
+   * trigonometric and {@code -5} otherwise, with the correct change values of {@code -1} also
+   * assigned.
    * 
    * @param dataset The {@link ValueDataSSet} that is to be analysed.
    * @param maxDepth The maximum depth to which the derivative should be calculated.
    *        {@code derivDepth} larger than this will be assigned {@link Integer#MAX_VALUE},
    *        representing infinity.
+   * @param doInfiniteDepths Whether infinite derivDepths should be further analysed to exponential,
+   *        trigonometric etc. (={@code true}) or not (={@code false}).
    * @return An {@link ArrayList ArrayList<Integer>} of the {@code derivDepth} for each value of
-   *         {@code dataset} up to its {@code size - maxDepth}.
+   *         {@code dataset}. Note that the last {@code maxDepth} values may be inaccurate.
    */
   public static ArrayList<Integer> calcDerivDepth(ValueDataSet<? extends Number> dataset,
-      int maxDepth) {
+      int maxDepth, boolean doInfiniteDepths) {
     int size = dataset.size();
     ArrayList<Integer> depths = new ArrayList<Integer>(size);
     double[][] derivs = new double[size][maxDepth];
@@ -139,6 +209,11 @@ public final class Tangenter {
     countDerivDepths(derivs, depths);
     // detect and mark points of change
     detectDepthChanges(derivs, depths);
+    // further analysis
+    if (doInfiniteDepths == true) {
+      Tangenter.checkInfs(dataset, depths, maxDepth);
+    }
+    smoothEndOfDepths(depths, maxDepth);
     // finished
     return depths;
   }
@@ -147,9 +222,11 @@ public final class Tangenter {
    * This method populates the derivative matrix used in {@link #calcDerivDepth(ValueDataSet, int)}.
    * 
    * @category helper
+   * 
    * @param derivs A reference to the initialised derivative matrix.
    * @param set The {@link ValueDataSet} that is to be analysed.
-   * @see ValueDataSet
+   * 
+   * @see ValueDataSet#calcDerivDepths()
    */
   private static void calcDerivs(double[][] derivs, ValueDataSet<? extends Number> set) {
     int size = derivs.length;
@@ -165,7 +242,7 @@ public final class Tangenter {
     for (int k = 1; k < size - 1; k++) {
       derivs[k][0] = set.getByIndex(Math.abs(X - k)).doubleValue();
       for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
-        derivs[i][j] = tangentExact(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
+        derivs[i][j] = tangentApprox(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
       }
     }
   }
@@ -175,9 +252,11 @@ public final class Tangenter {
    * {@link #calcDerivDepth(ValueDataSet, int)}.
    * 
    * @category helper
-   * @param derivs
-   * @param depths
-   * @see ValueDataSet
+   * 
+   * @param derivs A matrix of derivatives.
+   * @param depths The recorded {@link ArrayList} of {@code derivDepth} values.
+   * 
+   * @see ValueDataSet#calcDerivDepths()
    */
   private static void countDerivDepths(double[][] derivs, ArrayList<Integer> depths) {
     int maxDepth = derivs[0].length;
@@ -201,9 +280,11 @@ public final class Tangenter {
    * is being analysed.
    * 
    * @category helper
-   * @param derivs
-   * @param depths
-   * @see ValueDataSet
+   * 
+   * @param derivs A matrix of derivatives.
+   * @param depths The recordedd {@link ArrayList} of {@code derivDepth} values.
+   * 
+   * @see ValueDataSet#calcDerivDepths()
    */
   private static void detectDepthChanges(double[][] derivs, ArrayList<Integer> depths) {
     int maxDepth = derivs[0].length;
@@ -230,6 +311,137 @@ public final class Tangenter {
         tracking = false;
       }
     }
+  }
+
+  /**
+   * Used within {@link #calcDerivDepth(ValueDataSet, int, boolean)} to ensure the last few values
+   * of {@code derivDepth} are consistent with the remaining ones. This does not mean that these are
+   * the true derivDepth values, but the true one cannot be calculated close to the end.
+   * 
+   * @param depths The recordedd {@link ArrayList} of {@code derivDepth} values.
+   * @param maxDepth The {@code defrivDepth} to which the analysis extends.
+   */
+  private static void smoothEndOfDepths(ArrayList<Integer> depths, int maxDepth) {
+    int depth = depths.get(depths.size() - maxDepth - 1);
+    int firstIndex = depths.size() - maxDepth;
+    if (firstIndex < 0) {
+      firstIndex = 0;
+    }
+    for (int i = firstIndex; i < depths.size(); i++) {
+      depths.set(i, depth);
+    }
+  }
+
+  /**
+   * Used within {@link #calcDerivDepth(ValueDataSet, int, boolean)} to check for {@code dericDepth}
+   * values of {@link Integer#MAX_VALUE} and initiate further analysis on these elements.
+   * 
+   * @param set The original {@link ValueDataSet}.
+   * @param depths The recordedd {@link ArrayList} of {@code derivDepth} values.
+   * @param maxDepth The {@code defrivDepth} to which the analysis extends.
+   */
+  private static void checkInfs(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
+      int maxDepth) {
+    int size = depths.size();
+    boolean checking = false;
+    int startI = 0;
+    int endI = 0;
+    // check all derivDepths for yet undefined values
+    for (int i = 0; i < size; i++) {
+      if (depths.get(i) == Integer.MAX_VALUE) {
+        depths.set(i, -5); // depth is undefined until we know otherwise
+        if (checking == false) {
+          // begin tracking a this segment for further analysis.
+          startI = i;
+          checking = true;
+        }
+      } else if (checking == true) {
+        // end of segment, stop tracking
+        endI = i;
+        checking = false;
+        if (endI - startI < maxDepth) {
+          // if segment too small no point
+          continue;
+        }
+        // initate further analysis
+        checkForExp(set, depths, startI, endI, maxDepth);
+      }
+    }
+  }
+
+  /**
+   * Used by {@link #checkInfs(ValueDataSet, ArrayList, int)} to check for exponential functions, as
+   * the first step in further analysis.
+   * 
+   * @param set The original {@link ValueDataSet}.
+   * @param depths The recordedd {@link ArrayList} of {@code derivDepth} values.
+   * @param startI The {@code index} within {@code set} at which the analysis should begin,
+   *        inclusively.
+   * @param endI The {@code index} within {@code set} at which analysis ends, exclusively.
+   * @param maxDepth The {@code defrivDepth} to which the analysis extends.
+   */
+  private static void checkForExp(ValueDataSet<? extends Number> set, ArrayList<Integer> depths,
+      int startI, int endI, int maxDepth) {
+    double val;
+    double smallest = Double.MIN_VALUE;
+    ArrayList<Double> values = new ArrayList<>();
+    for (int i = startI; i < endI; i++) {
+      val = set.getByIndex(i).doubleValue();
+      if (val < smallest) {
+        smallest = val;
+      }
+      values.add(val);
+    }
+    // if there are negative values, move all values up such that they are all positive
+    // this is required to prevent NaN or infinity values when taking the logarithm
+    // it does not affect the derivative values beyond possible floating point errors
+    if (smallest <= 0) {
+      for (int i = 0; i < values.size(); i++) {
+        values.set(i, values.get(i) + smallest + Double.MIN_VALUE);
+      }
+    }
+    // prepare a DataSet to recalculate derivDepth of the logarithmic values
+    double step = set.getStep();
+    ValueDataSet<Double> otherSet = new ValueDataSet<>(set.getBase() + startI * step, step,
+        set.getPrecision(), d -> Double.valueOf(d));
+    for (Double element : values) {
+      otherSet.add(Math.log(element));
+    }
+    ArrayList<Integer> list = calcDerivDepth(otherSet, maxDepth, false); // prevent infinite
+                                                                         // recursion
+    // recheck if there are Integer.Max_Value derivDepths
+    int depth;
+    Integer otherStartI = null;
+    for (int i = 0; i < list.size(); i++) {
+      depth = list.get(i);
+      if (depth == Integer.MAX_VALUE) {
+        // track if not exponential for further analysis
+        if (otherStartI == null) {
+          otherStartI = i;
+        }
+      } else if (depth == 1) {
+        // mark as exponential
+        depths.set(i + startI, -2);
+        if (otherStartI != null) {
+          // if was tracking then mark change and stop
+          depths.set(i + startI - 1, -1);
+          // TODO trig
+          otherStartI = null;
+        }
+      } else {
+        // else transfer value over (e.g. change within exponential or bias)
+        depths.set(i + startI, depth);
+        if (otherStartI != null) {
+          // if was tracking then mark change
+          depths.set(i + startI - 1, -1);
+          // TODO trig
+          otherStartI = null;
+        }
+
+      }
+    }
+    // mark the change
+    depths.set(endI - 1, -1);
   }
 
 }

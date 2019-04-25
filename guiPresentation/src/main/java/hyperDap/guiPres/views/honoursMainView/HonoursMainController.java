@@ -2,13 +2,13 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
+import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -56,13 +56,16 @@ public class HonoursMainController {
   Map<CheckBox, String> didiMap;
 
   @FXML
-  Label functionErrorLabel;
-
-  @FXML
   VBox graphBox;
 
   @FXML
   Button executeButton;
+  @FXML
+  Button executeButton2;
+  @FXML
+  TextField precisionField;
+  @FXML
+  Button precisionButton;
   @FXML
   Button exitButton;
 
@@ -107,7 +110,7 @@ public class HonoursMainController {
 
   public void execute() {
     Map<String, Double> map = new HashMap<String, Double>();
-    double temp;
+    Double temp;
 
     try {
       temp = Double.valueOf(this.baseField.getText());
@@ -126,7 +129,7 @@ public class HonoursMainController {
       return;
     }
     try {
-      temp = Double.valueOf(this.lengthField.getText()).intValue();
+      temp = Integer.valueOf(this.lengthField.getText()).doubleValue();
       if (temp < 10) {
         this.lengthField.setText("");
         this.lengthField.setPromptText("This must be above 10");
@@ -134,12 +137,12 @@ public class HonoursMainController {
       }
       map.put("length", temp);
     } catch (NumberFormatException e) {
-      this.lengthField.setPromptText("This must be a number e.g. '15'");
+      this.lengthField.setPromptText("This must be a number e.g. '20'");
       this.lengthField.setText("");
       return;
     }
 
-    temp = 0;
+    temp = 0.0;
     for (CheckBox didi : didiMap.keySet()) {
       if (didi.isSelected() == true) {
         map.put(this.didiMap.get(didi), 1.0);
@@ -149,13 +152,33 @@ public class HonoursMainController {
     if (temp == 0.0) {
       map.put("constant", 1.0);
     }
-    temp = temp * 10;
-    if ((map.get("length").doubleValue() / temp) < 1.0) {
-      this.functionErrorLabel.setText("The data set is too short for this many functions.");
+    if ((map.get("length").doubleValue() / temp) - 2.0 < 10.00) {
+      temp = temp * 12.0;
+      this.lengthField.setPromptText(
+          String.format("Must have at least %s points for these functions", temp.intValue()));
+      this.lengthField.setText("");
       return;
     }
 
     this.main.execute(map);
+  }
+
+  public void setPrecision() {
+    Double precision;
+    try {
+      precision = Double.parseDouble(this.precisionField.getText());
+    } catch (NumberFormatException ne) {
+      this.precisionField.setPromptText("Invalid Number Format!");
+      this.precisionField.setText("");
+      return;
+    } catch (NullPointerException e) {
+      return;
+    }
+    Tangenter.setPrecision(precision);
+    this.precisionField.setPromptText("Adjust Precision");
+    this.precisionField.setText("");
+    System.out
+        .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
   }
 
   // for GUIMain

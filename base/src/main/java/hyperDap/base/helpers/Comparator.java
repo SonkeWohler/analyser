@@ -13,6 +13,22 @@ public final class Comparator {
 
   private Comparator() {}
 
+  public static boolean equalProportionate(double a, double b, double fractionalPrecision)
+      throws IllegalArgumentException {
+    if (fractionalPrecision < 0 || fractionalPrecision > 1) {
+      throw new IllegalArgumentException(
+          String.format("%s.equalProportionate has been passed %s as precision!", Comparator.class,
+              fractionalPrecision));
+    }
+    if (b < (a * (1 - fractionalPrecision))) {
+      return false;
+    }
+    if (b > (a * (1 + fractionalPrecision))) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Evaluate whether with the chosen precision the two values are equal, i.e. if {@code a} plus or
    * minus {@code precision} contains {@code b}.

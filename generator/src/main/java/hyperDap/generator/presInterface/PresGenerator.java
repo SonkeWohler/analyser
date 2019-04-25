@@ -27,6 +27,8 @@ public class PresGenerator {
     Double noise = map.remove("noise");
     if (noise == null) {
       noise = 0.0;
+    } else {
+      noise = 0.01;
     }
     // convert encodings to correct format
     ArrayList<String> encodings = new ArrayList<>();

@@ -23,7 +23,6 @@ public class GenMain {
    */
   public static ValueDataSet<Double> newDataSet(List<String> functionEncodings, int numberOfBiases,
       double base, double step, int length, double noise) {
-    // TODO noise
     // protect from bad arguments
     if (functionEncodings.isEmpty()) {
       throw new IllegalArgumentException(

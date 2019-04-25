@@ -166,13 +166,7 @@ public abstract class DataSet<T> implements Collection<T> {
    * {@link #initialisationValue(Object, Object).
    * <p>
    * This method is more comparable to {@link ArrayList#set(int, Object)} as it replaces the element
-   * in question rather than shifting elements to the right. <<<<<<< HEAD
-   * 
-   * 
-   * =======
-   * 
-   * 
-   * >>>>>>> master
+   * in question rather than shifting elements to the right.
    * 
    * @category writing
    * @param index The index at which the value is to be added.
