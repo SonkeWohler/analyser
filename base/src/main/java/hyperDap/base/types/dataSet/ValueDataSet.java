@@ -1,6 +1,7 @@
 package hyperDap.base.types.dataSet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.DoubleFunction;
 import hyperDap.base.helpers.Comparator;
@@ -120,10 +121,24 @@ public class ValueDataSet<T extends Number> extends ValidityDataSet<T> {
    * 
    * @param valuePair Data that is to be unboxed to add an entry.
    */
-  public void add(ValuePair<T> valuePair) {
+  public void add(ValuePair<? extends T> valuePair) {
     double xValue = valuePair.getX().doubleValue();
-    T yValue = valuePair.getY();
-    this.add(xValue, yValue);
+    this.add(xValue, valuePair.getY());
+  }
+
+  /**
+   * Ensures that all {@link ValuePair} entries in {@code c} are added to this {@code DataSet},
+   * making use of {@link #add(ValuePair)}.
+   * <p>
+   * If more than one {@link ValuePair} are assigned to the same {@code index}, in
+   * {@link #getIndex(double)}, the last entry remains.
+   * 
+   * @param c
+   */
+  public void addAllPairs(Collection<? extends ValuePair<? extends T>> c) {
+    for (ValuePair<? extends T> entry : c) {
+      this.add(entry);
+    }
   }
 
   /**

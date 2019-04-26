@@ -1,6 +1,7 @@
 package hyperDap.base.types.dataSet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * An abstract subclass of {@link DataSet} that allows marking entries as valid ({@code true} or
@@ -90,12 +91,32 @@ public abstract class ValidityDataSet<T> extends DataSet<T> {
   /**
    * {@inheritDoc}
    * <p>
-   * The new entry iis marked as valid.
+   * The new entry is marked as valid.
    */
   @Override
   public double addValue(T value) {
     this.valids.add(true);
     return super.addValue(value);
+  }
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * All added values are considered valid ({@link #getValidByIndex(int)} will return {@code true}).
+   */
+  @Override
+  public boolean addAll(Collection<? extends T> c) {
+    boolean ret = super.addAll(c);
+    if (ret == false) {
+      return false;
+    }
+    int entries = c.size();
+    for (int i = 0; i < entries; i++) {
+      if (this.valids.add(true) == false) {
+        ret = false;
+      }
+    }
+    return ret;
   }
 
   // get
