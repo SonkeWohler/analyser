@@ -208,9 +208,10 @@ public class GenSegment {
     for (Integer i = 0; i < N; i++) {
       val = Double.valueOf(noisyF(i.doubleValue() * step, noise));
       set.add(val);
-      if (Comparator.equalApprox(0.0, val, 10000.0) == false) {
-        set.editValidityByIndex((i + size), false);
-      }
+      // if the value is too large or small, consider it invalid
+      // if (Comparator.equalApprox(0.0, val, 10000.0) == false) {
+      // set.editValidityByIndex((i + size), false);
+      // }
     }
   }
 

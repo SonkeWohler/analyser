@@ -128,7 +128,8 @@ public class DisplayDataSet extends VBox {
     this.derivChart.getData().add(this.changeSeries);
     this.derivChart.getData().add(this.undefinedSeries);
 
-    // TODO size chart better
+    this.setChart.setPrefHeight(250.0);
+    this.derivChart.setPrefHeight(200.0);
   }
 
   // setters
@@ -226,17 +227,31 @@ public class DisplayDataSet extends VBox {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-        setSeries.getData().clear();
-        constSeries.getData().clear();
-        linearSeries.getData().clear();
-        SquareSeries.getData().clear();
-        cubicSeries.getData().clear();
-        expSeries.getData().clear();
-        sinSeries.getData().clear();
-        changeSeries.getData().clear();
-        undefinedSeries.getData().clear();
+        resetAllSeries();
       }
     });
+  }
+
+  private void resetAllSeries() {
+    double base = set.getBase();
+    double max = set.size() * set.getStep() + base;
+    setSeries.getData().clear();
+    resetSeries(constSeries, base, max, 1);
+    resetSeries(linearSeries, base, max, 2);
+    resetSeries(SquareSeries, base, max, 3);
+    resetSeries(cubicSeries, base, max, 4);
+    resetSeries(expSeries, base, max, -1);
+    resetSeries(sinSeries, base, max, -2);
+    resetSeries(changeSeries, base, max, 0);
+    resetSeries(undefinedSeries, base, max, -5);
+  }
+
+  private void resetSeries(XYChart.Series<Number, Number> series, double base, double max,
+      double val) {
+    series.getData().clear();
+    series.getData().add(new XYChart.Data<Number, Number>(base, val));
+    series.getData().add(new XYChart.Data<Number, Number>(max, val));
+    series.getData().clear();
   }
 
   /**
