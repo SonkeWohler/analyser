@@ -5,6 +5,8 @@ import java.util.Map;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -85,6 +87,7 @@ public class HonoursMainController {
    */
   public void initialize() {
 
+    // for reading in whcih functions should be plotted
     this.didiMap = new HashMap<CheckBox, String>();
     this.didiMap.put(didi1, "constant");
     this.didiMap.put(didi2, "linear");
@@ -95,12 +98,22 @@ public class HonoursMainController {
     this.didiMap.put(didi7, "bias");
     this.didiMap.put(didi8, "noise");
 
+    // the graphs used for display
     this.setChart = new DisplayDataSet();
     this.graphBox.getChildren().add(this.setChart);
 
+    // a boolean property to help unfocus at startup
+    final BooleanProperty firstTime = new SimpleBooleanProperty(true);
+    this.baseField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue && firstTime.get()) {
+        firstTime.set(false);
+        this.baseField.getParent().requestFocus();
+      }
+    });
+
   }
 
-  // fx buttons
+  // fx interface
   // **************************************************************************************************************************
 
   public void terminate() {
@@ -168,6 +181,22 @@ public class HonoursMainController {
     }
 
     this.main.execute(map);
+  }
+
+  public void baseDefault() {
+    this.baseField.setText("0.0");
+  }
+
+  public void stepDefault() {
+    this.stepField.setText("1.0");
+  }
+
+  public void lengthDefault() {
+    this.lengthField.setText("50");
+  }
+
+  public void precisionDefault() {
+    this.precisionField.setText("0.001");
   }
 
   // public void setPrecision() {
