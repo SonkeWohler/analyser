@@ -102,7 +102,8 @@ public class HonoursMainController {
     this.setChart = new DisplayDataSet();
     this.graphBox.getChildren().add(this.setChart);
 
-    // a boolean property to help unfocus at startup
+    // a boolean property to help unfocus at startup. Credit:
+    // https://stackoverflow.com/questions/29051225/remove-default-focus-from-textfield-javafx
     final BooleanProperty firstTime = new SimpleBooleanProperty(true);
     this.baseField.focusedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue && firstTime.get()) {
