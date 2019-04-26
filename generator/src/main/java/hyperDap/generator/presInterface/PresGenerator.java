@@ -15,10 +15,16 @@ import hyperDap.generator.main.GenMain;
  */
 public class PresGenerator {
 
+  private static double precision = 0.001;
+
   public static ValueDataSet<Double> generate(Map<String, Double> map) {
     Random rand = new Random();
     double base = map.remove("base");
     double step = map.remove("step");
+    Double precision = map.remove("precision");
+    if (precision == null) {
+      precision = PresGenerator.precision;
+    }
     int length = map.remove("length").intValue();
     int biasNumber = 0;
     if (map.remove("bias") != null) {
@@ -50,7 +56,12 @@ public class PresGenerator {
       }
     }
     // complete
-    return GenMain.newDataSet(encodings, biasNumber, base, step, length, noise);
+    return GenMain.newDataSet(encodings, biasNumber, base, step, length, noise,
+        precision.doubleValue());
+  }
+
+  public void setPrecision(double precision) {
+
   }
 
 }

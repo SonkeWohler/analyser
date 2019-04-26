@@ -37,26 +37,34 @@
                       <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Base" />
-                        <TextField fx:id="baseField" promptText="Where the data starts." GridPane.columnIndex="1">
+                        <TextField fx:id="baseField" onAction="#execute" promptText="Where the data starts." text="0.0" GridPane.columnIndex="1">
                            <tooltip>
                               <Tooltip text="The first xValue in the data i.e. where it starts." />
                            </tooltip></TextField>
-                        <Button fx:id="baseRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" />
+                        <Button fx:id="baseRandButton" mnemonicParsing="false" onAction="#baseDefault" text="Default" GridPane.columnIndex="2" />
                         <Label text="Step" GridPane.rowIndex="1" />
-                        <TextField fx:id="stepField" promptText="The distance between data points." GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="stepField" onAction="#execute" promptText="The distance between data points." text="1.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <tooltip>
                               <Tooltip text="The distance between data points on the x-axis." />
                            </tooltip></TextField>
-                        <Button fx:id="stepRandButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Button fx:id="stepRandButton" mnemonicParsing="false" onAction="#stepDefault" text="Default" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label text="Length" GridPane.rowIndex="2" />
-                        <TextField fx:id="lengthField" promptText="The number of data points." GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <TextField fx:id="lengthField" onAction="#execute" promptText="The number of data points." text="50" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <tooltip>
                               <Tooltip text="The number of data points." />
                            </tooltip></TextField>
-                        <Button fx:id="lengthRanndButton" disable="true" mnemonicParsing="false" text="Random" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Button fx:id="lengthRanndButton" mnemonicParsing="false" onAction="#lengthDefault" text="Default" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label text="Precision" GridPane.rowIndex="3" />
+                        <TextField fx:id="precisionField" layoutX="136.0" layoutY="83.0" onAction="#execute" promptText="Used to ignore Noise" text="0.001" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <tooltip>
+                              <Tooltip text="Ths number is used to cut away noise." />
+                           </tooltip>
+                        </TextField>
+                        <Button fx:id="precisionRanndButton" layoutX="380.0" layoutY="83.0" mnemonicParsing="false" onAction="#precisionDefault" text="Default" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />
@@ -147,16 +155,7 @@
                      </rowConstraints>
                      <children>
                         <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2">
-                           <children>
-                              <TextField fx:id="precisionField" promptText="Adjust Precision">
-                                 <tooltip>
-                                    <Tooltip text="When calculating derivatives, by default a precision of 0.05 is used. This makes it more robust to noise and floating point errors." textAlignment="JUSTIFY" wrapText="true" />
-                                 </tooltip>
-                              </TextField>
-                              <Button fx:id="precisionButton" mnemonicParsing="false" onAction="#setPrecision" text="Set" />
-                           </children>
-                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" />
                      </children>
                   </GridPane>
                   <VBox fx:id="graphBox" />

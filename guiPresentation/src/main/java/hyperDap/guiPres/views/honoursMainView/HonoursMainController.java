@@ -2,10 +2,11 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
-import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -35,6 +36,10 @@ public class HonoursMainController {
   TextField lengthField;
   @FXML
   Button lengthRandButton;
+  @FXML
+  TextField precisionField;
+  @FXML
+  Button precisionRandomField;
 
   @FXML
   CheckBox didi1;
@@ -63,10 +68,6 @@ public class HonoursMainController {
   @FXML
   Button executeButton2;
   @FXML
-  TextField precisionField;
-  @FXML
-  Button precisionButton;
-  @FXML
   Button exitButton;
 
   private DisplayDataSet setChart;
@@ -86,6 +87,7 @@ public class HonoursMainController {
    */
   public void initialize() {
 
+    // for reading in whcih functions should be plotted
     this.didiMap = new HashMap<CheckBox, String>();
     this.didiMap.put(didi1, "constant");
     this.didiMap.put(didi2, "linear");
@@ -96,12 +98,23 @@ public class HonoursMainController {
     this.didiMap.put(didi7, "bias");
     this.didiMap.put(didi8, "noise");
 
+    // the graphs used for display
     this.setChart = new DisplayDataSet();
     this.graphBox.getChildren().add(this.setChart);
 
+    // a boolean property to help unfocus at startup. Credit:
+    // https://stackoverflow.com/questions/29051225/remove-default-focus-from-textfield-javafx
+    final BooleanProperty firstTime = new SimpleBooleanProperty(true);
+    this.baseField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue && firstTime.get()) {
+        firstTime.set(false);
+        this.baseField.getParent().requestFocus();
+      }
+    });
+
   }
 
-  // fx buttons
+  // fx interface
   // **************************************************************************************************************************
 
   public void terminate() {
@@ -141,6 +154,14 @@ public class HonoursMainController {
       this.lengthField.setText("");
       return;
     }
+    try {
+      temp = Double.valueOf(this.precisionField.getText());
+      map.put("precision", temp);
+    } catch (NumberFormatException e) {
+      this.precisionField.setPromptText("This must be a number e.g. '0.001'");
+      this.precisionField.setText("");
+      return;
+    }
 
     temp = 0.0;
     for (CheckBox didi : didiMap.keySet()) {
@@ -163,23 +184,39 @@ public class HonoursMainController {
     this.main.execute(map);
   }
 
-  public void setPrecision() {
-    Double precision;
-    try {
-      precision = Double.parseDouble(this.precisionField.getText());
-    } catch (NumberFormatException ne) {
-      this.precisionField.setPromptText("Invalid Number Format!");
-      this.precisionField.setText("");
-      return;
-    } catch (NullPointerException e) {
-      return;
-    }
-    Tangenter.setPrecision(precision);
-    this.precisionField.setPromptText("Adjust Precision");
-    this.precisionField.setText("");
-    System.out
-        .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
+  public void baseDefault() {
+    this.baseField.setText("0.0");
   }
+
+  public void stepDefault() {
+    this.stepField.setText("1.0");
+  }
+
+  public void lengthDefault() {
+    this.lengthField.setText("50");
+  }
+
+  public void precisionDefault() {
+    this.precisionField.setText("0.001");
+  }
+
+  // public void setPrecision() {
+  // Double precision;
+  // try {
+  // precision = Double.parseDouble(this.precisionField.getText());
+  // } catch (NumberFormatException ne) {
+  // this.precisionField.setPromptText("Invalid Number Format!");
+  // this.precisionField.setText("");
+  // return;
+  // } catch (NullPointerException e) {
+  // return;
+  // }
+  // Tangenter.setPrecision(precision);
+  // this.precisionField.setPromptText("Adjust Precision");
+  // this.precisionField.setText("");
+  // System.out
+  // .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
+  // }
 
   // for GUIMain
   // **************************************************************************************************************************
