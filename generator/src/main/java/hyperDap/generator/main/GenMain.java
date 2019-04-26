@@ -1,7 +1,6 @@
 package hyperDap.generator.main;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import hyperDap.base.types.dataSet.DataSet;
 import hyperDap.base.types.dataSet.ValueDataSet;
@@ -58,6 +57,11 @@ public class GenMain {
       lastVal = set.getByIndex(set.size() - 1);
       scale = (Double.valueOf(rand.nextInt(10)) - 4.0) / 10;
       shiftX = Double.valueOf(rand.nextInt(30)) - 15.0;
+      if (encoding.equals("rand")) { // random data is handled differently
+        generator = new GenSegment("constant", scale, shiftX, lastVal, step);
+        generator.addRandomToDoubleDataSet(set, number);
+        continue;
+      }
       generator = new GenSegment(encoding, scale, shiftX, lastVal, step);
       generator.addToDoubleDataSet(set, number, noise);
       // add a bias if needed
@@ -73,25 +77,6 @@ public class GenMain {
     }
     // complete
     return set;
-  }
-
-  /**
-   * Create a new {@link ValueDataSet} according to specifications.
-   * <p>
-   * This method provides more control than {@link #newDataSet(List, Number, double, double, int)},
-   * following exactly the fractions specified in the {@code encodingMap} and generating data points
-   * of the specified function up to this point.
-   * 
-   * @param encodingMap From {@link Double} (must be between 0 and 1) that specifies a fraction of
-   *        the total length of the {@link DataSet}, to the function encoding of the type of data
-   *        that should be generated up to that point.
-   * @param base The {@code base} of the {@link DataSet}
-   * @param step The {@code step} of the {@link DataSet}
-   * @param length The number of data points in the completed {@link DataSet}
-   */
-  @SuppressWarnings("unused")
-  private void newDataSet(Map<Double, String> encodingMap, double base, double step, int length) {
-
   }
 
 }

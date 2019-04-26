@@ -57,6 +57,7 @@ public class HonoursMainController {
   CheckBox didi7;
   @FXML
   CheckBox didi8;
+  CheckBox randomBox;
 
   Map<CheckBox, String> didiMap;
 
@@ -94,9 +95,10 @@ public class HonoursMainController {
     this.didiMap.put(didi3, "square");
     this.didiMap.put(didi4, "cubic");
     this.didiMap.put(didi5, "exp");
-    this.didiMap.put(didi6, "sine");
+    this.didiMap.put(didi6, "rand");
     this.didiMap.put(didi7, "bias");
     this.didiMap.put(didi8, "noise");
+    this.randomBox = this.didi6;
 
     // the graphs used for display
     this.setChart = new DisplayDataSet();

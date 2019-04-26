@@ -117,10 +117,10 @@
                            </rowConstraints>
                            <children>
                               <Label text="y=a*exp(b*x + c) + d" GridPane.columnIndex="1" />
-                              <Label text="y= a* sin(b*x + c) + d" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Random Numbers" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="A point without derivative" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <CheckBox fx:id="didi5" mnemonicParsing="false" text="Exponential" />
-                              <CheckBox fx:id="didi6" mnemonicParsing="false" text="Trigonometric" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="didi6" mnemonicParsing="false" text="Random" GridPane.rowIndex="1" />
                               <CheckBox fx:id="didi7" mnemonicParsing="false" text="Bias" GridPane.rowIndex="2">
                                  <tooltip>
                                     <Tooltip text="Simulates a Sensor being &quot;knocked&quot; off true." />

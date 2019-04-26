@@ -272,4 +272,39 @@ public class GenSegment {
     }
   }
 
+  public void addRandomToDoubleDataSet(ValueDataSet<Double> set, int N)
+      throws IllegalArgumentException {
+    if (this.step != set.getStep()) {
+      throw new IllegalArgumentException(
+          String.format("%s. addToDoubleDataSet() does not match preset step! %s!=%s",
+              GenSegment.class, this.step, set.getStep()));
+    }
+    set.ensureCapacity(set.size() + N);
+    Integer temp;
+    for (int i = 0; i < N; i++) {
+      temp = (rand.nextInt(10000) - 5000);
+      set.add(temp.doubleValue() / 100);
+    }
+  }
+
+  public void addRandomToDataSet(ValueDataSet<? extends Number> set, int N)
+      throws IllegalArgumentException {
+    if (set.hasConversionFunction() == false) {
+      throw new IllegalArgumentException(
+          "ValueDataSet must have a convertFromDouble function defined!");
+    }
+    if (this.step != set.getStep()) {
+      throw new IllegalArgumentException(
+          String.format("%s. addToDoubleDataSet() does not match preset step! %s!=%s",
+              GenSegment.class, this.step, set.getStep()));
+    }
+    set.ensureCapacity(set.size() + N);
+    Integer temp;
+    for (int i = 0; i < N; i++) {
+      temp = (rand.nextInt(10000) - 5000);
+      set.add(temp.doubleValue() / 100);
+    }
+
+  }
+
 }
