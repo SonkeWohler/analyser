@@ -412,6 +412,7 @@ public final class Tangenter {
     // this is required to prevent NaN or infinity values when taking the logarithm
     // it does not affect the derivative values beyond possible floating point errors
     if (smallest <= 0) {
+      smallest = Math.abs(smallest);
       for (int i = 0; i < values.size(); i++) {
         values.set(i, values.get(i) + smallest + Double.MIN_VALUE);
       }
