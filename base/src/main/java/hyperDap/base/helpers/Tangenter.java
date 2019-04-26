@@ -247,6 +247,7 @@ public final class Tangenter {
     int size = derivs.length;
     int maxDepth = derivs[0].length;
     double step = set.getStep();
+    double precision = set.getPrecision();
     int X; // this variable helps ensure that tangents are calculated left to right on the x-axis
     if (step > 0) {
       X = 0;
@@ -257,7 +258,7 @@ public final class Tangenter {
     for (int k = 1; k < size - 1; k++) {
       derivs[k][0] = set.getByIndex(Math.abs(X - k)).doubleValue();
       for (int i = k - 1, j = 1; i >= 0 && j < maxDepth; i--, j++) {
-        derivs[i][j] = tangentApprox(step, derivs[i][j - 1], derivs[i + 1][j - 1]);
+        derivs[i][j] = tangentApprox(step, derivs[i][j - 1], derivs[i + 1][j - 1], precision);
       }
     }
   }
