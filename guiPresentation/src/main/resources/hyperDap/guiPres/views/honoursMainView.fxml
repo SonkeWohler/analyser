@@ -59,9 +59,9 @@
                            </tooltip></TextField>
                         <Button fx:id="lengthRanndButton" mnemonicParsing="false" onAction="#lengthDefault" text="Default" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Label text="Precision" GridPane.rowIndex="3" />
-                        <TextField fx:id="precisionField" layoutX="136.0" layoutY="83.0" onAction="#execute" promptText="Used to ignore Noise" text="0.001" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <TextField fx:id="precisionField" layoutX="136.0" layoutY="83.0" onAction="#execute" promptText="Used to ignore Noise" text="0.01" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <tooltip>
-                              <Tooltip text="Ths number is used to cut away noise." />
+                              <Tooltip text="Ths number is used to cut away noise, (set to 0.01)." />
                            </tooltip>
                         </TextField>
                         <Button fx:id="precisionRanndButton" layoutX="380.0" layoutY="83.0" mnemonicParsing="false" onAction="#precisionDefault" text="Default" GridPane.columnIndex="2" GridPane.rowIndex="3" />

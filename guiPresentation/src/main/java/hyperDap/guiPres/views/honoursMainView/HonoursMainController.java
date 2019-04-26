@@ -160,7 +160,7 @@ public class HonoursMainController {
       temp = Double.valueOf(this.precisionField.getText());
       map.put("precision", temp);
     } catch (NumberFormatException e) {
-      this.precisionField.setPromptText("This must be a number e.g. '0.001'");
+      this.precisionField.setPromptText("This must be a number e.g. '0.01'");
       this.precisionField.setText("");
       return;
     }
@@ -199,7 +199,7 @@ public class HonoursMainController {
   }
 
   public void precisionDefault() {
-    this.precisionField.setText("0.001");
+    this.precisionField.setText("0.01");
   }
 
   // public void setPrecision() {
