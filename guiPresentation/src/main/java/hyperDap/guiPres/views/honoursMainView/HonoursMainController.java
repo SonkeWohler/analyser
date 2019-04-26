@@ -2,7 +2,6 @@ package hyperDap.guiPres.views.honoursMainView;
 
 import java.util.HashMap;
 import java.util.Map;
-import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.guiPres.charts.DisplayDataSet;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
@@ -35,6 +34,10 @@ public class HonoursMainController {
   TextField lengthField;
   @FXML
   Button lengthRandButton;
+  @FXML
+  TextField precisionField;
+  @FXML
+  Button precisionRandomField;
 
   @FXML
   CheckBox didi1;
@@ -62,10 +65,6 @@ public class HonoursMainController {
   Button executeButton;
   @FXML
   Button executeButton2;
-  @FXML
-  TextField precisionField;
-  @FXML
-  Button precisionButton;
   @FXML
   Button exitButton;
 
@@ -141,6 +140,14 @@ public class HonoursMainController {
       this.lengthField.setText("");
       return;
     }
+    try {
+      temp = Double.valueOf(this.precisionField.getText());
+      map.put("precision", temp);
+    } catch (NumberFormatException e) {
+      this.precisionField.setPromptText("This must be a number e.g. '0.001'");
+      this.precisionField.setText("");
+      return;
+    }
 
     temp = 0.0;
     for (CheckBox didi : didiMap.keySet()) {
@@ -163,23 +170,23 @@ public class HonoursMainController {
     this.main.execute(map);
   }
 
-  public void setPrecision() {
-    Double precision;
-    try {
-      precision = Double.parseDouble(this.precisionField.getText());
-    } catch (NumberFormatException ne) {
-      this.precisionField.setPromptText("Invalid Number Format!");
-      this.precisionField.setText("");
-      return;
-    } catch (NullPointerException e) {
-      return;
-    }
-    Tangenter.setPrecision(precision);
-    this.precisionField.setPromptText("Adjust Precision");
-    this.precisionField.setText("");
-    System.out
-        .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
-  }
+  // public void setPrecision() {
+  // Double precision;
+  // try {
+  // precision = Double.parseDouble(this.precisionField.getText());
+  // } catch (NumberFormatException ne) {
+  // this.precisionField.setPromptText("Invalid Number Format!");
+  // this.precisionField.setText("");
+  // return;
+  // } catch (NullPointerException e) {
+  // return;
+  // }
+  // Tangenter.setPrecision(precision);
+  // this.precisionField.setPromptText("Adjust Precision");
+  // this.precisionField.setText("");
+  // System.out
+  // .println(String.format("User set new pprecision of %s in %s!", precision, Tangenter.class));
+  // }
 
   // for GUIMain
   // **************************************************************************************************************************

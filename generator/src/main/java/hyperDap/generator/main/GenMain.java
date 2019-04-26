@@ -22,7 +22,7 @@ public class GenMain {
    * @return The generated {@link ValueDataSet}
    */
   public static ValueDataSet<Double> newDataSet(List<String> functionEncodings, int numberOfBiases,
-      double base, double step, int length, double noise) {
+      double base, double step, int length, double noise, double precision) {
     // protect from bad arguments
     if (functionEncodings.isEmpty()) {
       throw new IllegalArgumentException(
@@ -46,7 +46,8 @@ public class GenMain {
     // prepare data generation
     Random rand = new Random();
     int number = length / functionEncodings.size(); // the number of data points to be added
-    ValueDataSet<Double> set = new ValueDataSet<Double>(base, step, 0.1, d -> Double.valueOf(d));
+    ValueDataSet<Double> set =
+        new ValueDataSet<Double>(base, step, precision, d -> Double.valueOf(d));
     set.add(5.0); // add an initial value
     // for each functionEncoding generate and add a list of data points
     GenSegment generator;
