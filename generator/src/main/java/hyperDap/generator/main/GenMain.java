@@ -47,7 +47,7 @@ public class GenMain {
     int number = length / functionEncodings.size(); // the number of data points to be added
     ValueDataSet<Double> set =
         new ValueDataSet<Double>(base, step, precision, d -> Double.valueOf(d));
-    set.add(5.0); // add an initial value
+    set.add(0.0); // add an initial value
     // for each functionEncoding generate and add a list of data points
     GenSegment generator;
     double scale;

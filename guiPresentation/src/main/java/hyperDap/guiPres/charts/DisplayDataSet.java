@@ -129,7 +129,7 @@ public class DisplayDataSet extends VBox {
     this.derivChart.getData().add(this.undefinedSeries);
 
     this.setChart.setPrefHeight(250.0);
-    this.derivChart.setPrefHeight(200.0);
+    this.derivChart.setPrefHeight(250.0);
   }
 
   // setters
@@ -248,9 +248,9 @@ public class DisplayDataSet extends VBox {
 
   private void resetSeries(XYChart.Series<Number, Number> series, double base, double max,
       double val) {
-    series.getData().clear();
-    series.getData().add(new XYChart.Data<Number, Number>(base, val));
-    series.getData().add(new XYChart.Data<Number, Number>(max, val));
+    // series.getData().clear();
+    // series.getData().add(new XYChart.Data<Number, Number>(base, val));
+    // series.getData().add(new XYChart.Data<Number, Number>(max, val));
     series.getData().clear();
   }
 
