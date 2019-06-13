@@ -1,9 +1,11 @@
 package hyperDap.guiPres.application;
 
+import java.io.IOException;
 import java.util.Map;
 import hyperDap.base.helpers.Tangenter;
 import hyperDap.base.types.dataSet.ValueDataSet;
 import hyperDap.generator.presInterface.PresGenerator;
+import hyperDap.guiPres.file.TxtInput;
 import hyperDap.guiPres.fxEncapsulation.GUIMainForFX;
 import hyperDap.guiPres.views.honoursMainView.HonoursMainController;
 import javafx.application.Application;
@@ -157,6 +159,25 @@ public final class GUIMain extends Application implements GUIMainForFX {
     ValueDataSet<? extends Number> set = PresGenerator.generate(map);
     System.out.println("Generation complete.");
     this.mainController.displayDataSet(set);
+  }
+
+  /**
+   * quick fix to allow analysis of ASCII files, using ...
+   */
+  public void executeFromFile(){
+    System.err.println("reading from file is not tested yet!");
+    TxtInput fileReader= new TxtInput();
+    System.out.println("reading from file");
+    try {
+      ValueDataSet<Double> set = fileReader.readFile();
+      System.out.println("reading complete");
+      this.mainController.displayDataSet(set);
+    } catch (IOException e){
+      e.printStackTrace();
+      System.err.println("read was unsuccessful");
+      return;
+    }
+    // TODO
   }
 
   /**

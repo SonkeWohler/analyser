@@ -67,6 +67,8 @@ public class HonoursMainController {
   @FXML
   Button executeButton;
   @FXML
+  Button executeFileButton;
+  @FXML
   Button executeButton2;
   @FXML
   Button exitButton;
@@ -184,6 +186,10 @@ public class HonoursMainController {
     }
 
     this.main.execute(map);
+  }
+
+  public void executeFromFile(){
+    this.main.executeFromFile();
   }
 
   public void baseDefault() {

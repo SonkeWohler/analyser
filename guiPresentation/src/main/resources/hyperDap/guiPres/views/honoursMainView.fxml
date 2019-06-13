@@ -156,6 +156,7 @@
                      <children>
                         <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" />
+                        <Button fx:id="executeFileButton" mnemonicParsing="false" onAction="#executeFromFile" text="Execute from File" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <VBox fx:id="graphBox" />

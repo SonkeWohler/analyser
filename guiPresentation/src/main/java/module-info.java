@@ -21,6 +21,7 @@ module guiPresentation {
   requires javafx.controls;
   requires javafx.fxml;
   requires transitive javafx.graphics;
+  requires java.base;
 
   opens hyperDap.guiPres.application to javafx.graphics, javafx.fxml;
   opens hyperDap.guiPres.fxEncapsulation to javafx.graphics, javafx.fxml;

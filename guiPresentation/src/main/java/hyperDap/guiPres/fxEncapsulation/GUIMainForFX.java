@@ -8,4 +8,6 @@ public interface GUIMainForFX {
 
   public void execute(Map<String, Double> map);
 
+  public void executeFromFile();
+
 }
